@@ -8,9 +8,9 @@ using System.IO;
 public class Taskmaster : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] List<Task> tasklist;
+    [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
-    string filename = "SavedList";
+    string filename = "SavedList.txt";
 
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class Taskmaster : MonoBehaviour
     public void create_newTask(string t, string d, DateTime dt, float p)
     {
         Task new_task = new Task(t, d, dt, p);
-        tasklist.Add(new_task);
+        dataSave.addnewtoList(new_task);
         savelist();
 
 
@@ -47,11 +47,8 @@ public class Taskmaster : MonoBehaviour
             Directory.CreateDirectory(dir);
   
         }
-        if (!File.Exists(dir + filename))
-        {
-            File.Create(dir + filename);
-        }
-        string saveJason = JsonUtility.ToJson(tasklist);
+      
+        string saveJason = JsonUtility.ToJson(dataSave);
         File.WriteAllText(dir + filename, saveJason);
 
 
@@ -59,10 +56,13 @@ public class Taskmaster : MonoBehaviour
     private void loadlist()
     {
         string loadpath = Application.persistentDataPath + directory + filename;
+        print(loadpath);
 
         if (File.Exists(loadpath))
         {
-            tasklist = JsonUtility.FromJson<List<Task>>(loadpath);
+            print("data found");
+            String readstring = File.ReadAllText(loadpath);
+            dataSave = JsonUtility.FromJson<SaveObject>(readstring);
         }
         else
         {
@@ -71,7 +71,7 @@ public class Taskmaster : MonoBehaviour
         // tasklist = JsonUtility.FromJson<List<Task>>(json);
     }
     
-    /// ////////////////
+    //////////////////// Task
     
     [Serializable]
     public class Task
@@ -107,7 +107,23 @@ public class Taskmaster : MonoBehaviour
         }
 
     }
+
+    /////// Save Object
     
+   [Serializable]
+   public class SaveObject
+   {
+        [SerializeField] List<Task> tasklist = new List<Task>();
+        public void addnewtoList(Task addT)
+        {
+            tasklist.Add(addT);
+        }
+        public void removenewtoList()
+        {
+
+        }
+   }
+
 
 
 }
