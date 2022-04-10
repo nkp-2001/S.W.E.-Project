@@ -28,7 +28,7 @@ public class Taskmaster : MonoBehaviour
     {
 
         loadlist();
-        readtest();
+        
 
 
     }
@@ -79,17 +79,7 @@ public class Taskmaster : MonoBehaviour
         }
         // tasklist = JsonUtility.FromJson<List<Task>>(json);
     }
-    public void readtest()
-    {
-        foreach(Task i in dataSave.returnList())
-        {
-           print( i.getDeadline());
-        }
-        
-    }
-    
-    //////////////////// Task
-    
+    ///////////// Task ////////////
     [Serializable]
     public class Task
     {
