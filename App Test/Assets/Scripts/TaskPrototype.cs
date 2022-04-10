@@ -20,14 +20,4 @@ public class TaskPrototype : MonoBehaviour
         Destroy(gameObject);
         ///TODO: handle underlying task object
     }
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 }
