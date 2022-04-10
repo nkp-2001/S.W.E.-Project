@@ -48,15 +48,18 @@ public class ValueMang : MonoBehaviour
        }
        if (!dltoggle.isOn) 
        {
-           
 
-            DateTime deadline = new DateTime(2021 + year.value, month.value +1, day.value+1, hour.value, min.value,0);
+
+            // DateTime deadline = new DateTime(2021 + year.value, month.value +1, day.value+1, hour.value, min.value,0);
+            // print(deadline.ToString());
+            int[] deadline = { min.value*5, hour.value, day.value + 1,  month.value + 1, 2022 + year.value, };
+
             tm.create_newTask(titel.text, discrip.text, deadline, prio.value);
-            
+           
        }
        else
        {
-            tm.create_newTask(titel.text, discrip.text, DateTime.MinValue, prio.value);
+            tm.create_newTask(titel.text, discrip.text, null, prio.value); // null -> Datetime.minvalue wenn zurückwechsel auf Datetime
        }
 
         scenlaod.loadScene(0);

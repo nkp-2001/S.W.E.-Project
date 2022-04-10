@@ -5,6 +5,7 @@ using System.Globalization;
 using System;
 using System.IO;
 
+
 public class Taskmaster : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -27,15 +28,17 @@ public class Taskmaster : MonoBehaviour
     {
 
         loadlist();
+        readtest();
 
 
     }
-    public void create_newTask(string t, string d, DateTime dt, float p)
+    public void create_newTask(string t, string d, int[] dt, float p)
     {
         Task new_task = new Task(t, d, dt, p);
         dataSave.addnewtoList(new_task);
         savelist();
 
+        
 
     }
     private void savelist()
@@ -48,7 +51,9 @@ public class Taskmaster : MonoBehaviour
   
         }
       
+
         string saveJason = JsonUtility.ToJson(dataSave);
+        
         File.WriteAllText(dir + filename, saveJason);
 
 
@@ -61,14 +66,26 @@ public class Taskmaster : MonoBehaviour
         if (File.Exists(loadpath))
         {
             print("data found");
-            String readstring = File.ReadAllText(loadpath);
-            dataSave = JsonUtility.FromJson<SaveObject>(readstring);
+            string readstring = File.ReadAllText(loadpath);
+            if(readstring != "")
+            {
+                dataSave = JsonUtility.FromJson<SaveObject>(readstring);
+            }
+            
         }
         else
         {
             Debug.Log("Keine Datei vorhanden");
         }
         // tasklist = JsonUtility.FromJson<List<Task>>(json);
+    }
+    public void readtest()
+    {
+        foreach(Task i in dataSave.returnList())
+        {
+           print( i.getDeadline());
+        }
+        
     }
     
     //////////////////// Task
@@ -78,7 +95,8 @@ public class Taskmaster : MonoBehaviour
     {
         [SerializeField] string titel;
         [SerializeField] string description;
-        [SerializeField] DateTime deadline;
+        [SerializeField] int[] deadline;  /// DateTime nicht so leicht serizaible | dewegen int[]
+        
         [SerializeField] float prio;
         
 
@@ -86,19 +104,29 @@ public class Taskmaster : MonoBehaviour
         bool done = false;
         bool sucess = false;
 
-        public Task(string t, string d, DateTime dt, float p)
+        public Task(string t, string d, int[] dt, float p)
         {
             titel = t;
             description = d;
             deadline = dt;
             prio = p;
+
+          
+
+            
         }
 
         public string Titel { get => titel; set => titel = value; }
         public string Description { get => description; set => description = value; }
+        public string getDeadline()
+        {
+           
+            return deadline.ToString();
         
+        }
+        public float Prio { get => prio; set => prio = value; }
 
-        public void change(string t, string d, DateTime dt, int p)
+        public void change(string t, string d, int[] dt, int p)
         {
             titel = t;
             description = d;
@@ -118,11 +146,15 @@ public class Taskmaster : MonoBehaviour
         {
             tasklist.Add(addT);
         }
-        public void removenewtoList()
+        public void removefromList()
         {
-
+           
         }
-   }
+        public List<Task> returnList()
+        {
+            return tasklist;
+        }
+    }
 
 
 
