@@ -161,8 +161,20 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
-  m_IsOn: 1
+      m_Calls:
+      - m_Target: {fileID: 2814354614230403387}
+        m_TargetAssemblyTypeName: TaskPrototype, Assembly-CSharp
+        m_MethodName: SetTaskToDone
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  m_IsOn: 0
 --- !u!1 &2814354613829544590
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +390,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 89.5
+  m_fontSize: 24.2
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1

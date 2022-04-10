@@ -15,6 +15,12 @@ public class TaskPrototype : MonoBehaviour
         return transform.Find("TaskPreview").GetComponent<RectTransform>();
     }
 
+    public void SetTaskToDone()
+    {
+        Destroy(gameObject);
+        ///TODO: handle underlying task object
+    }
+
     void Start()
     {
         
