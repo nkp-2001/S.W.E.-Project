@@ -36,6 +36,8 @@ public class ValueMang : MonoBehaviour
         tm = FindObjectOfType<Taskmaster>();
         scenlaod = FindObjectOfType<Sceneloader>();  
 
+
+
         
     }
 

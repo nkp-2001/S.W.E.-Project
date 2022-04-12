@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Unity.Notifications.Android;
 
-public class CentralControl : MonoBehaviour
+public class CentralControl : MonoBehaviour //Nur für Testzwecke 
 {
     [SerializeField] RectTransform ProTest;
     [SerializeField] GameObject toplace;
