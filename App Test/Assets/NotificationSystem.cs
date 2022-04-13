@@ -7,7 +7,7 @@ public class NotificationSystem : MonoBehaviour
 {
     // Start is called before the first frame update //WIP
 
-    private void Awake()
+    private void Awake() 
     {
         Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Sigenton , Scenenwechesel löscht es nicht 
 
@@ -53,8 +53,11 @@ public class NotificationSystem : MonoBehaviour
         var notification = new AndroidNotification(
             "To-Do-List Alert", 
             "There are Task on your to-Do List",
-            System.DateTime.Now.AddDays(1),
-            new System.TimeSpan(1,0,0,0)); // 1 Tag Repeat
+            System.DateTime.Now.AddMinutes(5),
+            new System.TimeSpan(0,0,10,0)); // 1 Tag Repeat
+
+        //System.DateTime.Now.AddDays(1),
+        //    new System.TimeSpan(1, 0, 0, 0)); // 1 Tag Repeat
 
         AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "Channel-To-Do-List", 1000);
        

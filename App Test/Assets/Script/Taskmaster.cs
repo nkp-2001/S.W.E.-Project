@@ -57,6 +57,11 @@ public class Taskmaster : MonoBehaviour
         }
 
     }
+    public void removeall() // nur zum Testen sollte später entfernt werden
+    {
+        dataSave.removeall();
+        savelist();
+    }
     private void savelist()
     {
         string dir = Application.persistentDataPath + directory;
@@ -152,7 +157,13 @@ public class Taskmaster : MonoBehaviour
         {
             return tasklist;
         }
-    }
+
+        // Test funktion
+        public void removeall()
+        {
+            tasklist.Clear();
+        }
+   }
 
 
 
