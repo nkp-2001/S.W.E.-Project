@@ -64,7 +64,7 @@ public class ValueMang : MonoBehaviour
             tm.create_newTask(titel.text, discrip.text, null, prio.value); // null -> Datetime.minvalue wenn zurückwechsel auf Datetime
        }
 
-        scenlaod.loadScene(0);
+        scenlaod.loadScene(1);
    }
     public void grey()
     {
