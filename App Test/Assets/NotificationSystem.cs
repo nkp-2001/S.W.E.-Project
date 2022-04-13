@@ -25,7 +25,7 @@ public class NotificationSystem : MonoBehaviour
             Id = "Channel-To-Do-List",
             Name = "To-Do-List Alert",
             Importance = Importance.Default,
-            Description = "",
+            Description = "Channel for the App",
 
         };
         AndroidNotificationCenter.RegisterNotificationChannel(channel);
@@ -53,8 +53,8 @@ public class NotificationSystem : MonoBehaviour
         var notification = new AndroidNotification(
             "To-Do-List Alert", 
             "There are Task on your to-Do List",
-            System.DateTime.Now.AddMinutes(5),
-            new System.TimeSpan(0,0,10,0)); // 1 Tag Repeat
+            System.DateTime.Now.AddMinutes(1),
+            new System.TimeSpan(0,0,2,0)); // 1 Tag Repeat
 
         //System.DateTime.Now.AddDays(1),
         //    new System.TimeSpan(1, 0, 0, 0)); // 1 Tag Repeat

@@ -60,6 +60,7 @@ public class Taskmaster : MonoBehaviour
     public void removeall() // nur zum Testen sollte später entfernt werden
     {
         dataSave.removeall();
+        NotiSy.NotficationStatusReaction(true);
         savelist();
     }
     private void savelist()
