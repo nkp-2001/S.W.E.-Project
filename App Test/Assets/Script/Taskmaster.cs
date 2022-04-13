@@ -25,11 +25,12 @@ public class Taskmaster : MonoBehaviour
         }
 
         DontDestroyOnLoad(this.gameObject);
+
+        loadlist();
     }
     private void Start()
     {
         NotiSy = FindObjectOfType<NotificationSystem>();
-        loadlist();
         
 
 
@@ -47,7 +48,7 @@ public class Taskmaster : MonoBehaviour
         {
             NotiSy.NotficationStatusReaction(true);
         }
-        
+        savelist();
     }
     public void removeTask(Task tk)
     {
@@ -55,7 +56,7 @@ public class Taskmaster : MonoBehaviour
         {
             NotiSy.NotficationStatusReaction(true);
         }
-
+        savelist();
     }
     public void removeall() // nur zum Testen sollte später entfernt werden
     {
@@ -63,6 +64,12 @@ public class Taskmaster : MonoBehaviour
         NotiSy.NotficationStatusReaction(true);
         savelist();
     }
+
+    public List<Task> GetTasks()
+    {
+        return dataSave.returnList();
+    }
+
     private void savelist()
     {
         string dir = Application.persistentDataPath + directory;
