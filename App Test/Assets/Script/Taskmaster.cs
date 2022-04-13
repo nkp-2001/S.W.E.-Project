@@ -12,8 +12,10 @@ public class Taskmaster : MonoBehaviour
     [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
     string filename = "SavedList.txt";
+    [SerializeField] NotificationSystem NotiSy;
 
-    private void Awake()
+
+    private void Awake() 
     {
         Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Sigenton , Scenenwechesel löscht es nicht 
 
@@ -26,7 +28,7 @@ public class Taskmaster : MonoBehaviour
     }
     private void Start()
     {
-
+        NotiSy = FindObjectOfType<NotificationSystem>();
         loadlist();
         
 
@@ -37,8 +39,22 @@ public class Taskmaster : MonoBehaviour
         Task new_task = new Task(t, d, dt, p);
         dataSave.addnewtoList(new_task);
         savelist();
-
+        NotiSy.NotficationStatusReaction(false);
+    }
+    public void removeTask(int index)
+    {
+        if (dataSave.removefromList(index) == 0)
+        {
+            NotiSy.NotficationStatusReaction(true);
+        }
         
+    }
+    public void removeTask(Task tk)
+    {
+        if (dataSave.removefromList(tk) == 0)
+        {
+            NotiSy.NotficationStatusReaction(true);
+        }
 
     }
     private void savelist()
@@ -108,22 +124,8 @@ public class Taskmaster : MonoBehaviour
 
         public string Titel { get => titel; set => titel = value; }
         public string Description { get => description; set => description = value; }
-        public string getDeadline()
-        {
-           
-            return deadline.ToString();
-        
-        }
         public float Prio { get => prio; set => prio = value; }
-
-        public void change(string t, string d, int[] dt, int p)
-        {
-            titel = t;
-            description = d;
-            deadline = dt;
-            prio = p;
-        }
-
+        public int[] Deadline { get => deadline; set => deadline = value; }
     }
 
     /////// Save Object
@@ -136,9 +138,15 @@ public class Taskmaster : MonoBehaviour
         {
             tasklist.Add(addT);
         }
-        public void removefromList()
+        public int removefromList(int i)
         {
-           
+            tasklist.RemoveAt(i);
+            return tasklist.Count;
+        }
+        public int removefromList(Task tk)
+        {
+            tasklist.Remove(tk);
+            return tasklist.Count;
         }
         public List<Task> returnList()
         {
