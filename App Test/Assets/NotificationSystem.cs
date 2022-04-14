@@ -52,16 +52,25 @@ public class NotificationSystem : MonoBehaviour
     {
         var notification = new AndroidNotification(
             "To-Do-List Alert", 
-            "There are Task on your to-Do List",
-            System.DateTime.Now.AddSeconds(10),
-            new System.TimeSpan(0,0,1,0)); // 
-
-        //System.DateTime.Now.AddDays(1),
-        //    new System.TimeSpan(1, 0, 0, 0)); // 1 Tag Repeat
+            "There are Task on your to-Do List",  
+            System.DateTime.Now.AddDays(1),
+            new System.TimeSpan(1, 0, 0, 0)); // 1 Tag Repeat
 
         AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "Channel-To-Do-List", 1000);
-       
+
+    }
+    public void CheckSpeficNotifcation()
+    {
+
+    }
+    public void SendNewDeadlineNotification()
+    {
+
+    }
+    public void CanelDeadlineNotifction(int id)
+    {
+        AndroidNotificationCenter.CancelNotification(id);
     }
 
-  
+
 }
