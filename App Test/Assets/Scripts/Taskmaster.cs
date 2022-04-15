@@ -37,8 +37,17 @@ public class Taskmaster : MonoBehaviour
     }
     public void create_newTask(string t, string d, int[] dt, float p)
     {
-        Task new_task = new Task(t, d, dt, p);
-        dataSave.addnewtoList(new_task);
+        if (dt != null)
+        {
+            List<int> id_list = NotiSy.SendNewDeadlineNotifications(t, new DateTime(dt[4], dt[3], dt[2],dt[1],dt[0],0));
+            Task new_task = new Task(t, d, dt, p,id_list);
+            dataSave.addnewtoList(new_task);
+        }
+        else
+        {
+            Task new_task = new Task(t, d, dt, p);
+            dataSave.addnewtoList(new_task);
+        }  
         savelist();
         NotiSy.NotficationStatusReaction(false);
     }
@@ -48,6 +57,10 @@ public class Taskmaster : MonoBehaviour
         {
             NotiSy.NotficationStatusReaction(true);
         }
+        foreach (int i in dataSave.returnList()[index].DeadlineIDs)
+        {
+            NotiSy.CanelDeadlineNotifctions(i);
+        }
         savelist();
     }
     public void removeTask(Task tk)
@@ -55,6 +68,10 @@ public class Taskmaster : MonoBehaviour
         if (dataSave.removefromList(tk) == 0)
         {
             NotiSy.NotficationStatusReaction(true);
+        }
+        foreach (int i in tk.DeadlineIDs)
+        {
+            NotiSy.CanelDeadlineNotifctions(i);
         }
         savelist();
     }
@@ -115,7 +132,8 @@ public class Taskmaster : MonoBehaviour
         [SerializeField] string titel;
         [SerializeField] string description;
         [SerializeField] int[] deadline;  /// DateTime nicht so leicht serizaible | dewegen int[]
-        
+
+        [SerializeField] List<int> deadlineIDs = new List<int>();
         [SerializeField] float prio;
         
 
@@ -128,17 +146,22 @@ public class Taskmaster : MonoBehaviour
             titel = t;
             description = d;
             deadline = dt;
+            prio = p;       
+        }
+        public Task(string t, string d, int[] dt, float p,List<int> dlID)
+        {
+            titel = t;
+            description = d;
+            deadline = dt;
             prio = p;
-
-          
-
-            
+            deadlineIDs = dlID;
         }
 
         public string Titel { get => titel; set => titel = value; }
         public string Description { get => description; set => description = value; }
         public float Prio { get => prio; set => prio = value; }
         public int[] Deadline { get => deadline; set => deadline = value; }
+        public List<int> DeadlineIDs { get => deadlineIDs; set => deadlineIDs = value; }
     }
 
     /////// Save Object

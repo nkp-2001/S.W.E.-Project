@@ -66,8 +66,10 @@ public class NotificationSystem : MonoBehaviour
     {
 
     }
-    public void SendNewDeadlineNotifications(int dayleft,string titel, System.DateTime expireTime)
+    public List<int> SendNewDeadlineNotifications(string titel, System.DateTime expireTime) //Anders Notfication ID Speicher 
     {
+        int dayleft = (expireTime - System.DateTime.Now).Days;
+        List<int> Notifi_ID = new List<int>();
         List<AndroidNotification> allNotifi = new List<AndroidNotification>();
         if(dayleft >= 7)
         {
@@ -106,15 +108,24 @@ public class NotificationSystem : MonoBehaviour
              expireTime);
         /////////////////////////////////////////
         notificationDeadline.ShowTimestamp = true;
+        
         allNotifi.Add(notificationDeadline);
 
+        foreach (var noti in allNotifi)
+        {
+            Notifi_ID.Add(AndroidNotificationCenter.SendNotification(noti, "Channel-To-Do-List"));
+        }
+        return Notifi_ID;
 
 
 
     }
     public void CanelDeadlineNotifctions(int id)
     {
-      
+        if ( (AndroidNotificationCenter.CheckScheduledNotificationStatus(id) == NotificationStatus.Delivered) | (AndroidNotificationCenter.CheckScheduledNotificationStatus(id) == NotificationStatus.Scheduled))
+        {
+            AndroidNotificationCenter.CancelNotification(id);
+        }
     }
 
 
