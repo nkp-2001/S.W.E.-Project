@@ -53,25 +53,28 @@ public class Taskmaster : MonoBehaviour
     }
     public void removeTask(int index)
     {
-        if (dataSave.removefromList(index) == 0)
-        {
-            NotiSy.NotficationStatusReaction(true);
-        }
+       
         foreach (int i in dataSave.returnList()[index].DeadlineIDs)
         {
             NotiSy.CanelDeadlineNotifctions(i);
         }
-        savelist();
-    }
-    public void removeTask(Task tk)
-    {
-        if (dataSave.removefromList(tk) == 0)
+
+        if (dataSave.removefromList(index) == 0)
         {
             NotiSy.NotficationStatusReaction(true);
         }
+        savelist();
+    }
+    public void removeTask(Task tk)
+    {   
         foreach (int i in tk.DeadlineIDs)
         {
             NotiSy.CanelDeadlineNotifctions(i);
+        }
+
+        if (dataSave.removefromList(tk) == 0)
+        {
+            NotiSy.NotficationStatusReaction(true);
         }
         savelist();
     }
