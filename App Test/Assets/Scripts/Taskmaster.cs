@@ -39,6 +39,8 @@ public class Taskmaster : MonoBehaviour
     {
         if (dt != null)
         {
+            print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
+
             List<int> id_list = NotiSy.SendNewDeadlineNotifications(t, new DateTime(dt[4], dt[3], dt[2],dt[1],dt[0],0));
             Task new_task = new Task(t, d, dt, p,id_list);
             dataSave.addnewtoList(new_task);

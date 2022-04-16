@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Notifications.Android;
+using System;
 
 public class NotificationSystem : MonoBehaviour
 {
@@ -66,15 +67,23 @@ public class NotificationSystem : MonoBehaviour
     {
 
     }
-    public List<int> SendNewDeadlineNotifications(string titel, System.DateTime expireTime) //Anders Notfication ID Speicher 
+    public List<int> SendNewDeadlineNotifications(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz
     {
         int dayleft = (expireTime - System.DateTime.Now).Days;
         List<int> Notifi_ID = new List<int>();
         List<AndroidNotification> allNotifi = new List<AndroidNotification>();
+        print(dayleft);
+
         if(dayleft >= 7)
         {
-            for (int i = dayleft / 7; i <= 1; i++)
+            int weeks = dayleft / 7;
+            if (weeks > 4)
             {
+                weeks = 4;
+            }
+            for (int i = weeks; i >= 1; i--)
+            {
+               
                 var notificationDeadlines = new AndroidNotification(
                 "Deadline Alert:" + titel,
                 "You have " + i +" Week(s)  left to finish the task:" + titel,
@@ -91,7 +100,7 @@ public class NotificationSystem : MonoBehaviour
         {
             singeldayes = 6;
         }
-        for (int i = singeldayes; i <= 1; i--) 
+        for (int i = singeldayes; i >= 1; i--) 
         {
             var notificationDeadlines = new AndroidNotification(
               "Deadline Alert:" + titel,
@@ -111,21 +120,110 @@ public class NotificationSystem : MonoBehaviour
         
         allNotifi.Add(notificationDeadline);
 
+        print(allNotifi.Count);
         foreach (var noti in allNotifi)
         {
+           
+            print("FireDays" + noti.FireTime.Day);
             Notifi_ID.Add(AndroidNotificationCenter.SendNotification(noti, "Channel-To-Do-List"));
         }
         return Notifi_ID;
-
-
-
     }
+
+    public int SendNewDeadlineNotificationsX(string titel, DateTime expireTime)
+    {
+        List<int> t = new List<int>();
+        int id = 0;
+        foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
+        {
+            t.Add(Int32.Parse(x.Id));
+
+            print(Int32.Parse(x.Id));
+        }
+        t.Sort();
+        foreach (int i in t)
+        {
+           if (id == i)
+           {
+                id++;
+           } 
+        }
+        var channelDealineNew = new AndroidNotificationChannel()
+        {
+            Id = ""+ id,
+            Name = "To-Do-List Alert",
+            Importance = Importance.Default,
+            Description = "Channel for the App",
+
+        };
+        channelDealineNew.EnableVibration = true;
+        AndroidNotificationCenter.RegisterNotificationChannel(channelDealineNew);
+        //////////
+        int dayleft = (expireTime - System.DateTime.Now).Days;
+        List<int> Notifi_ID = new List<int>();
+        List<AndroidNotification> allNotifi = new List<AndroidNotification>();
+        print(dayleft);
+
+        if (dayleft >= 7)
+        {
+            int weeks = dayleft / 7;
+            if (weeks > 4)
+            {
+                weeks = 4;
+            }
+            for (int i = weeks; i >= 1; i--)
+            {
+
+                var notificationDeadlines = new AndroidNotification(
+                "Deadline Alert:" + titel,
+                "You have " + i + " Week(s)  left to finish the task:" + titel,
+                System.DateTime.Now.AddDays((dayleft / 7 - i) * 7));
+                /////////////////////////////////////////
+
+                notificationDeadlines.ShowTimestamp = true;
+                
+                AndroidNotificationCenter.SendNotification(notificationDeadlines, "" + id);
+            }
+        }
+
+        int singeldayes = dayleft % 7;
+        if (singeldayes == 0)
+        {
+            singeldayes = 6;
+        }
+        for (int i = singeldayes; i >= 1; i--)
+        {
+            var notificationDeadlines = new AndroidNotification(
+              "Deadline Alert:" + titel,
+              "You have " + i + " day(s)  left to finish the task:" + titel,
+              System.DateTime.Now.AddDays((dayleft - i)));
+            /////////////////////////////////////////
+            notificationDeadlines.ShowTimestamp = true;
+            AndroidNotificationCenter.SendNotification(notificationDeadlines, "" + id);
+        }
+
+        var notificationDeadline = new AndroidNotification(
+             "Deadline Alert:" + titel,
+             "The Deadline for " + titel + "has expired. You didn`t complete it in time",
+             expireTime);
+        /////////////////////////////////////////
+        notificationDeadline.ShowTimestamp = true;
+        AndroidNotificationCenter.SendNotification(notificationDeadline, "" + id);
+        ///////////////
+        return id;
+    }
+
     public void CanelDeadlineNotifctions(int id)
     {
         if ( (AndroidNotificationCenter.CheckScheduledNotificationStatus(id) == NotificationStatus.Delivered) | (AndroidNotificationCenter.CheckScheduledNotificationStatus(id) == NotificationStatus.Scheduled))
         {
+            
             AndroidNotificationCenter.CancelNotification(id);
         }
+    }
+    public void CanelDeadlineNotifctionsX(int id)
+    {
+        AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
 
 
