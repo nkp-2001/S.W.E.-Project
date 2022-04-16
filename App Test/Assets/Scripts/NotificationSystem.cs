@@ -133,12 +133,17 @@ public class NotificationSystem : MonoBehaviour
     public int SendNewDeadlineNotificationsX(string titel, DateTime expireTime)
     {
         List<int> t = new List<int>();
-        int id = 0;
+        int id = 1;
         foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
         {
-            t.Add(Int32.Parse(x.Id));
+            print(x.Id);
+            try
+            {
+               
+                t.Add(Int32.Parse(x.Id)); 
+            }
+            catch (FormatException) {   }
 
-            print(Int32.Parse(x.Id));
         }
         t.Sort();
         foreach (int i in t)
@@ -158,7 +163,8 @@ public class NotificationSystem : MonoBehaviour
         };
         channelDealineNew.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channelDealineNew);
-        //////////
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///
         int dayleft = (expireTime - System.DateTime.Now).Days;
         List<int> Notifi_ID = new List<int>();
         List<AndroidNotification> allNotifi = new List<AndroidNotification>();
@@ -206,7 +212,7 @@ public class NotificationSystem : MonoBehaviour
              "Deadline Alert:" + titel,
              "The Deadline for " + titel + "has expired. You didn`t complete it in time",
              expireTime);
-        /////////////////////////////////////////
+        ////////////////////////////////////////////////////
         notificationDeadline.ShowTimestamp = true;
         AndroidNotificationCenter.SendNotification(notificationDeadline, "" + id);
         ///////////////
