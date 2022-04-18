@@ -151,21 +151,24 @@ public class Taskmaster : MonoBehaviour
     }
     public void CheckDeadlinesTask()
     {
+        
 
-        foreach (Task t in (dataSave.returnList()).ToArray())
-        {
-            if (t.Deadline != null)
+
+            foreach (Task t in (dataSave.returnList()).ToArray())
             {
-                print("check");
-                if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
+                if (t.Deadline != null)
                 {
-                    print("Checkout");
-                    removeTask(t);
-                    FindObjectOfType<ToDoPageController>().FetchTasks(); // Refernez Sache anpssen Scenenwechesl etc beachten 
-                  
+                    print("check");
+                    if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
+                    {
+                        print("Checkout");
+                        removeTask(t);
+                        FindObjectOfType<ToDoPageController>().FetchTasks(); // Refernez Sache anpssen Scenenwechesl etc beachten 
+
+                    }
                 }
             }
-        }
+        
     }
     ///////////// Task ////////////
     [Serializable]

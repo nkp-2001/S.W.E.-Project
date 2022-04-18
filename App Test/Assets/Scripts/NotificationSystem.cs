@@ -201,6 +201,7 @@ public class NotificationSystem : MonoBehaviour
             singeldayes = 6;
             
         }
+       
         for (int i = singeldayes; i >= 1; i--)
         {
             print(i);
