@@ -140,7 +140,7 @@ public class NotificationSystem : MonoBehaviour
             try
             {
                
-                t.Add(Int32.Parse(x.Id)); 
+                t.Add(Int32.Parse(x.Id));
             }
             catch (FormatException) {   }
 
@@ -156,7 +156,7 @@ public class NotificationSystem : MonoBehaviour
         var channelDealineNew = new AndroidNotificationChannel()
         {
             Id = ""+ id,
-            Name = "To-Do-List Alert",
+            Name = "id" + id,
             Importance = Importance.Default,
             Description = "Channel for the App",
 
@@ -179,11 +179,14 @@ public class NotificationSystem : MonoBehaviour
             }
             for (int i = weeks; i >= 1; i--)
             {
+                DateTime DT = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, System.DateTime.Now.Day, expireTime.Hour, expireTime.Minute,0);
+                
+                
 
                 var notificationDeadlines = new AndroidNotification(
                 "Deadline Alert:" + titel,
                 "You have " + i + " Week(s)  left to finish the task:" + titel,
-                System.DateTime.Now.AddDays((dayleft / 7 - i) * 7));
+                DT.AddDays((dayleft / 7 - i) * 7));
                 /////////////////////////////////////////
 
                 notificationDeadlines.ShowTimestamp = true;
@@ -193,16 +196,21 @@ public class NotificationSystem : MonoBehaviour
         }
 
         int singeldayes = dayleft % 7;
-        if (singeldayes == 0)
+        if (singeldayes == 0 && dayleft != 0)
         {
             singeldayes = 6;
+            
         }
         for (int i = singeldayes; i >= 1; i--)
         {
+            print(i);
+
+            DateTime DT = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, System.DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
+
             var notificationDeadlines = new AndroidNotification(
               "Deadline Alert:" + titel,
               "You have " + i + " day(s)  left to finish the task:" + titel,
-              System.DateTime.Now.AddDays((dayleft - i)));
+              DT.AddDays((dayleft - i)));
             /////////////////////////////////////////
             notificationDeadlines.ShowTimestamp = true;
             AndroidNotificationCenter.SendNotification(notificationDeadlines, "" + id);

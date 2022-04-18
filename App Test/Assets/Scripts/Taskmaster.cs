@@ -14,6 +14,10 @@ public class Taskmaster : MonoBehaviour
     string filename = "SavedList.txt";
     [SerializeField] NotificationSystem NotiSy;
 
+    /// 
+   
+    /// 
+
 
     private void Awake() 
     {
@@ -36,7 +40,7 @@ public class Taskmaster : MonoBehaviour
 
 
     }
-    private void OnApplicationFocus(bool focus) //vllt noch/stattdessen Call Event dafür benutzten 
+    private void OnApplicationFocus(bool focus) //vllt noch/stattdessen anderes Call Event dafür benutzten 
     {
         CheckDeadlinesTask();
     }
@@ -147,13 +151,18 @@ public class Taskmaster : MonoBehaviour
     }
     public void CheckDeadlinesTask()
     {
-        foreach (Task t in dataSave.returnList())
+
+        foreach (Task t in (dataSave.returnList()).ToArray())
         {
             if (t.Deadline != null)
             {
-                if (System.DateTime.Now > new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
+                print("check");
+                if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
                 {
+                    print("Checkout");
                     removeTask(t);
+                    FindObjectOfType<ToDoPageController>().FetchTasks(); // Refernez Sache anpssen Scenenwechesl etc beachten 
+                  
                 }
             }
         }
