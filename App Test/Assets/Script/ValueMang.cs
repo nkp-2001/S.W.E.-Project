@@ -46,7 +46,8 @@ public class ValueMang : MonoBehaviour
         // Vald-check
        if ((titel.text == "")) //| (discrip.text == ""))
        {
-            return; //TODO: show prompt
+            MessageBox.ShowMessage("Please enter a Title");
+            return;
        }
        if (!dltoggle.isOn) 
        {
@@ -68,7 +69,8 @@ public class ValueMang : MonoBehaviour
             }
             else
             {
-                return; //TODO: show prompt
+                MessageBox.ShowMessage("Please enter a valid Date");
+                return;
             }
            
        }
