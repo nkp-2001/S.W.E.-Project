@@ -23,6 +23,10 @@ public class TaskPrototype : MonoBehaviour
         taskMaster.removeTask(task);
         Destroy(gameObject);
     }
+    public void SelfDestroyTest()
+    {
+        Destroy(gameObject);
+    }
 
     private void Start()
     {

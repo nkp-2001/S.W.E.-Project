@@ -14,6 +14,10 @@ public class Taskmaster : MonoBehaviour
     string filename = "SavedList.txt";
     [SerializeField] NotificationSystem NotiSy;
 
+    /// 
+   
+    /// 
+
 
     private void Awake() 
     {
@@ -31,19 +35,46 @@ public class Taskmaster : MonoBehaviour
     private void Start()
     {
         NotiSy = FindObjectOfType<NotificationSystem>();
-        
+
+        CheckDeadlinesTask();
 
 
     }
+    private void OnApplicationFocus(bool focus) //vllt noch/stattdessen anderes Call Event dafür benutzten 
+    {
+        CheckDeadlinesTask();
+    }
     public void create_newTask(string t, string d, int[] dt, float p)
     {
-        Task new_task = new Task(t, d, dt, p);
-        dataSave.addnewtoList(new_task);
+        if (dt != null)
+        {
+            print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
+
+            int id = NotiSy.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2],dt[1],dt[0],0));
+            Task new_task = new Task(t, d, dt, p,id);
+            dataSave.addnewtoList(new_task);
+        }
+        else
+        {
+            Task new_task = new Task(t, d, dt, p);
+            dataSave.addnewtoList(new_task);
+        }  
         savelist();
         NotiSy.NotficationStatusReaction(false);
     }
     public void removeTask(int index)
     {
+        /*
+         foreach (int i in dataSave.returnList()[index].DeadlineIDs)
+         {
+             NotiSy.CanelDeadlineNotifctions(i);
+         }
+        */ ///////////////////////////
+
+        NotiSy.CanelDeadlineNotifctionsX(dataSave.returnList()[index].DeadlineChannel_ID);
+
+        ////////////////////////////
+
         if (dataSave.removefromList(index) == 0)
         {
             NotiSy.NotficationStatusReaction(true);
@@ -52,6 +83,16 @@ public class Taskmaster : MonoBehaviour
     }
     public void removeTask(Task tk)
     {
+        /* foreach (int i in tk.)
+          {
+             NotiSy.CanelDeadlineNotifctions(i);
+          }
+        */ //////////////////////////
+
+        NotiSy.CanelDeadlineNotifctionsX(tk.DeadlineChannel_ID);
+
+        ////////////////////////////
+
         if (dataSave.removefromList(tk) == 0)
         {
             NotiSy.NotficationStatusReaction(true);
@@ -108,6 +149,27 @@ public class Taskmaster : MonoBehaviour
         }
         // tasklist = JsonUtility.FromJson<List<Task>>(json);
     }
+    public void CheckDeadlinesTask()
+    {
+        
+
+
+            foreach (Task t in (dataSave.returnList()).ToArray())
+            {
+                if (t.Deadline != null)
+                {
+                    print("check");
+                    if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
+                    {
+                        print("Checkout");
+                        removeTask(t);
+                        FindObjectOfType<ToDoPageController>().FetchTasks(); // Refernez Sache anpssen Scenenwechesl etc beachten 
+
+                    }
+                }
+            }
+        
+    }
     ///////////// Task ////////////
     [Serializable]
     public class Task
@@ -115,7 +177,8 @@ public class Taskmaster : MonoBehaviour
         [SerializeField] string titel;
         [SerializeField] string description;
         [SerializeField] int[] deadline;  /// DateTime nicht so leicht serizaible | dewegen int[]
-        
+
+        [SerializeField] int deadlineChannel_ID = 0;
         [SerializeField] float prio;
         
 
@@ -128,17 +191,22 @@ public class Taskmaster : MonoBehaviour
             titel = t;
             description = d;
             deadline = dt;
+            prio = p;       
+        }
+        public Task(string t, string d, int[] dt, float p,int dlID)
+        {
+            titel = t;
+            description = d;
+            deadline = dt;
             prio = p;
-
-          
-
-            
+            deadlineChannel_ID = dlID;
         }
 
         public string Titel { get => titel; set => titel = value; }
         public string Description { get => description; set => description = value; }
         public float Prio { get => prio; set => prio = value; }
         public int[] Deadline { get => deadline; set => deadline = value; }
+        public int DeadlineChannel_ID { get => deadlineChannel_ID; set => deadlineChannel_ID = value; }
     }
 
     /////// Save Object
