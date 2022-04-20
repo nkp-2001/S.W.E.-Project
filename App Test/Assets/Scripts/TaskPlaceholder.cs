@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class TaskPlaceholder : MonoBehaviour
 {
-    public List<string> tasks = new List<string>();
+    public List<string> tasks = new List<string>(); 
 }
