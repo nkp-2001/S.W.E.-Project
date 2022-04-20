@@ -46,17 +46,32 @@ public class ValueMang : MonoBehaviour
         // Vald-check
        if ((titel.text == "")) //| (discrip.text == ""))
        {
+            MessageBox.ShowMessage("Please enter a Title");
             return;
        }
        if (!dltoggle.isOn) 
        {
 
-
             // DateTime deadline = new DateTime(2021 + year.value, month.value +1, day.value+1, hour.value, min.value,0);
             // print(deadline.ToString());
             int[] deadline = { min.value*5, hour.value, day.value + 1,  month.value + 1, 2022 + year.value, };
+            int yearV = deadline[4],
+                monthV = deadline[3],
+                dayV = deadline[2],
+                hourV = deadline[1],
+                minuteV = deadline[0];
 
-            tm.create_newTask(titel.text, discrip.text, deadline, prio.value);
+            string deadlineString = yearV + "-" + monthV.ToString("D2") + "-" + dayV.ToString("D2") + " " + hourV.ToString("D2") + ":" + minuteV.ToString("D2") + ":00.0";
+
+            if (DateTime.TryParse(deadlineString, out _))
+            {
+                tm.create_newTask(titel.text, discrip.text, deadline, prio.value);
+            }
+            else
+            {
+                MessageBox.ShowMessage("Please enter a valid Date");
+                return;
+            }
            
        }
        else

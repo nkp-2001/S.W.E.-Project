@@ -9,9 +9,8 @@ public class ToDoPageController : MonoBehaviour
     [SerializeField] private Transform taskContainer;
     [SerializeField] private GameObject taskPrototype;
 
-    public void AddTask(Taskmaster.Task t) ///TODO: string should be an actual task object
+    public void AddTask(Taskmaster.Task t)
     {
-        ///TODO: make prototype contruct instance
         GameObject tp = Instantiate(taskPrototype);
         tp.GetComponent<TaskPrototype>().Setup(t, taskContainer);
     }
