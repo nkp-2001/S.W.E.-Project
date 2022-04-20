@@ -18,16 +18,6 @@ public class TaskPrototype : MonoBehaviour
         gameObject.SetActive(true);
     }
 
-    public float GetHeight()
-    {
-        return transform.Find("TaskPreview").GetComponent<RectTransform>().rect.height;
-    }
-
-    public RectTransform GetRectTransform()
-    {
-        return transform.Find("TaskPreview").GetComponent<RectTransform>();
-    }
-
     public void SetTaskToDone()
     {
         taskMaster.removeTask(task);

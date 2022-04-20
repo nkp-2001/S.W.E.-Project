@@ -61,7 +61,7 @@ public class ValueMang : MonoBehaviour
                 hourV = deadline[1],
                 minuteV = deadline[0];
 
-            string deadlineString = "" + yearV + "-" + monthV.ToString("D2") + "-" + dayV.ToString("D2") + " " + hourV.ToString("D2") + ":" + minuteV.ToString("D2") + ":00.0";
+            string deadlineString = yearV + "-" + monthV.ToString("D2") + "-" + dayV.ToString("D2") + " " + hourV.ToString("D2") + ":" + minuteV.ToString("D2") + ":00.0";
 
             if (DateTime.TryParse(deadlineString, out _))
             {
