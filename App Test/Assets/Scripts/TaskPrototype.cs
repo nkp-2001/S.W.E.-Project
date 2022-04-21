@@ -12,7 +12,19 @@ public class TaskPrototype : MonoBehaviour
     {
         task = t;
 
-        transform.Find("TaskPreview").GetComponentInChildren<TextMeshProUGUI>().text = t.Titel;
+       // transform.Find("TaskPreview").GetComponentInChildren<TextMeshProUGUI>().text = t.Titel;
+        transform.Find("TaskPreview").GetComponentsInChildren<TextMeshProUGUI>()[0].text = t.Titel;
+       
+        if (t.Deadline != null && t.Deadline.Length !=0)
+        {
+           transform.Find("TaskPreview").GetComponentsInChildren<TextMeshProUGUI>()[1].text = 
+                "DT:" + string.Format("{0:00}", t.Deadline[2]) + "." + string.Format("{0:00}", t.Deadline[3]) + "." 
+                + t.Deadline[4] + "|" + string.Format("{0:00}", t.Deadline[1]) + ":" + string.Format("{0:00}", t.Deadline[0]);
+        }
+        
+       
+
+
         transform.SetParent(taskContainer);
         transform.localScale = Vector3.one;
         gameObject.SetActive(true);
