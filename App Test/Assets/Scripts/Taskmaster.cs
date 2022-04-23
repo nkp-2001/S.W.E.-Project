@@ -58,6 +58,7 @@ public class Taskmaster : MonoBehaviour
         savelist();
         NotiSy.NotficationStatusReaction(false);
     }
+    
     public void removeTask(int index)
     {
         /*
@@ -229,6 +230,12 @@ public class Taskmaster : MonoBehaviour
         {
             return tasklist;
         }
+        public void ChangeTask(Task altertT)
+        {
+            
+        }
+
+
 
         // Test funktion
         public void removeall()
