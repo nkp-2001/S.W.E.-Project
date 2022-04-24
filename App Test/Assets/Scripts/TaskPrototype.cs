@@ -43,7 +43,12 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
 
     public void SetTaskToDone()
     {
-        Hidediscrip();
+
+        for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Verhinderer 
+        {
+            transform.parent.GetChild(index).GetComponent<TaskPrototype>().Hidediscrip();
+        }
+
         taskMaster.removeTask(task);
         Destroy(gameObject);
     }
