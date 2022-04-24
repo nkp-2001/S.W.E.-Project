@@ -79,7 +79,7 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
         {
 
             RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(2500, rect.sizeDelta.y +900); 
+            rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y +900); 
 
         }
     }
@@ -92,7 +92,7 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
             for (int index = transform.GetSiblingIndex()-1; index >= 0; index--)
             {
                 RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
-                rect.sizeDelta = new Vector2(2500, rect.sizeDelta.y - 900);
+                rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y - 900);
             }
             //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rt.rect.height * 1/6);
         }
