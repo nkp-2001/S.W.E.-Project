@@ -9,13 +9,17 @@ public class ValueMang : MonoBehaviour
 {
     TMP_InputField titel;
     TMP_InputField discrip;
-    Toggle dltoggle;
+    [SerializeField] Toggle dltoggle;
+
     TMP_Dropdown day;
     TMP_Dropdown month;
     TMP_Dropdown year;
     TMP_Dropdown hour;
     TMP_Dropdown min;
-    Slider prio;
+
+    DatePicker datePicker;
+
+    [SerializeField] Slider prio;
     Taskmaster tm;
     Sceneloader scenlaod;
 
@@ -24,15 +28,20 @@ public class ValueMang : MonoBehaviour
     {
         titel = transform.GetChild(0).GetComponent<TMP_InputField>();
         discrip = transform.GetChild(1).GetComponent<TMP_InputField>();
-        dltoggle = transform.GetChild(2).GetComponent<Toggle>();
+       
+
+        datePicker = FindObjectOfType<DatePicker>();
+
+        /*
         day = transform.GetChild(3).GetComponent<TMP_Dropdown>();
         month = transform.GetChild(4).GetComponent<TMP_Dropdown>();
         year = transform.GetChild(5).GetComponent<TMP_Dropdown>();
 
         hour = transform.GetChild(6).GetComponent<TMP_Dropdown>();
         min = transform.GetChild(7).GetComponent<TMP_Dropdown>();
+        */
 
-        prio = transform.GetChild(8).GetComponent<Slider>();
+        
         tm = FindObjectOfType<Taskmaster>();
         scenlaod = FindObjectOfType<Sceneloader>();  
 
@@ -49,30 +58,11 @@ public class ValueMang : MonoBehaviour
             MessageBox.ShowMessage("Please enter a Title");
             return;
        }
-       if (!dltoggle.isOn) 
+       if (dltoggle.isOn)
        {
-
-            // DateTime deadline = new DateTime(2021 + year.value, month.value +1, day.value+1, hour.value, min.value,0);
-            // print(deadline.ToString());
-            int[] deadline = { min.value*5, hour.value, day.value + 1,  month.value + 1, 2022 + year.value, };
-            int yearV = deadline[4],
-                monthV = deadline[3],
-                dayV = deadline[2],
-                hourV = deadline[1],
-                minuteV = deadline[0];
-
-            string deadlineString = yearV + "-" + monthV.ToString("D2") + "-" + dayV.ToString("D2") + " " + hourV.ToString("D2") + ":" + minuteV.ToString("D2") + ":00.0";
-
-            if (DateTime.TryParse(deadlineString, out _))
-            {
-                tm.create_newTask(titel.text, discrip.text, deadline, prio.value);
-            }
-            else
-            {
-                MessageBox.ShowMessage("Please enter a valid Date");
-                return;
-            }
-           
+            DateTime dtraw = datePicker.GetSelectedDate();
+            int[] dt = { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
+            tm.create_newTask(titel.text, discrip.text,dt, prio.value);
        }
        else
        {
