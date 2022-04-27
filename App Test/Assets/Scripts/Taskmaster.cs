@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Globalization;
 using System;
 using System.IO;
-
+using System.Linq; 
 
 public class Taskmaster : MonoBehaviour
 {
@@ -21,7 +21,7 @@ public class Taskmaster : MonoBehaviour
 
     private void Awake() 
     {
-        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Sigenton , Scenenwechesel löscht es nicht 
+        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Sigenton , Scenenwechesel l?scht es nicht 
 
         if (objs.Length > 1)
         {
@@ -40,7 +40,7 @@ public class Taskmaster : MonoBehaviour
 
 
     }
-    private void OnApplicationFocus(bool focus) //vllt noch/stattdessen anderes Call Event dafür benutzten 
+    private void OnApplicationFocus(bool focus) //vllt noch/stattdessen anderes Call Event daf?r benutzten 
     {
         CheckDeadlinesTask();
     }
@@ -99,7 +99,7 @@ public class Taskmaster : MonoBehaviour
         }
         savelist();
     }
-    public void removeall() // nur zum Testen sollte später entfernt werden
+    public void removeall() // nur zum Testen sollte sp?ter entfernt werden
     {
         dataSave.removeall();
         NotiSy.NotficationStatusReaction(true);
@@ -109,6 +109,22 @@ public class Taskmaster : MonoBehaviour
     public List<Task> GetTasks()
     {
         return dataSave.returnList();
+    }
+
+
+    public List<Task> GetSortedTasks()
+    {
+        List<Task> unsort = dataSave.returnList();
+
+        List<Task> sorted = unsort.OrderBy(t => t.DeadlineChannel_ID)
+            .ThenBy(t => t.Prio)
+            .ThenByDescending(t => {
+                if (t.DeadlineChannel_ID == 0) return 0;
+                return new DateTimeOffset(new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0)).ToUnixTimeSeconds();
+            })
+            .ToList();
+
+        return sorted;
     }
 
     private void savelist()
@@ -170,6 +186,8 @@ public class Taskmaster : MonoBehaviour
             }
         
     }
+
+
     ///////////// Task ////////////
     [Serializable]
     public class Task

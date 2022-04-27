@@ -31,7 +31,7 @@ public class ToDoPageController : MonoBehaviour
 
         if (taskmaster.GetTasks() is not null)
         {
-            foreach (Taskmaster.Task task in taskmaster.GetTasks())
+            foreach (Taskmaster.Task task in taskmaster.GetSortedTasks())
             {
                 AddTask(task);
             }
