@@ -14,10 +14,6 @@ public class Taskmaster : MonoBehaviour
     string filename = "SavedList.txt";
     [SerializeField] NotificationSystem NotiSy;
 
-    /// 
-   
-    /// 
-
 
     private void Awake() 
     {
@@ -40,12 +36,14 @@ public class Taskmaster : MonoBehaviour
 
 
     }
-    private void OnApplicationFocus(bool focus) //vllt noch/stattdessen anderes Call Event daf?r benutzten 
+
+    private void OnApplicationFocus(bool focus) // vllt noch stattdessen anderes Call Event dafür benutzten
     {
         CheckDeadlinesTask();
     }
     public void create_newTask(string t, string d, int[] dt, float p)
     {
+        //Hier muss noch ein Namecheck rein , keine Doppelten
         if (dt != null)
         {
             print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
@@ -62,6 +60,7 @@ public class Taskmaster : MonoBehaviour
         savelist();
         NotiSy.NotficationStatusReaction(false);
     }
+    
     public void removeTask(int index)
     {
         /*
@@ -99,13 +98,20 @@ public class Taskmaster : MonoBehaviour
         }
         savelist();
     }
-    public void removeall() // nur zum Testen sollte sp?ter entfernt werden
+    public void ChangeTask(Task oldtask,string t, string d, int[] dt, float p)
     {
-        dataSave.removeall();
-        NotiSy.NotficationStatusReaction(true);
+        if (oldtask.Deadline != dt)
+        {
+            NotiSy.CanelDeadlineNotifctionsX(oldtask.DeadlineChannel_ID);
+            int new_id = NotiSy.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            dataSave.ChangeTask(oldtask,t, d, dt, p, new_id);
+        }
+        else
+        {
+            dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID);
+        }
         savelist();
     }
-
     public List<Task> GetTasks()
     {
         return dataSave.returnList();
@@ -167,14 +173,12 @@ public class Taskmaster : MonoBehaviour
     }
     public void CheckDeadlinesTask()
     {
-        
-
-
             foreach (Task t in (dataSave.returnList()).ToArray())
             {
-                if (t.Deadline != null)
-                {
-                    print("check");
+                if (t.Deadline != null && t.Deadline.Length != 0)
+            {
+                    
+                    //
                     if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
                     {
                         print("Checkout");
@@ -186,7 +190,6 @@ public class Taskmaster : MonoBehaviour
             }
         
     }
-
 
     ///////////// Task ////////////
     [Serializable]
@@ -251,12 +254,21 @@ public class Taskmaster : MonoBehaviour
         {
             return tasklist;
         }
+        public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id)
+        {
+            int index = tasklist.FindLastIndex(task => task.Titel == t); //Kann nur klappen wenn allles Unterschidlich heißt anpassen!!!
+            tasklist[index] = new Task(t, d, dt, p,id);
+            
+        }
+
+
 
         // Test funktion
         public void removeall()
         {
             tasklist.Clear();
         }
+        
    }
 
 
