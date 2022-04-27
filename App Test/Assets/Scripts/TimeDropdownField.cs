@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using TMPro;
 
 
-public class TimeDropdownField : MonoBehaviour
+public class TimeDropdownField : MonoBehaviour, IObservee<int>
 {
-
     private TMP_Dropdown dropdown;
     private Dictionary<string, int> indexOfOption = new Dictionary<string, int>();
 
@@ -22,8 +22,6 @@ public class TimeDropdownField : MonoBehaviour
 
     public void SetOptions(List<string> options)
     {
-
-        Debug.Log("setting options list");
         indexOfOption.Clear();
 
         int index = 0;
@@ -39,7 +37,6 @@ public class TimeDropdownField : MonoBehaviour
 
     public void SetCurrentOption(string option)
     {
-        Debug.Log("setting current option");
         dropdown.SetValueWithoutNotify(indexOfOption[option]);
     }
 
@@ -50,6 +47,12 @@ public class TimeDropdownField : MonoBehaviour
     
     public string GetCurrentOption()
     {
-        return dropdown.options[dropdown.value].ToString();
+        return dropdown.options[dropdown.value].text;
+    }
+
+    public void AddObserver(IObserver<int> observer)
+    {
+        UnityAction<int> notifyObserver = observer.Notify;
+        dropdown.onValueChanged.AddListener(notifyObserver);
     }
 }

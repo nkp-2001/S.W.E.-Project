@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DatePicker : MonoBehaviour
+public class DatePicker : MonoBehaviour, IObserver<int>
 {
     [SerializeField] private Toggle isInteractibleToggle;
     [SerializeField] private TimeDropdownField hourDropdown, minuteDropdown, dayDropdown, monthDropdown, yearDropdown;
@@ -19,30 +19,32 @@ public class DatePicker : MonoBehaviour
         InitializeDropdowns();
     }
 
-    public void InitializeDropdowns()
+    private void InitializeDropdowns()
     {
+        DateTime currentDateTime = DateTime.Now;
+
         List<string> hourOptions = new List<string>();
         for (int h = 0; h <= 23; ++h)
         {
             hourOptions.Add(h.ToString());
         }
+
         List<string> minuteOptions = new List<string>();
         for (int m = 0; m <= 59; ++m)
         {
             minuteOptions.Add(m.ToString());
         }
-        List<string> dayOptions = new List<string>();
-        for (int d = 1; d <= 31; ++d)
-        {
-            dayOptions.Add(d.ToString());
-        }
+
+        List<string> dayOptions = GetStringListOfDaysInMonth(currentDateTime.Year, currentDateTime.Month);
+
         List<string> monthOptions = new List<string>();
         for (int month = 1; month <= 12; ++month)
         {
             monthOptions.Add(month.ToString());
         }
+
         List<string> yearOptions = new List<string>();
-        for (int y = DateTime.Now.Year; y <= DateTime.Now.Year + 100; ++y)
+        for (int y = currentDateTime.Year; y <= currentDateTime.Year + 100; ++y)
         {
             yearOptions.Add(y.ToString());
         }
@@ -53,8 +55,8 @@ public class DatePicker : MonoBehaviour
         monthDropdown.SetOptions(monthOptions);
         yearDropdown.SetOptions(yearOptions);
 
-
-        DateTime currentDateTime = DateTime.Now;
+        monthDropdown.AddObserver(this);
+        yearDropdown.AddObserver(this);
 
         hourDropdown.SetCurrentOption(currentDateTime.Hour.ToString());
         minuteDropdown.SetCurrentOption(currentDateTime.Minute.ToString());
@@ -63,6 +65,19 @@ public class DatePicker : MonoBehaviour
         yearDropdown.SetCurrentOption(currentDateTime.Year.ToString());
 
         SetInteractability();
+    }
+
+    private List<string> GetStringListOfDaysInMonth(int year, int month)
+    {
+        List<string> daysInSelectedMonth = new List<string>();
+
+        int numDaysInSelectedMonth = DateTime.DaysInMonth(year, month);
+        for (int day = 1; day <= numDaysInSelectedMonth; ++day)
+        {
+            daysInSelectedMonth.Add(day.ToString());
+        }
+
+        return daysInSelectedMonth;
     }
 
     public void SetInteractability()
@@ -79,13 +94,25 @@ public class DatePicker : MonoBehaviour
         SetInteractability();
     }
 
-    public DateTime GetPickedDate()
+    public void Notify<T>(T _)
+    {
+        DateTime selectedDate = GetSelectedDate();
+        List<string> daysInSelectedMonth = GetStringListOfDaysInMonth(selectedDate.Year, selectedDate.Month);
+        dayDropdown.SetOptions(daysInSelectedMonth);
+    }
+
+    public DateTime GetSelectedDate()
     {
         string dateTimeString = yearDropdown.GetCurrentOption() + "-" + monthDropdown.GetCurrentOption() + "-" + dayDropdown.GetCurrentOption() 
                                     + " " + hourDropdown.GetCurrentOption() + ":" + minuteDropdown.GetCurrentOption() + ":00.0";
 
         DateTime dateTime;
         bool success = DateTime.TryParse(dateTimeString, out dateTime);
+
+        if (!success)
+        {
+            return DateTime.Now;
+        }
 
         return dateTime;
     }
