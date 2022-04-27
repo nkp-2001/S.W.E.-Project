@@ -22,7 +22,7 @@ public class ToDoPageController : MonoBehaviour
         
         for(int i = 0; i < taskContainer.childCount; i++)
         {
-            print("" +i+ "__Weg_Fetsch" + taskContainer.transform.GetChild(i).gameObject);
+           // print("" +i+ "__Weg_Fetsch" + taskContainer.transform.GetChild(i).gameObject);
             Destroy(taskContainer.transform.GetChild(i).gameObject);    
    
 
