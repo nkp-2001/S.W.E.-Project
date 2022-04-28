@@ -8,16 +8,15 @@ using System.Linq;
 
 public class Taskmaster : MonoBehaviour
 {
-    // Start is called before the first frame update
     [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
     string filename = "SavedList.txt";
-    [SerializeField] NotificationSystem NotiSy;
+    [SerializeField] NotificationSystem notificationSystem;
 
 
     private void Awake() 
     {
-        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Sigenton , Scenenwechesel l?scht es nicht 
+        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Singleton , Scenenwechesel loescht es nicht 
 
         if (objs.Length > 1)
         {
@@ -26,101 +25,83 @@ public class Taskmaster : MonoBehaviour
 
         DontDestroyOnLoad(this.gameObject);
 
-        loadlist();
+        LoadList();
     }
     private void Start()
     {
-        NotiSy = FindObjectOfType<NotificationSystem>();
+        notificationSystem = FindObjectOfType<NotificationSystem>();
 
         CheckDeadlinesTask();
-
-
     }
 
     private void OnApplicationFocus(bool focus) // vllt noch stattdessen anderes Call Event dafür benutzten
     {
         CheckDeadlinesTask();
     }
-    public void create_newTask(string t, string d, int[] dt, float p)
+    public void CreateNewTask(string t, string d, int[] dt, float p)
     {
         //Hier muss noch ein Namecheck rein , keine Doppelten
         if (dt != null)
         {
             print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
 
-            int id = NotiSy.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2],dt[1],dt[0],0));
+            int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2],dt[1],dt[0],0));
             Task new_task = new Task(t, d, dt, p,id);
-            dataSave.addnewtoList(new_task);
+            dataSave.AddNewToList(new_task);
         }
         else
         {
             Task new_task = new Task(t, d, dt, p);
-            dataSave.addnewtoList(new_task);
+            dataSave.AddNewToList(new_task);
         }  
-        savelist();
-        NotiSy.NotficationStatusReaction(false);
+        SaveList();
+        notificationSystem.NotficationStatusReaction(false);
     }
     
-    public void removeTask(int index)
+    public void RemoveTask(int index)
     {
-        /*
-         foreach (int i in dataSave.returnList()[index].DeadlineIDs)
-         {
-             NotiSy.CanelDeadlineNotifctions(i);
-         }
-        */ ///////////////////////////
+        notificationSystem.CancelDeadlineNotificationsX(dataSave.GetList()[index].DeadlineChannel_ID);
 
-        NotiSy.CanelDeadlineNotifctionsX(dataSave.returnList()[index].DeadlineChannel_ID);
-
-        ////////////////////////////
-
-        if (dataSave.removefromList(index) == 0)
+        if (dataSave.RemoveFromList(index) == 0)
         {
-            NotiSy.NotficationStatusReaction(true);
+            notificationSystem.NotficationStatusReaction(true);
         }
-        savelist();
+        SaveList();
     }
-    public void removeTask(Task tk)
+    public void RemoveTask(Task tk)
     {
-        /* foreach (int i in tk.)
-          {
-             NotiSy.CanelDeadlineNotifctions(i);
-          }
-        */ //////////////////////////
 
-        NotiSy.CanelDeadlineNotifctionsX(tk.DeadlineChannel_ID);
+        notificationSystem.CancelDeadlineNotificationsX(tk.DeadlineChannel_ID);
 
-        ////////////////////////////
-
-        if (dataSave.removefromList(tk) == 0)
+        if (dataSave.RemoveFromList(tk) == 0)
         {
-            NotiSy.NotficationStatusReaction(true);
+            notificationSystem.NotficationStatusReaction(true);
         }
-        savelist();
+        SaveList();
     }
     public void ChangeTask(Task oldtask,string t, string d, int[] dt, float p)
     {
         if (oldtask.Deadline != dt)
         {
-            NotiSy.CanelDeadlineNotifctionsX(oldtask.DeadlineChannel_ID);
-            int new_id = NotiSy.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
+            int new_id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
             dataSave.ChangeTask(oldtask,t, d, dt, p, new_id);
         }
         else
         {
             dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID);
         }
-        savelist();
+        SaveList();
     }
     public List<Task> GetTasks()
     {
-        return dataSave.returnList();
+        return dataSave.GetList();
     }
 
 
     public List<Task> GetSortedTasks()
     {
-        List<Task> unsort = dataSave.returnList();
+        List<Task> unsort = dataSave.GetList();
 
         List<Task> sorted = unsort.OrderBy(t => t.DeadlineChannel_ID)
             .ThenBy(t => t.Prio)
@@ -133,7 +114,7 @@ public class Taskmaster : MonoBehaviour
         return sorted;
     }
 
-    private void savelist()
+    private void SaveList()
     {
         string dir = Application.persistentDataPath + directory;
         
@@ -150,39 +131,34 @@ public class Taskmaster : MonoBehaviour
 
 
     }
-    private void loadlist()
+    private void LoadList()
     {
         string loadpath = Application.persistentDataPath + directory + filename;
         print(loadpath);
 
         if (File.Exists(loadpath))
         {
-            print("data found");
             string readstring = File.ReadAllText(loadpath);
             if(readstring != "")
             {
                 dataSave = JsonUtility.FromJson<SaveObject>(readstring);
-            }
-            
+            }         
         }
         else
         {
             Debug.Log("Keine Datei vorhanden");
         }
-        // tasklist = JsonUtility.FromJson<List<Task>>(json);
     }
     public void CheckDeadlinesTask()
     {
-            foreach (Task t in (dataSave.returnList()).ToArray())
+            foreach (Task t in (dataSave.GetList()).ToArray())
             {
                 if (t.Deadline != null && t.Deadline.Length != 0)
             {
-                    
-                    //
                     if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
                     {
                         print("Checkout");
-                        removeTask(t);
+                        RemoveTask(t);
                         FindObjectOfType<ToDoPageController>().FetchTasks(); // Refernez Sache anpssen Scenenwechesl etc beachten 
 
                     }
@@ -236,41 +212,28 @@ public class Taskmaster : MonoBehaviour
    public class SaveObject
    {
         [SerializeField] List<Task> tasklist = new List<Task>();
-        public void addnewtoList(Task addT)
+        public void AddNewToList(Task addT)
         {
             tasklist.Add(addT);
         }
-        public int removefromList(int i)
+        public int RemoveFromList(int i)
         {
             tasklist.RemoveAt(i);
             return tasklist.Count;
         }
-        public int removefromList(Task tk)
+        public int RemoveFromList(Task tk)
         {
             tasklist.Remove(tk);
             return tasklist.Count;
         }
-        public List<Task> returnList()
+        public List<Task> GetList()
         {
             return tasklist;
         }
         public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id)
         {
             int index = tasklist.FindLastIndex(task => task.Titel == t); //Kann nur klappen wenn allles Unterschidlich heißt anpassen!!!
-            tasklist[index] = new Task(t, d, dt, p,id);
-            
-        }
-
-
-
-        // Test funktion
-        public void removeall()
-        {
-            tasklist.Clear();
-        }
-        
+            tasklist[index] = new Task(t, d, dt, p,id);     
+        }        
    }
-
-
-
 }
