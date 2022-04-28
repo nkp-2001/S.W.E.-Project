@@ -8,15 +8,12 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
     private Taskmaster taskMaster;
     private Taskmaster.Task task;
 
-    TextMeshProUGUI discrTM;
     GameObject dircTobj;
-    RectTransform rt;
 
     public void Setup(Taskmaster.Task t, Transform taskContainer)
     {
         task = t;
 
-       // transform.Find("TaskPreview").GetComponentInChildren<TextMeshProUGUI>().text = t.Titel;
         transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>()[0].text = t.Titel;
        
         if (t.Deadline != null && t.Deadline.Length !=0)
@@ -27,14 +24,8 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
         }
         dircTobj = transform.GetChild(0).GetChild(2).gameObject;
 
-       // discrTM = transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>()[2];
         dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priotät: " + t.Prio + "\n Discirption: " + t.Description;
-        //  discrTM.enabled = false;
         dircTobj.SetActive(false);
-
-
-
-
 
         transform.SetParent(taskContainer);
         transform.localScale = Vector3.one;
@@ -46,45 +37,42 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
 
         for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Verhinderer 
         {
-            transform.parent.GetChild(index).GetComponent<TaskPrototype>().Hidediscrip();
+            transform.parent.GetChild(index).GetComponent<TaskPrototype>().HideDescription();
         }
 
-        taskMaster.removeTask(task);
+        taskMaster.RemoveTask(task);
         Destroy(gameObject);
     }
     public void SelfDestroyTest()
     {
         Destroy(gameObject);
     }
-    public void ToogleDiscrip()
+    public void ToggleDescription()
     {
         if (dircTobj.activeSelf == true)
         {
-            Hidediscrip();
+            HideDescription();
         }
         else
         {
-            Showdisrip();
+            ShowDescription();
         }
 
     }
 
-    private void Showdisrip()
+    private void ShowDescription()
     {
         dircTobj.SetActive(true);
-
-        // rt.SetPositionAndRotation(new Vector3(rt.position.x, rt.position.y + 2, rt.position.z),Quaternion.identity);
 
         for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
         {
 
             RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y +900); 
-
         }
     }
 
-    public void Hidediscrip()
+    public void HideDescription()
     {
         if (dircTobj.activeSelf == true)
         {
@@ -94,13 +82,11 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
                 RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
                 rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y - 900);
             }
-            //rt.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, rt.rect.height * 1/6);
         }
     }
 
     private void Start()
     {
         taskMaster = FindObjectOfType<Taskmaster>();
-        rt = GetComponent<RectTransform>();
     }
 }

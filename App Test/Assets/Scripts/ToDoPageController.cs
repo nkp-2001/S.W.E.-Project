@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 
 
@@ -17,17 +16,11 @@ public class ToDoPageController : MonoBehaviour
 
     public void FetchTasks()
     {
-        print("FetschON");
-        //clear and fill UI with existing tasks
-        
+        //clear and fill UI with existing tasks   
         for(int i = 0; i < taskContainer.childCount; i++)
         {
-           // print("" +i+ "__Weg_Fetsch" + taskContainer.transform.GetChild(i).gameObject);
-            Destroy(taskContainer.transform.GetChild(i).gameObject);    
-   
-
+            Destroy(taskContainer.transform.GetChild(i).gameObject);
         }
-     
 
         if (taskmaster.GetTasks() is not null)
         {
@@ -35,9 +28,7 @@ public class ToDoPageController : MonoBehaviour
             {
                 AddTask(task);
             }
-        }
-
-      
+        }  
     }
 
     void Start()

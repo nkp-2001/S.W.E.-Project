@@ -9,9 +9,9 @@ public class PageManager : MonoBehaviour
 
     public void GoToPage(Page page)
     {
-        activePage.Deactivate(); //TODO: implement transition animations
+        activePage.Deactivate();
         activePage = page;
-        activePage.Activate(); //TODO: implement transition animations
+        activePage.Activate();
     }
 
     private void Start()
