@@ -3510,8 +3510,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1026126442}
-        m_TargetAssemblyTypeName: ValueMang, Assembly-CSharp
-        m_MethodName: test_create_Task
+        m_TargetAssemblyTypeName: ValueManager, Assembly-CSharp
+        m_MethodName: CreateTaskAndValidate
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5642,8 +5642,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1361344774}
-        m_TargetAssemblyTypeName: sceneloader, Assembly-CSharp
-        m_MethodName: loadScene
+        m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
+        m_MethodName: LoadScene
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9201,7 +9201,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 439151799608720369, guid: 0557482ba9a877f4396101214446d178, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 439151799608720374, guid: 0557482ba9a877f4396101214446d178, type: 3}
       propertyPath: m_RootOrder
@@ -10217,7 +10217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataSave:
     tasklist: []
-  NotiSy: {fileID: 0}
+  notificationSystem: {fileID: 0}
 --- !u!4 &2121271685
 Transform:
   m_ObjectHideFlags: 0

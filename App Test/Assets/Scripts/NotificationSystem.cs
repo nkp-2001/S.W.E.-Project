@@ -6,11 +6,9 @@ using System;
 
 public class NotificationSystem : MonoBehaviour
 {
-    // Start is called before the first frame update //WIP
-
     private void Awake() 
     {
-        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Sigenton , Scenenwechesel löscht es nicht 
+        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Singleton , Scenenwechesel löscht es nicht 
 
         if (objs.Length > 1)
         {
@@ -63,10 +61,7 @@ public class NotificationSystem : MonoBehaviour
         AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "Channel-To-Do-List", 1000);
 
     }
-    public void CheckSpeficNotifcation()
-    {
 
-    }
     public List<int> SendNewDeadlineNotifications(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz
     {
         int dayleft = (expireTime - System.DateTime.Now).Days;
@@ -95,12 +90,12 @@ public class NotificationSystem : MonoBehaviour
             }
         }
 
-        int singeldayes = dayleft % 7;
-        if (singeldayes == 0)
+        int singledays = dayleft % 7;
+        if (singledays == 0)
         {
-            singeldayes = 6;
+            singledays = 6;
         }
-        for (int i = singeldayes; i >= 1; i--) 
+        for (int i = singledays; i >= 1; i--) 
         {
             var notificationDeadlines = new AndroidNotification(
               "Deadline Alert:" + titel,
@@ -195,14 +190,14 @@ public class NotificationSystem : MonoBehaviour
             }
         }
 
-        int singeldayes = dayleft % 7;
-        if (singeldayes == 0 && dayleft != 0)
+        int singleDays = dayleft % 7;
+        if (singleDays == 0 && dayleft != 0)
         {
-            singeldayes = 6;
+            singleDays = 6;
             
         }
        
-        for (int i = singeldayes; i >= 1; i--)
+        for (int i = singleDays; i >= 1; i--)
         {
             print(i);
 
@@ -228,7 +223,7 @@ public class NotificationSystem : MonoBehaviour
         return id;
     }
 
-    public void CanelDeadlineNotifctions(int id)
+    public void CancelDeadlineNotifications(int id)
     {
         if ( (AndroidNotificationCenter.CheckScheduledNotificationStatus(id) == NotificationStatus.Delivered) | (AndroidNotificationCenter.CheckScheduledNotificationStatus(id) == NotificationStatus.Scheduled))
         {
@@ -236,7 +231,7 @@ public class NotificationSystem : MonoBehaviour
             AndroidNotificationCenter.CancelNotification(id);
         }
     }
-    public void CanelDeadlineNotifctionsX(int id)
+    public void CancelDeadlineNotificationsX(int id)
     {
         AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
