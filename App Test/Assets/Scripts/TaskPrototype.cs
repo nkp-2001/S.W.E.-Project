@@ -69,30 +69,15 @@ public class TaskPrototype : MonoBehaviour, IObserver
     private void ShowDescription()
     {
         dircTobj.SetActive(true);
-        print(transform.GetSiblingIndex());
-        Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), true);
-        //for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
-        //{
-
-        //    RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
-        //    rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y + 900);
-        //}
-
-
+        Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), true);  
     }
 
     public void HideDescription()
     {
         if (dircTobj.activeSelf == true)
         {
-            dircTobj.SetActive(false);
-            print(transform.GetSiblingIndex());
+            dircTobj.SetActive(false);        
             Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), false);
-            //for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
-            //{
-            //    RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
-            //    rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y - 900);
-            //}
         }
     }
     public void MoveRect(int id,bool plusUp)
@@ -111,8 +96,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
         }
         
     }
-   
-   
+
     /// ///
     public void SubscribeToEvents_Start()
     {
