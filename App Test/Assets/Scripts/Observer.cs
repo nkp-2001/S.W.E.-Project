@@ -5,5 +5,6 @@ using UnityEngine;
 public interface IObserver 
 {
     public void SubscribeToEvents_Start();
-    public void UnsubscribeToAllEvents(); //On Display/On Destroy Benutzten ansonsten könnte es zu Exception kommen
+    public void UnsubscribeToAllEvents(); //On Diable Benutzten ansonsten könnte es zu Exception kommen
 }
+

@@ -3,24 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
-{
+public class TaskPrototype : MonoBehaviour, IObserver
+{   //!nicht die Child Strukur anfassen
     private Taskmaster taskMaster;
     private Taskmaster.Task task;
+    RectTransform rect;
 
     GameObject dircTobj;
-
+    private void Start()
+    {
+        taskMaster = FindObjectOfType<Taskmaster>();
+        rect = GetComponent<RectTransform>();
+        SubscribeToEvents_Start();
+    }
     public void Setup(Taskmaster.Task t, Transform taskContainer)
     {
         task = t;
 
         transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>()[0].text = t.Titel;
-       
-        if (t.Deadline != null && t.Deadline.Length !=0)
+
+        if (t.Deadline != null && t.Deadline.Length != 0)
         {
-           transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>()[1].text =  //Format("{0:00} damit bei beispiel weise 6.2.2022 -> 06.02.2022 wird und so gleich lang ist wie z.b 12.11.2022
-                "DT:" + string.Format("{0:00}", t.Deadline[2]) + "." + string.Format("{0:00}", t.Deadline[3]) + "." 
-                + t.Deadline[4] + "|" + string.Format("{0:00}", t.Deadline[1]) + ":" + string.Format("{0:00}", t.Deadline[0]);
+            transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>()[1].text =  //Format("{0:00} damit bei beispiel weise 6.2.2022 -> 06.02.2022 wird und so gleich lang ist wie z.b 12.11.2022
+                 "DT:" + string.Format("{0:00}", t.Deadline[2]) + "." + string.Format("{0:00}", t.Deadline[3]) + "."
+                 + t.Deadline[4] + "|" + string.Format("{0:00}", t.Deadline[1]) + ":" + string.Format("{0:00}", t.Deadline[0]);
         }
         dircTobj = transform.GetChild(0).GetChild(2).gameObject;
 
@@ -63,13 +69,16 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
     private void ShowDescription()
     {
         dircTobj.SetActive(true);
+        print(transform.GetSiblingIndex());
+        Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), true);
+        //for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
+        //{
 
-        for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
-        {
+        //    RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
+        //    rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y + 900);
+        //}
 
-            RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y +900); 
-        }
+
     }
 
     public void HideDescription()
@@ -77,16 +86,45 @@ public class TaskPrototype : MonoBehaviour //!nicht die Child Strukur anfassen
         if (dircTobj.activeSelf == true)
         {
             dircTobj.SetActive(false);
-            for (int index = transform.GetSiblingIndex()-1; index >= 0; index--)
+            print(transform.GetSiblingIndex());
+            Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), false);
+            //for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
+            //{
+            //    RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
+            //    rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y - 900);
+            //}
+        }
+    }
+    public void MoveRect(int id,bool plusUp)
+    {
+        print("Event output: " +id + "" + plusUp);
+        if (id > transform.GetSiblingIndex())
+        {
+            if (plusUp)
             {
-                RectTransform rect = transform.parent.GetChild(index).GetComponent<RectTransform>();
+                rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y + 900);
+            }
+            else
+            {
                 rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y - 900);
             }
         }
+        
     }
-
-    private void Start()
+   
+   
+    /// ///
+    public void SubscribeToEvents_Start()
     {
-        taskMaster = FindObjectOfType<Taskmaster>();
+        Subject.current.OnScrollPopUp += MoveRect;
+        
+    }
+    public void UnsubscribeToAllEvents()
+    {
+        Subject.current.OnScrollPopUp -= MoveRect;
+    }
+    private void OnDisable()
+    {
+        UnsubscribeToAllEvents();
     }
 }
