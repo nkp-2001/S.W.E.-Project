@@ -233,6 +233,7 @@ public class NotificationSystem : MonoBehaviour
     }
     public void CancelDeadlineNotificationsX(int id)
     {
+       
         AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
 

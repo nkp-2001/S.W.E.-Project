@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class ToDoPageController : MonoBehaviour
+public class ToDoPageController : MonoBehaviour,IObserver
 {
     private Taskmaster taskmaster;
 
@@ -11,7 +11,7 @@ public class ToDoPageController : MonoBehaviour
     public void AddTask(Taskmaster.Task t)
     {
         GameObject tp = Instantiate(taskPrototype);
-        tp.GetComponent<TaskPrototype>().Setup(t, taskContainer);
+        tp.GetComponent<TaskPrototype>().Setup(t, taskContainer); 
     }
 
     public void FetchTasks()
@@ -34,11 +34,26 @@ public class ToDoPageController : MonoBehaviour
     void Start()
     {
         FetchTasks();
+        SubscribeToEvents_Start();
     }
 
     private void OnEnable()
     {
         taskmaster = FindObjectOfType<Taskmaster>();
-        FetchTasks();
+       FetchTasks(); //nötig??
+    }
+
+    public void SubscribeToEvents_Start()
+    {
+        Subject.current.OnExpiredDealine += FetchTasks;
+    }
+
+    public void UnsubscribeToAllEvents()
+    {
+        Subject.current.OnExpiredDealine -= FetchTasks;
+    }
+    private void OnDisable()
+    {
+        UnsubscribeToAllEvents();
     }
 }

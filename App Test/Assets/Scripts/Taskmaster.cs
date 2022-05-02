@@ -159,7 +159,9 @@ public class Taskmaster : MonoBehaviour
                     {
                         print("Checkout");
                         RemoveTask(t);
-                        FindObjectOfType<ToDoPageController>().FetchTasks(); // Refernez Sache anpssen Scenenwechesl etc beachten 
+                        Subject.current.Trigger_ExpiredDeadline();
+
+                        
 
                     }
                 }

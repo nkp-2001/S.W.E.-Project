@@ -41,7 +41,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
     public void SetTaskToDone()
     {
 
-        for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Verhinderer 
+        for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Verhinderer , Obersever Anpassung ?
         {
             transform.parent.GetChild(index).GetComponent<TaskPrototype>().HideDescription();
         }
@@ -97,7 +97,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
         
     }
 
-    /// ///
+    /// ///Event
     public void SubscribeToEvents_Start()
     {
         Subject.current.OnScrollPopUp += MoveRect;
