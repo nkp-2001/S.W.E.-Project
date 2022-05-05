@@ -40,11 +40,12 @@ public class TaskPrototype : MonoBehaviour, IObserver
 
     public void SetTaskToDone()
     {
-
+        task.Sucess = true;
         for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Verhinderer , Obersever Anpassung ?
         {
             transform.parent.GetChild(index).GetComponent<TaskPrototype>().HideDescription();
         }
+        Subject.current.Trigger_TaskSetDone(task);
 
         taskMaster.RemoveTask(task);
         Destroy(gameObject);

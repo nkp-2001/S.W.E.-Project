@@ -182,8 +182,9 @@ public class Taskmaster : MonoBehaviour
         
 
         bool redo = false;
-        bool done = false;
         bool sucess = false;
+        bool done = false;
+       
 
         public Task(string t, string d, int[] dt, float p)
         {
@@ -206,6 +207,9 @@ public class Taskmaster : MonoBehaviour
         public float Prio { get => prio; set => prio = value; }
         public int[] Deadline { get => deadline; set => deadline = value; }
         public int DeadlineChannel_ID { get => deadlineChannel_ID; set => deadlineChannel_ID = value; }
+        public bool Done { get => done; set => done = value; }
+        public bool Redo { get => redo; set => redo = value; }
+        public bool Sucess { get => sucess; set => sucess = value; }
     }
 
     /////// Save Object

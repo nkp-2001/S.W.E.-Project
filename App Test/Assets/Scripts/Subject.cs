@@ -14,7 +14,7 @@ public class Subject : MonoBehaviour
   
     ////// Events ////////////////////////////////////////////////
    
-    public event Action NewTask;
+    public event Action NewTask; // not Usesd
     public void Trigger_NewTask() { if (NewTask != null) {NewTask();}}
 
     public event Action<int,bool> OnScrollPopUp;
@@ -22,12 +22,12 @@ public class Subject : MonoBehaviour
 
     public event Action OnExpiredDealine;
     public void Trigger_ExpiredDeadline() { if (OnExpiredDealine != null) { OnExpiredDealine(); } }
-    
 
-    
+    public event Action<Taskmaster.Task> OnTaskSetDone; // not bulit in yet
+    public void Trigger_TaskSetDone(Taskmaster.Task doneTask) { if (OnTaskSetDone != null) { OnTaskSetDone(doneTask); } } 
 
 
-    ///Test funcs
+    ///funcs
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private Func<int> onRequest_NotiID;
     public void SetonRequest_NotiID(Func<int> delegt)
