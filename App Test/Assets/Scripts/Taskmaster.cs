@@ -4,9 +4,10 @@ using UnityEngine;
 using System.Globalization;
 using System;
 using System.IO;
-using System.Linq; 
+using System.Linq;
+using UnityEngine.SceneManagement;
 
-public class Taskmaster : MonoBehaviour
+public class Taskmaster : MonoBehaviour, IObserver
 {
     [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
@@ -14,13 +15,14 @@ public class Taskmaster : MonoBehaviour
     [SerializeField] NotificationSystem notificationSystem;
 
 
-    private void Awake() 
+    private void Awake()
     {
         Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Singleton , Scenenwechesel loescht es nicht 
 
         if (objs.Length > 1)
         {
             Destroy(this.gameObject);
+            return;
         }
 
         DontDestroyOnLoad(this.gameObject);
@@ -30,7 +32,7 @@ public class Taskmaster : MonoBehaviour
     private void Start()
     {
         notificationSystem = FindObjectOfType<NotificationSystem>();
-
+       
         CheckDeadlinesTask();
     }
 
@@ -45,19 +47,19 @@ public class Taskmaster : MonoBehaviour
         {
             print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
 
-            int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2],dt[1],dt[0],0));
-            Task new_task = new Task(t, d, dt, p,id);
+            int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            Task new_task = new Task(t, d, dt, p, id);
             dataSave.AddNewToList(new_task);
         }
         else
         {
             Task new_task = new Task(t, d, dt, p);
             dataSave.AddNewToList(new_task);
-        }  
+        }
         SaveList();
         notificationSystem.NotficationStatusReaction(false);
     }
-    
+
     public void RemoveTask(int index)
     {
         notificationSystem.CancelDeadlineNotificationsX(dataSave.GetList()[index].DeadlineChannel_ID);
@@ -71,21 +73,23 @@ public class Taskmaster : MonoBehaviour
     public void RemoveTask(Task tk)
     {
 
-        notificationSystem.CancelDeadlineNotificationsX(tk.DeadlineChannel_ID);
+        //notificationSystem.CancelDeadlineNotificationsX(tk.DeadlineChannel_ID);
 
-        if (dataSave.RemoveFromList(tk) == 0)
-        {
-            notificationSystem.NotficationStatusReaction(true);
-        }
+        //if (dataSave.RemoveFromList(tk) == 0)
+        //{
+        //    notificationSystem.NotficationStatusReaction(true);
+        //}
+
+        dataSave.RemoveFromList(tk);
         SaveList();
     }
-    public void ChangeTask(Task oldtask,string t, string d, int[] dt, float p)
+    public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p)
     {
         if (oldtask.Deadline != dt)
         {
             notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
             int new_id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-            dataSave.ChangeTask(oldtask,t, d, dt, p, new_id);
+            dataSave.ChangeTask(oldtask, t, d, dt, p, new_id);
         }
         else
         {
@@ -96,6 +100,10 @@ public class Taskmaster : MonoBehaviour
     public List<Task> GetTasks()
     {
         return dataSave.GetList();
+    }
+    public int GetTaskListLenght()
+    {
+        return GetTasks().Count;
     }
 
 
@@ -117,16 +125,16 @@ public class Taskmaster : MonoBehaviour
     private void SaveList()
     {
         string dir = Application.persistentDataPath + directory;
-        
+
         if (!Directory.Exists(dir))
         {
             Directory.CreateDirectory(dir);
-  
+
         }
-      
+
 
         string saveJason = JsonUtility.ToJson(dataSave);
-        
+
         File.WriteAllText(dir + filename, saveJason);
 
 
@@ -139,10 +147,10 @@ public class Taskmaster : MonoBehaviour
         if (File.Exists(loadpath))
         {
             string readstring = File.ReadAllText(loadpath);
-            if(readstring != "")
+            if (readstring != "")
             {
                 dataSave = JsonUtility.FromJson<SaveObject>(readstring);
-            }         
+            }
         }
         else
         {
@@ -151,23 +159,50 @@ public class Taskmaster : MonoBehaviour
     }
     public void CheckDeadlinesTask()
     {
-            foreach (Task t in (dataSave.GetList()).ToArray())
+        foreach (Task t in (dataSave.GetList()).ToArray())
+        {
+            if (t.Deadline != null && t.Deadline.Length != 0)
             {
-                if (t.Deadline != null && t.Deadline.Length != 0)
-            {
-                    if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
-                    {
-                        print("Checkout");
-                        RemoveTask(t);
-                        Subject.current.Trigger_ExpiredDeadline();
+                if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
+                {
+                    print("Checkout");
+                    RemoveTask(t);
+                    Subject.current.Trigger_ExpiredDeadline();
 
-                        
 
-                    }
+
                 }
             }
-        
+        }
+
     }
+
+    public void SubscribeToEvents_Start()
+    {
+        Subject.current.OnTaskSetDone += RemoveTask;
+    }
+
+    public void UnsubscribeToAllEvents()
+    {
+        Subject.current.OnTaskSetDone -= RemoveTask;
+    }
+    
+    private void OnDestroy()
+    {
+        UnsubscribeToAllEvents();
+        print("2xxxx");
+
+    }
+    private void OnEnable()
+    {
+        SubscribeToEvents_Start();
+        
+        Debug.Log("OnEnable");
+    }
+  
+
+
+
 
     ///////////// Task ////////////
     [Serializable]
@@ -227,11 +262,17 @@ public class Taskmaster : MonoBehaviour
             tasklist.RemoveAt(i);
             return tasklist.Count;
         }
-        public int RemoveFromList(Task tk)
+        public int RemoveFromListAndGiveCount(Task tk) // veraltet ??
         {
             tasklist.Remove(tk);
             return tasklist.Count;
         }
+        public void RemoveFromList(Task tk)
+        {
+            tasklist.Remove(tk);
+           
+        }
+
         public List<Task> GetList()
         {
             return tasklist;

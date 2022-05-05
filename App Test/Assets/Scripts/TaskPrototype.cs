@@ -47,7 +47,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
         }
         Subject.current.Trigger_TaskSetDone(task);
 
-        taskMaster.RemoveTask(task);
+       // taskMaster.RemoveTask(task);
         Destroy(gameObject);
     }
     public void SelfDestroyTest()
@@ -111,5 +111,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
     private void OnDisable()
     {
         UnsubscribeToAllEvents();
+
+       
     }
 }

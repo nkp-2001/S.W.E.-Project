@@ -9,7 +9,19 @@ public class Subject : MonoBehaviour
    
     public void Awake() 
     {
-        current = this; 
+        Subject[] objs = FindObjectsOfType<Subject>(); //Singleton , Scenenwechesel loescht es nicht 
+
+        if (objs.Length > 1)
+        {
+            Destroy(this.gameObject);
+        }
+
+        DontDestroyOnLoad(this.gameObject);
+        if (current == null)
+        {
+            current = this;
+        }
+        
     }
   
     ////// Events ////////////////////////////////////////////////
@@ -24,7 +36,7 @@ public class Subject : MonoBehaviour
     public void Trigger_ExpiredDeadline() { if (OnExpiredDealine != null) { OnExpiredDealine(); } }
 
     public event Action<Taskmaster.Task> OnTaskSetDone; // not bulit in yet
-    public void Trigger_TaskSetDone(Taskmaster.Task doneTask) { if (OnTaskSetDone != null) { OnTaskSetDone(doneTask); } } 
+    public void Trigger_TaskSetDone(Taskmaster.Task doneTask) { print("Task Set "); if (OnTaskSetDone != null) { print("Task Set Done" ); OnTaskSetDone(doneTask); } } 
 
 
     ///funcs
