@@ -58,6 +58,12 @@ public class NotificationSystem : MonoBehaviour , IObserver
             }
         }
     }
+
+    public void NotficationStatusReaction(string t, string d, int[] dt, float prio) //!! vllt anders als mit diesen "Toten" Parameter 
+    {
+        NotficationStatusReaction(false);
+        print("Reaction on new Task");
+    }
     public void SendNewGeneralNotifcation()
     {
         var notification = new AndroidNotification(
@@ -245,6 +251,18 @@ public class NotificationSystem : MonoBehaviour , IObserver
        
         AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
+
+    public void CancelDeadlineNotificationsX(Taskmaster.Task oldtask, string t, string d, int[] dt, float p) //!! vllt anders als mit diesen "Toten" Parameter 
+    {
+        
+        if (oldtask.Deadline != dt)
+        {
+            CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
+            print("Reaction on Deadline remove");
+        }
+
+
+    }
     public void CancelNotificationsX(Taskmaster.Task task)
     {
         int id = task.DeadlineChannel_ID;
@@ -266,11 +284,18 @@ public class NotificationSystem : MonoBehaviour , IObserver
     public void SubscribeToEvents_Start()
     {
         Subject.current.OnTaskSetDone += CancelNotificationsX;
+        Subject.current.OnNewTask += NotficationStatusReaction;
+        Subject.current.OnTaskChange += CancelDeadlineNotificationsX;
+        Subject.current.SetonRequest_NotiID(SendNewDeadlineNotificationsX);
+
+        // if (oldtask.Deadline != dt)
     }
 
     public void UnsubscribeToAllEvents()
     {
         Subject.current.OnTaskSetDone -= CancelNotificationsX;
+        Subject.current.OnNewTask -= NotficationStatusReaction;
+        Subject.current.OnTaskChange -= CancelDeadlineNotificationsX;
     }
     private void OnDisable()
     {

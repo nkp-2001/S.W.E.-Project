@@ -26,8 +26,7 @@ public class Subject : MonoBehaviour
   
     ////// Events ////////////////////////////////////////////////
    
-    public event Action NewTask; // not Usesd
-    public void Trigger_NewTask() { if (NewTask != null) {NewTask();}}
+   
 
     public event Action<int,bool> OnScrollPopUp;
     public void Trigger_ScrollPopUp(int id,bool onoff) { if (OnScrollPopUp != null) {OnScrollPopUp(id,onoff);}}
@@ -35,25 +34,35 @@ public class Subject : MonoBehaviour
     public event Action OnExpiredDealine;
     public void Trigger_ExpiredDeadline() { if (OnExpiredDealine != null) { OnExpiredDealine(); } }
 
-    public event Action<Taskmaster.Task> OnTaskSetDone; // not bulit in yet
-    public void Trigger_TaskSetDone(Taskmaster.Task doneTask) { print("Task Set "); if (OnTaskSetDone != null) { print("Task Set Done" ); OnTaskSetDone(doneTask); } } 
+    public event Action<Taskmaster.Task> OnTaskSetDone; 
+    public void Trigger_TaskSetDone(Taskmaster.Task doneTask) { print("Task Set "); if (OnTaskSetDone != null) { print("Task Set Done" ); OnTaskSetDone(doneTask); } }
+
+    ////////////////////////////////////////////////////////////////////////////////
+
+    public event Action<string, string, int[], float> OnNewTask; // not Usesd yet
+    public void Trigger_OnNewTask(string t, string d, int[] dt, float prio ) { if (OnNewTask != null) { OnNewTask(t, d,  dt, prio); } }
+
+    public event Action<Taskmaster.Task,string,string,int[], float > OnTaskChange;
+    public void TriggerOnTaskChange(Taskmaster.Task oldtask, string t, string d, int[] dt, float p) { if (OnTaskChange != null) { OnTaskChange(oldtask, t, d, dt, p); } }
 
 
     ///funcs
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private Func<int> onRequest_NotiID;
-    public void SetonRequest_NotiID(Func<int> delegt)
+    private Func<string , DateTime ,int> onRequest_NotiID;
+    public void SetonRequest_NotiID(Func<string ,DateTime, int> delegt)
     {
         onRequest_NotiID = delegt;
+    
     }
-    public int Trigger_Request_NotiID()
+    public int Trigger_Request_NotiID(string titel, DateTime expireTime)
     {
         if (onRequest_NotiID != null)
         {
-            return onRequest_NotiID();
+            return onRequest_NotiID(titel, expireTime);
         }
         return 0; //= not plugged
     }
+    
 
 
 

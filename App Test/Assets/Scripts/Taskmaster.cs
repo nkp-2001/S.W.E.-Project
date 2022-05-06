@@ -47,9 +47,21 @@ public class Taskmaster : MonoBehaviour, IObserver
         {
             print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
 
-            int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-            Task new_task = new Task(t, d, dt, p, id);
-            dataSave.AddNewToList(new_task);
+           // int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            
+            int id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            if (id != 0)
+            {
+                print("System plugged");
+                Task new_task = new Task(t, d, dt, p, id);
+                dataSave.AddNewToList(new_task);
+            }
+            else 
+            {
+                print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiID hasen`t been assigend by it");
+                Task new_task = new Task(t, d, dt, p);
+                dataSave.AddNewToList(new_task);
+            } 
         }
         else
         {
@@ -57,17 +69,13 @@ public class Taskmaster : MonoBehaviour, IObserver
             dataSave.AddNewToList(new_task);
         }
         SaveList();
-        notificationSystem.NotficationStatusReaction(false);
+       // notificationSystem.NotficationStatusReaction(false);
     }
 
-    public void RemoveTask(int index)
+    public void RemoveTask(int index) 
     {
-        notificationSystem.CancelDeadlineNotificationsX(dataSave.GetList()[index].DeadlineChannel_ID);
-
-        if (dataSave.RemoveFromList(index) == 0)
-        {
-            notificationSystem.NotficationStatusReaction(true);
-        }
+       
+        dataSave.RemoveFromList(dataSave.GetList()[index].DeadlineChannel_ID);
         SaveList();
     }
     public void RemoveTask(Task tk)
@@ -87,9 +95,18 @@ public class Taskmaster : MonoBehaviour, IObserver
     {
         if (oldtask.Deadline != dt)
         {
-            notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
-            int new_id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-            dataSave.ChangeTask(oldtask, t, d, dt, p, new_id);
+           // notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
+            int new_id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            if (new_id != 0)
+            {
+                dataSave.ChangeTask(oldtask, t, d, dt, p, new_id);
+            }
+            else
+            {
+                print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiID hasen`t been assigend by it");
+                dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID);
+            }
+           
         }
         else
         {
@@ -180,6 +197,9 @@ public class Taskmaster : MonoBehaviour, IObserver
     public void SubscribeToEvents_Start()
     {
         Subject.current.OnTaskSetDone += RemoveTask;
+        Subject.current.OnNewTask += CreateNewTask;
+        Subject.current.OnTaskChange += ChangeTask;
+       
     }
 
     public void UnsubscribeToAllEvents()

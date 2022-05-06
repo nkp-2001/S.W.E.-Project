@@ -40,11 +40,14 @@ public class ValueManager : MonoBehaviour
        {
             DateTime dtraw = datePicker.GetSelectedDate();
             int[] dt = { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
-            tm.CreateNewTask(titel.text, discrip.text,dt, prio.value);
+            // tm.CreateNewTask(titel.text, discrip.text,dt, prio.value);
+            Subject.current.Trigger_OnNewTask(titel.text, discrip.text,dt, prio.value);
+
        }
        else
        {
-            tm.CreateNewTask(titel.text, discrip.text, null, prio.value); // null -> Datetime.minvalue wenn zurückwechsel auf Datetime
+           // tm.CreateNewTask(titel.text, discrip.text, null, prio.value); 
+            Subject.current.Trigger_OnNewTask(titel.text, discrip.text, null, prio.value); // null -> Datetime.minvalue wenn zurückwechsel auf Datetime
        }
 
         sceneLoader.LoadScene(1);
