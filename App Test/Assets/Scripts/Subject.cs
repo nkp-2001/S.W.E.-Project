@@ -39,7 +39,7 @@ public class Subject : MonoBehaviour
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    public event Action<string, string, int[], float> OnNewTask; // not Usesd yet
+    public event Action<string, string, int[], float> OnNewTask;
     public void Trigger_OnNewTask(string t, string d, int[] dt, float prio ) { if (OnNewTask != null) { OnNewTask(t, d,  dt, prio); } }
 
     public event Action<Taskmaster.Task,string,string,int[], float > OnTaskChange;
