@@ -33,6 +33,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
     void Start()
     {
+      
         FetchTasks();
         SubscribeToEvents_Start();
     }
@@ -40,7 +41,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
     private void OnEnable()
     {
         taskmaster = FindObjectOfType<Taskmaster>();
-        FetchTasks(); //nötig??
+        FetchTasks(); 
     }
 
     public void SubscribeToEvents_Start()

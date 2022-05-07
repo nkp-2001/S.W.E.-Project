@@ -7,6 +7,8 @@ public class PageManager : MonoBehaviour
     [SerializeField] private Page activePage;
     [SerializeField] private Page[] registeredPages;
 
+    [SerializeField] GameObject[] PageObject;
+
     public void GoToPage(Page page)
     {
         activePage.Deactivate();

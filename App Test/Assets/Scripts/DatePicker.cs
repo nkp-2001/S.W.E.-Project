@@ -15,7 +15,7 @@ public class DatePicker : MonoBehaviour, IObserver<int>
 
     void OnEnable()
     {
-        InitializeDropdowns();
+       // InitializeDropdowns();
     }
 
     private void InitializeDropdowns()
@@ -114,6 +114,37 @@ public class DatePicker : MonoBehaviour, IObserver<int>
         }
 
         return dateTime;
+    }
+    //
+    public void SetSelectedDate(int[] dt)
+    {
+        DateTime OldtDateTime = new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0);
+
+
+        List<string> dayOptions = GetStringListOfDaysInMonth(OldtDateTime.Year, OldtDateTime.Month);
+
+        List<string> monthOptions = new List<string>();
+        for (int month = 1; month <= 12; ++month)
+        {
+            monthOptions.Add(month.ToString());
+        }
+
+        List<string> yearOptions = new List<string>();
+        for (int y = OldtDateTime.Year; y <= OldtDateTime.Year + 100; ++y)
+        {
+            yearOptions.Add(y.ToString());
+        }
+
+       
+        dayDropdown.SetOptions(dayOptions);
+        monthDropdown.SetOptions(monthOptions);
+        yearDropdown.SetOptions(yearOptions);
+
+        hourDropdown.SetCurrentOption(OldtDateTime.Hour.ToString());
+        minuteDropdown.SetCurrentOption(OldtDateTime.Minute.ToString());
+        dayDropdown.SetCurrentOption(OldtDateTime.Day.ToString());
+        monthDropdown.SetCurrentOption(OldtDateTime.Month.ToString());
+        yearDropdown.SetCurrentOption(OldtDateTime.Year.ToString());
     }
     
 }

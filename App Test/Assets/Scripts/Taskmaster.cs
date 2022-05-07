@@ -31,7 +31,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     private void Start()
     {
-        notificationSystem = FindObjectOfType<NotificationSystem>();
+       // notificationSystem = FindObjectOfType<NotificationSystem>(); // nicht mehr nötig
        
         CheckDeadlinesTask();
     }
@@ -93,7 +93,11 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p)
     {
-        if (oldtask.Deadline != dt)
+        if(dt == null)
+        {
+            dataSave.ChangeTask(oldtask, t, d, dt, p, 0); //0 = keine Meldungen , Cancel der Alten über das Event (im Notfi)
+        }
+        else if (oldtask.Deadline != dt)
         {
            // notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
             int new_id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
@@ -299,7 +303,8 @@ public class Taskmaster : MonoBehaviour, IObserver
         }
         public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id)
         {
-            int index = tasklist.FindLastIndex(task => task.Titel == t); //Kann nur klappen wenn allles Unterschidlich heißt anpassen!!!
+            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich heißt anpassen!!!
+            print(index);
             tasklist[index] = new Task(t, d, dt, p,id);     
         }        
    }

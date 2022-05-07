@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class TaskPrototype : MonoBehaviour, IObserver
 {   //!nicht die Child Strukur anfassen
@@ -96,6 +97,12 @@ public class TaskPrototype : MonoBehaviour, IObserver
             }
         }
         
+    }
+
+    public void GoIntoTaskEdit()
+    {
+        ValueManager.taskOnEdit = task;
+        SceneManager.LoadScene(1);
     }
 
     /// ///Event

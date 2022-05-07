@@ -255,7 +255,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
     public void CancelDeadlineNotificationsX(Taskmaster.Task oldtask, string t, string d, int[] dt, float p) //!! vllt anders als mit diesen "Toten" Parameter 
     {
         
-        if (oldtask.Deadline != dt)
+        if (oldtask.Deadline != dt && oldtask.Deadline != null)
         {
             CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
             print("Reaction on Deadline remove");
