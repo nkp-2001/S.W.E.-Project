@@ -12,7 +12,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
     string filename = "SavedList.txt";
-    [SerializeField] NotificationSystem notificationSystem;
+    [SerializeField] NotificationSystem notificationSystem; // nicht mehr nötig
 
 
     private void Awake()
@@ -142,6 +142,10 @@ public class Taskmaster : MonoBehaviour, IObserver
 
         return sorted;
     }
+    public List<Task> GetArchivedTasks()
+    {
+        return dataSave.GetArchivedList();
+    }
 
     private void SaveList()
     {
@@ -187,6 +191,7 @@ public class Taskmaster : MonoBehaviour, IObserver
                 if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
                 {
                     print("Checkout");
+                    t.Done = true;
                     RemoveTask(t);
                     Subject.current.Trigger_ExpiredDeadline();
 
@@ -238,11 +243,11 @@ public class Taskmaster : MonoBehaviour, IObserver
 
         [SerializeField] int deadlineChannel_ID = 0;
         [SerializeField] float prio;
-        
 
-        bool redo = false;
-        bool sucess = false;
-        bool done = false;
+
+        [SerializeField] bool redo = false;
+        [SerializeField] bool sucess = false;
+        [SerializeField] bool done = false;
        
 
         public Task(string t, string d, int[] dt, float p)
@@ -277,6 +282,7 @@ public class Taskmaster : MonoBehaviour, IObserver
    public class SaveObject
    {
         [SerializeField] List<Task> tasklist = new List<Task>();
+        [SerializeField] List<Task> archivedTasks = new List<Task>();
         public void AddNewToList(Task addT)
         {
             tasklist.Add(addT);
@@ -294,12 +300,19 @@ public class Taskmaster : MonoBehaviour, IObserver
         public void RemoveFromList(Task tk)
         {
             tasklist.Remove(tk);
-           
+            archivedTasks.Add(tk);
         }
-
+        public void RemoveFromArchieList(Task tk)
+        {
+            archivedTasks.Remove(tk);
+        }
         public List<Task> GetList()
         {
             return tasklist;
+        }
+        public List<Task> GetArchivedList()
+        {
+            return archivedTasks;
         }
         public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id)
         {

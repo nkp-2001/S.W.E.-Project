@@ -17,7 +17,7 @@ public class ValueManager : MonoBehaviour
     Taskmaster tm;
     SceneLoader sceneLoader;
 
-    public static Taskmaster.Task taskOnEdit = null; //muss noch mit wegfallen von Szenenwechsel überdenkt werden
+    public static Taskmaster.Task taskOnEdit = null; //muss noch mit potinziallen wegfallen von Szenenwechsel überdenkt werden / Andere Lösung allg. vllt 
 
     [SerializeField] TextMeshProUGUI HeadTitle;
     [SerializeField] TextMeshProUGUI ButtonText;

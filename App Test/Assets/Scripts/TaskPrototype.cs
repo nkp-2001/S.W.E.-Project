@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -9,12 +10,13 @@ public class TaskPrototype : MonoBehaviour, IObserver
     private Taskmaster taskMaster;
     private Taskmaster.Task task;
     RectTransform rect;
-
+   
     GameObject dircTobj;
     private void Start()
     {
         taskMaster = FindObjectOfType<Taskmaster>();
         rect = GetComponent<RectTransform>();
+        
         SubscribeToEvents_Start();
     }
     public void Setup(Taskmaster.Task t, Transform taskContainer)
@@ -38,10 +40,38 @@ public class TaskPrototype : MonoBehaviour, IObserver
         transform.localScale = Vector3.one;
         gameObject.SetActive(true);
     }
+    public void Setup_OldTask(Taskmaster.Task t, Transform taskContainer)
+    {      
+        Setup( t,  taskContainer);
+        Button button = GetComponentInChildren<Button>();
+        if (t.Sucess)
+        {
+            GetComponentInChildren<Image>().color = new Color32(0, 180, 0, 255);
+            ColorBlock cb = button.colors;
+            cb.normalColor = new Color32(0, 180, 0, 255);
+            cb.highlightedColor = new Color32(0, 100, 0, 255);
+            cb.pressedColor = new Color32(0, 100, 0, 255);
+            button.colors = cb;
+
+        }
+        else
+        {
+            GetComponentInChildren<Image>().color = new Color32(180, 0, 0, 255);
+            ColorBlock cb = button.colors;
+            cb.normalColor = new Color32(180, 0, 0, 255);
+            cb.highlightedColor = new Color32(180, 0, 0, 255);
+            cb.pressedColor = new Color32(100, 0, 0, 255);
+            button.colors = cb;
+        }
+
+
+    }
+
 
     public void SetTaskToDone()
     {
         task.Sucess = true;
+        task.Done = true;
         for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Verhinderer , Obersever Anpassung ?
         {
             transform.parent.GetChild(index).GetComponent<TaskPrototype>().HideDescription();
@@ -109,6 +139,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
     public void SubscribeToEvents_Start()
     {
         Subject.current.OnScrollPopUp += MoveRect;
+        
         
     }
     public void UnsubscribeToAllEvents()
