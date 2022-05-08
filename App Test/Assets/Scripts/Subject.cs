@@ -45,8 +45,9 @@ public class Subject : MonoBehaviour
     public event Action<Taskmaster.Task,string,string,int[], float > OnTaskChange;
     public void TriggerOnTaskChange(Taskmaster.Task oldtask, string t, string d, int[] dt, float p) { if (OnTaskChange != null) { OnTaskChange(oldtask, t, d, dt, p); } }
 
-    // On Task Return
-    public event Action<Taskmaster.Task> OnTaskReturning; // 
+    public event Action<Taskmaster.Task, string, string, int[], float> OnTaskReturning; // 
+    public void Trigger_OnTaskReturning(Taskmaster.Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrio)
+    {  if (OnTaskReturning != null) { OnTaskReturning(oldtask, potNewname, potNewDiscp, potNewDt, potNewPrio);} }
 
 
     ///funcs

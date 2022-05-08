@@ -43,7 +43,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     public void CreateNewTask(string t, string d, int[] dt, float p)
     {
         //Hier muss noch ein Namecheck rein , keine Doppelten
-        if (dt != null)
+        if (dt != null & dt.Length != 0)
         {
             print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
 
@@ -93,6 +93,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p)
     {
+
         if(dt == null)
         {
             dataSave.ChangeTask(oldtask, t, d, dt, p, 0); //0 = keine Meldungen , Cancel der Alten über das Event (im Notfi)
@@ -203,17 +204,28 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     }
 
+    public void ManageTaskReturn(Taskmaster.Task oldtask, string t, string d, int[] dt, float prio)
+    {
+        dataSave.RemoveFromArchieList(oldtask);
+        CreateNewTask(t, d, dt, prio);
+    }
+
     public void SubscribeToEvents_Start()
     {
         Subject.current.OnTaskSetDone += RemoveTask;
         Subject.current.OnNewTask += CreateNewTask;
         Subject.current.OnTaskChange += ChangeTask;
-       
+        Subject.current.OnTaskReturning += ManageTaskReturn;
+
+
     }
 
     public void UnsubscribeToAllEvents()
     {
         Subject.current.OnTaskSetDone -= RemoveTask;
+        Subject.current.OnNewTask -= CreateNewTask;
+        Subject.current.OnTaskChange -= ChangeTask;
+        Subject.current.OnTaskReturning -= ManageTaskReturn;
     }
     
     private void OnDestroy()

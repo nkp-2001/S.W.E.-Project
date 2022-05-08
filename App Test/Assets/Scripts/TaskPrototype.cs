@@ -10,7 +10,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
     private Taskmaster taskMaster;
     private Taskmaster.Task task;
     RectTransform rect;
-   
+    bool showingOldTask = false;
     GameObject dircTobj;
     private void Start()
     {
@@ -42,7 +42,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
     }
     public void Setup_OldTask(Taskmaster.Task t, Transform taskContainer)
     {      
-        Setup( t,  taskContainer);
+        Setup( t,  taskContainer);        
         Button button = GetComponentInChildren<Button>();
         if (t.Sucess)
         {
@@ -63,7 +63,10 @@ public class TaskPrototype : MonoBehaviour, IObserver
             cb.pressedColor = new Color32(100, 0, 0, 255);
             button.colors = cb;
         }
-
+        transform.GetChild(1).gameObject.SetActive(false);
+        transform.GetChild(0).GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Do it \n again"; //vllt doch per Feld machen , aber da nur einmal benutzt eigentlich überflüssig
+        
+        showingOldTask = true;
 
     }
 
@@ -133,6 +136,44 @@ public class TaskPrototype : MonoBehaviour, IObserver
     {
         ValueManager.taskOnEdit = task;
         SceneManager.LoadScene(1);
+    }
+    public void GoIntoTaskReturningEdit()
+    {
+        ValueManager.taskOnEdit = task;
+        ValueManager.tastReturninEdit = true;
+        SceneManager.LoadScene(1);
+    }
+    public void ButtonReaction()
+    {
+        if (!showingOldTask)
+        {
+            GoIntoTaskEdit();
+        }
+        else
+        {
+            print("showingOldTask");
+            task.Sucess = false;
+            task.Done = false;
+
+            int[] dt = task.Deadline;
+           
+            if (dt.Length == 0)
+            {
+                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio);
+            }
+            else if ((new System.DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0) > System.DateTime.Now))
+            {
+                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio);
+            }
+            else
+            {
+                GoIntoTaskReturningEdit();
+            }
+           
+            Destroy(gameObject);
+        }
+
+      
     }
 
     /// ///Event

@@ -85,6 +85,11 @@ public class ToDoPageController : MonoBehaviour,IObserver
         }
     }
 
+    public void FetchTasks(Taskmaster.Task task, string t, string d, int[] dt, float prio)
+    {
+        FetchTasks();
+    }
+
 
     void Start()
     {
@@ -102,11 +107,13 @@ public class ToDoPageController : MonoBehaviour,IObserver
     public void SubscribeToEvents_Start()
     {
         Subject.current.OnExpiredDealine += FetchTasks;
+        Subject.current.OnTaskReturning += FetchTasks;
     }
 
     public void UnsubscribeToAllEvents()
     {
         Subject.current.OnExpiredDealine -= FetchTasks;
+        Subject.current.OnTaskReturning -= FetchTasks;
     }
     private void OnDisable()
     {

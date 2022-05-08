@@ -394,7 +394,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2814354614230403387}
         m_TargetAssemblyTypeName: TaskPrototype, Assembly-CSharp
-        m_MethodName: GoIntoTaskEdit
+        m_MethodName: ButtonReaction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1127,7 +1127,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 30.863937, y: 0, z: 67.90105, w: 23.147995}
+  m_margin: {x: -13.130212, y: 0, z: 16.735893, w: 23.147995}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

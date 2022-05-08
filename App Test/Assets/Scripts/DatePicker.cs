@@ -10,12 +10,12 @@ public class DatePicker : MonoBehaviour, IObserver<int>
 
     void Start()
     {
-        InitializeDropdowns();
+        // InitializeDropdowns(); //Weg lassen da es sont Action von SetSelectedDate(int[] dt) überschreibt
     }
 
     void OnEnable()
     {
-       // InitializeDropdowns();
+        InitializeDropdowns();
     }
 
     private void InitializeDropdowns()
@@ -105,6 +105,8 @@ public class DatePicker : MonoBehaviour, IObserver<int>
         string dateTimeString = yearDropdown.GetCurrentOption() + "-" + monthDropdown.GetCurrentOption() + "-" + dayDropdown.GetCurrentOption() 
                                     + " " + hourDropdown.GetCurrentOption() + ":" + minuteDropdown.GetCurrentOption() + ":00.0";
 
+        print(dateTimeString);
+
         DateTime dateTime;
         bool success = DateTime.TryParse(dateTimeString, out dateTime);
 
@@ -118,33 +120,20 @@ public class DatePicker : MonoBehaviour, IObserver<int>
     //
     public void SetSelectedDate(int[] dt)
     {
-        DateTime OldtDateTime = new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0);
+        DateTime datetime = new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0);
+
+        print(datetime.Day.ToString());
+        hourDropdown.SetCurrentOption(datetime.Hour.ToString());
+        minuteDropdown.SetCurrentOption(datetime.Minute.ToString());
+        dayDropdown.SetCurrentOption(datetime.Day.ToString());
+        monthDropdown.SetCurrentOption(datetime.Month.ToString());
+        yearDropdown.SetCurrentOption(datetime.Year.ToString());
+
+        SetInteractability();
 
 
-        List<string> dayOptions = GetStringListOfDaysInMonth(OldtDateTime.Year, OldtDateTime.Month);
 
-        List<string> monthOptions = new List<string>();
-        for (int month = 1; month <= 12; ++month)
-        {
-            monthOptions.Add(month.ToString());
-        }
 
-        List<string> yearOptions = new List<string>();
-        for (int y = OldtDateTime.Year; y <= OldtDateTime.Year + 100; ++y)
-        {
-            yearOptions.Add(y.ToString());
-        }
-
-       
-        dayDropdown.SetOptions(dayOptions);
-        monthDropdown.SetOptions(monthOptions);
-        yearDropdown.SetOptions(yearOptions);
-
-        hourDropdown.SetCurrentOption(OldtDateTime.Hour.ToString());
-        minuteDropdown.SetCurrentOption(OldtDateTime.Minute.ToString());
-        dayDropdown.SetCurrentOption(OldtDateTime.Day.ToString());
-        monthDropdown.SetCurrentOption(OldtDateTime.Month.ToString());
-        yearDropdown.SetCurrentOption(OldtDateTime.Year.ToString());
     }
     
 }

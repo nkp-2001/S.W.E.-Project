@@ -18,6 +18,7 @@ public class ValueManager : MonoBehaviour
     SceneLoader sceneLoader;
 
     public static Taskmaster.Task taskOnEdit = null; //muss noch mit potinziallen wegfallen von Szenenwechsel überdenkt werden / Andere Lösung allg. vllt 
+    public static bool tastReturninEdit = false;
 
     [SerializeField] TextMeshProUGUI HeadTitle;
     [SerializeField] TextMeshProUGUI ButtonText;
@@ -47,40 +48,45 @@ public class ValueManager : MonoBehaviour
             MessageBox.ShowMessage("Please enter a Title");
             return;
        }
+      
+       DateTime dtraw = datePicker.GetSelectedDate();
+       int[] dt;
        if (dltoggle.isOn)
        {
-            DateTime dtraw = datePicker.GetSelectedDate();
-            int[] dt = { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
-            // tm.CreateNewTask(titel.text, discrip.text,dt, prio.value);
-            if (taskOnEdit == null)
-            {
-                Subject.current.Trigger_OnNewTask(titel.text, discrip.text, dt, prio.value);
-            }
-            else
-            {
-                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value);
-                StopFromEditMode(); //
-            }
+             dt = new int[]{dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year};
        }
        else
        {
-            // tm.CreateNewTask(titel.text, discrip.text, null, prio.value); 
-            if (taskOnEdit == null)
+            dt = null;
+       }
+        ///////////////////////////////
+        // int[] dt = { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
+        // tm.CreateNewTask(titel.text, discrip.text,dt, prio.value);
+        if (taskOnEdit == null)
+        {
+            Subject.current.Trigger_OnNewTask(titel.text, discrip.text, dt, prio.value);
+        }
+        else
+        {
+            if (!tastReturninEdit)
             {
-                Subject.current.Trigger_OnNewTask(titel.text, discrip.text, null, prio.value); // null -> Datetime.minvalue wenn zurückwechsel auf Datetime
+                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value);
             }
             else
             {
-                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, null, prio.value);
-                StopFromEditMode();
+                Subject.current.Trigger_OnTaskReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value);
+                tastReturninEdit = false;
             }
-       }
 
-        sceneLoader.LoadScene(0);
+            StopFromEditMode(); //
+        }
+     sceneLoader.LoadScene(0);
    }    
     /// <EditMode> ///
    public void StartEditMode(Taskmaster.Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
    {
+      
+
         taskOnEdit = oldtask;
         titel.text = oldtask.Titel;
         discrip.text = oldtask.Description;
@@ -94,30 +100,51 @@ public class ValueManager : MonoBehaviour
             datePicker.SetSelectedDate(oldtask.Deadline);
         }
 
-        HeadTitle.text = "Edit Task";
-        ButtonText.text = "Save Changes";
+        if (!tastReturninEdit)
+        {
+            HeadTitle.text = "Edit Task";
+            ButtonText.text = "Save Changes";
+        }
+        else
+        {
+            HeadTitle.text = "Please give New Deadline";
+            ButtonText.text = "Reinstiate Task";
+        }
+
+      
    }
-    public void StartEditMode() 
+    public void StartEditMode()  //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
     {
      
         titel.text = taskOnEdit.Titel;
         discrip.text = taskOnEdit.Description;
         prio.value = taskOnEdit.Prio;
-        if (taskOnEdit.Deadline != null)
+      
+        if (taskOnEdit.Deadline.Length ==0)
         {
             datePicker.SetInteractability();
         }
         else
         {
+            print("Put in deadline");
             datePicker.SetSelectedDate(taskOnEdit.Deadline);
         }
 
-        HeadTitle.text = "Edit Task";
-        ButtonText.text = "Save Changes";
+        if (!tastReturninEdit)
+        {
+            HeadTitle.text = "Edit Task";
+            ButtonText.text = "Save Changes";
+        }
+        else
+        {
+            HeadTitle.text = "Please give New Deadline";
+            ButtonText.text = "Reinstiate Task";
+        }
     }
     private void StopFromEditMode()
     {
         ValueManager.taskOnEdit = null;
+        tastReturninEdit = false;
         HeadTitle.text = "Create new Task";
         ButtonText.text = "Add Task";
     }

@@ -64,6 +64,12 @@ public class NotificationSystem : MonoBehaviour , IObserver
         NotficationStatusReaction(false);
         print("Reaction on new Task");
     }
+    public void NotficationStatusReaction(Taskmaster.Task task,string t, string d, int[] dt, float prio) //!! vllt anders als mit diesen "Toten" Parameter 
+    {
+        NotficationStatusReaction(false);
+        print("Reaction on new Task");
+    }
+
     public void SendNewGeneralNotifcation()
     {
         var notification = new AndroidNotification(
@@ -285,6 +291,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
     {
         Subject.current.OnTaskSetDone += CancelNotificationsX;
         Subject.current.OnNewTask += NotficationStatusReaction;
+        Subject.current.OnTaskReturning += NotficationStatusReaction;
         Subject.current.OnTaskChange += CancelDeadlineNotificationsX;
         Subject.current.SetonRequest_NotiID(SendNewDeadlineNotificationsX);
 
@@ -296,6 +303,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         Subject.current.OnTaskSetDone -= CancelNotificationsX;
         Subject.current.OnNewTask -= NotficationStatusReaction;
         Subject.current.OnTaskChange -= CancelDeadlineNotificationsX;
+        Subject.current.OnTaskReturning -= NotficationStatusReaction;
     }
     private void OnDisable()
     {
