@@ -42,7 +42,8 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     public void CreateNewTask(string t, string d, int[] dt, float p)
     {
-        //Hier muss noch ein Namecheck rein , keine Doppelten
+        t = AvoidDoubleName(t); // Namecheck  , keine Doppelten
+
         if (dt != null & dt.Length != 0)
         {
             print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
@@ -93,8 +94,9 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p)
     {
+        t = AvoidDoubleName(t); // Namecheck  , keine Doppelten
 
-        if(dt == null)
+        if (dt == null)
         {
             dataSave.ChangeTask(oldtask, t, d, dt, p, 0); //0 = keine Meldungen , Cancel der Alten über das Event (im Notfi)
         }
@@ -210,6 +212,34 @@ public class Taskmaster : MonoBehaviour, IObserver
         CreateNewTask(t, d, dt, prio);
     }
 
+    public string AvoidDoubleName(string titel)
+    {
+        string checkedtitel = titel;
+        bool doublefound = true;
+        int repeating = 0;
+        while (doublefound)
+        {
+            
+            doublefound = false;
+            print("Round" + repeating);
+            foreach (Task task in dataSave.GetList())
+            {
+                if (checkedtitel == task.Titel)
+                {
+                    print("double");
+
+                    repeating++;
+                    checkedtitel = titel + "(" + repeating + ")";
+                    doublefound = true;
+                    break;
+                }
+            }
+
+        }
+        return checkedtitel;
+       
+    }
+
     public void SubscribeToEvents_Start()
     {
         Subject.current.OnTaskSetDone += RemoveTask;
@@ -251,13 +281,16 @@ public class Taskmaster : MonoBehaviour, IObserver
     {
         [SerializeField] string titel;
         [SerializeField] string description;
-        [SerializeField] int[] deadline;  /// DateTime nicht so leicht serizaible | dewegen int[]
+        [SerializeField] int[] deadline;  /// DateTime nicht (so leicht) serizaible | dewegen int[]
 
         [SerializeField] int deadlineChannel_ID = 0;
         [SerializeField] float prio;
 
-
         [SerializeField] bool redo = false;
+
+        //   [SerializeField] int returningDtDayes = 0;
+       // [SerializeField] int[] resultingDTReturing = null;
+
         [SerializeField] bool sucess = false;
         [SerializeField] bool done = false;
        
@@ -277,6 +310,7 @@ public class Taskmaster : MonoBehaviour, IObserver
             prio = p;
             deadlineChannel_ID = dlID;
         }
+      
 
         public string Titel { get => titel; set => titel = value; }
         public string Description { get => description; set => description = value; }
