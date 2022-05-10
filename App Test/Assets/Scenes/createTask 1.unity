@@ -970,7 +970,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 404.4068
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -994,7 +994,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 172998554}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: 203, y: 405, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2570,7 +2570,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &507910175
 Canvas:
   m_ObjectHideFlags: 0
@@ -2580,8 +2580,8 @@ Canvas:
   m_GameObject: {fileID: 507910172}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_RenderMode: 2
+  m_Camera: {fileID: 172998556}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -2601,7 +2601,7 @@ RectTransform:
   m_GameObject: {fileID: 507910172}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.2708823, y: 0.2708823, z: 0.2708823}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1749681418}
@@ -2617,9 +2617,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 198.14693, y: 403.8531}
+  m_SizeDelta: {x: 1462.9744, y: 2981.7603}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &517039910
 GameObject:
   m_ObjectHideFlags: 0
@@ -9195,6 +9195,66 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 439151799362368072, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 172998556}
+    - target: {fileID: 439151799362368072, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_RenderMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368075, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1463.1289
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 2986.899
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.2708823
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.2708823
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.2708823
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 198.16792
+      objectReference: {fileID: 0}
+    - target: {fileID: 439151799362368181, guid: 0557482ba9a877f4396101214446d178, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 403.43106
+      objectReference: {fileID: 0}
     - target: {fileID: 439151799608720369, guid: 0557482ba9a877f4396101214446d178, type: 3}
       propertyPath: m_Name
       value: MessageBoxPrototype

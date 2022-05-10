@@ -99,19 +99,35 @@ public class Taskmaster : MonoBehaviour
     }
 
 
-    public List<Task> GetSortedTasks()
+    public List<Task> GetSortedTasks(int sortBy)
     {
         List<Task> unsort = dataSave.GetList();
 
-        List<Task> sorted = unsort.OrderBy(t => t.DeadlineChannel_ID)
-            .ThenBy(t => t.Prio)
-            .ThenByDescending(t => {
-                if (t.DeadlineChannel_ID == 0) return 0;
-                return new DateTimeOffset(new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0)).ToUnixTimeSeconds();
-            })
-            .ToList();
-
-        return sorted;
+        if (sortBy == 0)
+        {
+            return unsort.OrderBy(t => t.DeadlineChannel_ID)
+                .ThenBy(t => t.Prio)
+                .ThenByDescending(t => {
+                    if (t.DeadlineChannel_ID == 0) return 0;
+                    return new DateTimeOffset(new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0)).ToUnixTimeSeconds();
+                })
+                .ToList();
+        }
+        else if (sortBy == 1)
+        {
+            return unsort.OrderBy(t => t.DeadlineChannel_ID)
+                .ThenByDescending(t => {
+                    if (t.DeadlineChannel_ID == 0) return 0;
+                    return new DateTimeOffset(new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0)).ToUnixTimeSeconds();
+                })
+                .ThenBy(t => t.Prio)
+                .ToList();
+        }
+        else
+        {
+            return unsort.OrderByDescending(t => t.Titel)
+                .ToList();
+        }
     }
 
     private void SaveList()

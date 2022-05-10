@@ -1,5 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class ToDoPageController : MonoBehaviour
 {
@@ -16,22 +17,36 @@ public class ToDoPageController : MonoBehaviour
 
     public void FetchTasks()
     {
+        TMPro.TMP_Dropdown sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
         //clear and fill UI with existing tasks   
-        for(int i = 0; i < taskContainer.childCount; i++)
+        for (int i = 0; i < taskContainer.childCount; i++)
         {
             Destroy(taskContainer.transform.GetChild(i).gameObject);
         }
 
-        if (taskmaster.GetTasks() is not null)
+        /*if (taskmaster.GetTasks() is not null)
         {
             foreach (Taskmaster.Task task in taskmaster.GetSortedTasks())
             {
                 AddTask(task);
             }
-        }  
+        } */
+
+        List<Taskmaster.Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
+        if (tasks is not null)
+        {
+            foreach (Taskmaster.Task task in tasks)
+            {
+                AddTask(task);
+            }
+        }
     }
 
     void Start()
+    {
+        FetchTasks();
+    }
+    void Update()
     {
         FetchTasks();
     }
