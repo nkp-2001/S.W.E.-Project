@@ -15,6 +15,6 @@ EditorBuildSettings:
     path: Assets/Scenes/createTask 1.unity
     guid: d5534cb604339b14ea67381e0d6b673e
   - enabled: 1
-    path: Assets/Scenes/ToDoList.unity
+    path: Assets/Scenes/NewToDoList.unity
     guid: 1d8d9a6c247885349bcd1603b00c0f66
   m_configObjects: {}
