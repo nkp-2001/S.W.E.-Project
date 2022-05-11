@@ -12,6 +12,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
     [SerializeField] private GameObject taskPrototype;
     [SerializeField] bool ShowOldTask = false;
     [SerializeField] TextMeshProUGUI ButtonText;
+    TMPro.TMP_Dropdown sortByDropdown;
 
     public void AddTask(Taskmaster.Task t)
     {
@@ -31,9 +32,10 @@ public class ToDoPageController : MonoBehaviour,IObserver
             //clear and fill UI with existing tasks   
             ClearScrollView();
 
-            if (taskmaster.GetTasks() is not null)
+            List<Taskmaster.Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
+            if (tasks is not null)
             {
-                foreach (Taskmaster.Task task in taskmaster.GetSortedTasks())
+                foreach (Taskmaster.Task task in tasks)
                 {
                     AddTask(task);
                 }
@@ -100,6 +102,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
     private void OnEnable()
     {
+        sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
         taskmaster = FindObjectOfType<Taskmaster>();
         FetchTasks(); 
     }
