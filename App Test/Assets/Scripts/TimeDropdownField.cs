@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using TMPro;
 
 
-public class TimeDropdownField : MonoBehaviour, IObservee<int>
+public class TimeDropdownField : MonoBehaviour
 {
     private TMP_Dropdown dropdown;
     private Dictionary<string, int> indexOfOption = new Dictionary<string, int>();
@@ -49,11 +49,5 @@ public class TimeDropdownField : MonoBehaviour, IObservee<int>
     public string GetCurrentOption()
     {
         return dropdown.options[dropdown.value].text;
-    }
-
-    public void AddObserver(IObserver<int> observer)
-    {
-        UnityAction<int> notifyObserver = observer.Notify;
-        dropdown.onValueChanged.AddListener(notifyObserver);
     }
 }
