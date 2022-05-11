@@ -4,23 +4,25 @@ using UnityEngine;
 using System.Globalization;
 using System;
 using System.IO;
-using System.Linq; 
+using System.Linq;
+using UnityEngine.SceneManagement;
 
-public class Taskmaster : MonoBehaviour
+public class Taskmaster : MonoBehaviour, IObserver
 {
     [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
     string filename = "SavedList.txt";
-    [SerializeField] NotificationSystem notificationSystem;
+    [SerializeField] NotificationSystem notificationSystem; // nicht mehr nötig
 
 
-    private void Awake() 
+    private void Awake()
     {
         Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Singleton , Scenenwechesel loescht es nicht 
 
         if (objs.Length > 1)
         {
             Destroy(this.gameObject);
+            return;
         }
 
         DontDestroyOnLoad(this.gameObject);
@@ -29,8 +31,8 @@ public class Taskmaster : MonoBehaviour
     }
     private void Start()
     {
-        notificationSystem = FindObjectOfType<NotificationSystem>();
-
+       // notificationSystem = FindObjectOfType<NotificationSystem>(); // nicht mehr nötig
+       
         CheckDeadlinesTask();
     }
 
@@ -40,52 +42,78 @@ public class Taskmaster : MonoBehaviour
     }
     public void CreateNewTask(string t, string d, int[] dt, float p)
     {
-        //Hier muss noch ein Namecheck rein , keine Doppelten
-        if (dt != null)
+        t = AvoidDoubleName(t); // Namecheck  , keine Doppelten
+
+        if (dt != null & dt.Length != 0)
         {
             print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
 
-            int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2],dt[1],dt[0],0));
-            Task new_task = new Task(t, d, dt, p,id);
-            dataSave.AddNewToList(new_task);
+           // int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            
+            int id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            if (id != 0)
+            {
+                print("System plugged");
+                Task new_task = new Task(t, d, dt, p, id);
+                dataSave.AddNewToList(new_task);
+            }
+            else 
+            {
+                print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiID hasen`t been assigend by it");
+                Task new_task = new Task(t, d, dt, p);
+                dataSave.AddNewToList(new_task);
+            } 
         }
         else
         {
             Task new_task = new Task(t, d, dt, p);
             dataSave.AddNewToList(new_task);
-        }  
-        SaveList();
-        notificationSystem.NotficationStatusReaction(false);
-    }
-    
-    public void RemoveTask(int index)
-    {
-        notificationSystem.CancelDeadlineNotificationsX(dataSave.GetList()[index].DeadlineChannel_ID);
-
-        if (dataSave.RemoveFromList(index) == 0)
-        {
-            notificationSystem.NotficationStatusReaction(true);
         }
+        SaveList();
+       // notificationSystem.NotficationStatusReaction(false);
+    }
+
+    public void RemoveTask(int index) 
+    {
+       
+        dataSave.RemoveFromList(dataSave.GetList()[index].DeadlineChannel_ID);
         SaveList();
     }
     public void RemoveTask(Task tk)
     {
 
-        notificationSystem.CancelDeadlineNotificationsX(tk.DeadlineChannel_ID);
+        //notificationSystem.CancelDeadlineNotificationsX(tk.DeadlineChannel_ID);
 
-        if (dataSave.RemoveFromList(tk) == 0)
-        {
-            notificationSystem.NotficationStatusReaction(true);
-        }
+        //if (dataSave.RemoveFromList(tk) == 0)
+        //{
+        //    notificationSystem.NotficationStatusReaction(true);
+        //}
+
+        dataSave.RemoveFromList(tk);
         SaveList();
     }
-    public void ChangeTask(Task oldtask,string t, string d, int[] dt, float p)
+    public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p)
     {
-        if (oldtask.Deadline != dt)
+        t = AvoidDoubleName(t); // Namecheck  , keine Doppelten
+
+        if (dt == null)
         {
-            notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
-            int new_id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-            dataSave.ChangeTask(oldtask,t, d, dt, p, new_id);
+            dataSave.ChangeTask(oldtask, t, d, dt, p, 0); //0 = keine Meldungen , Cancel der Alten über das Event (im Notfi)
+        }
+        else if (oldtask.Deadline != dt)
+        {
+           // notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
+            int new_id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+            if (new_id != 0)
+            {
+                dataSave.ChangeTask(oldtask, t, d, dt, p, new_id);
+            }
+            else
+            {
+                print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiID hasen`t been assigend by it");
+                dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID);
+            }
+           
         }
         else
         {
@@ -96,6 +124,10 @@ public class Taskmaster : MonoBehaviour
     public List<Task> GetTasks()
     {
         return dataSave.GetList();
+    }
+    public int GetTaskListLenght()
+    {
+        return GetTasks().Count;
     }
 
 
@@ -113,20 +145,24 @@ public class Taskmaster : MonoBehaviour
 
         return sorted;
     }
+    public List<Task> GetArchivedTasks()
+    {
+        return dataSave.GetArchivedList();
+    }
 
     private void SaveList()
     {
         string dir = Application.persistentDataPath + directory;
-        
+
         if (!Directory.Exists(dir))
         {
             Directory.CreateDirectory(dir);
-  
+
         }
-      
+
 
         string saveJason = JsonUtility.ToJson(dataSave);
-        
+
         File.WriteAllText(dir + filename, saveJason);
 
 
@@ -139,10 +175,10 @@ public class Taskmaster : MonoBehaviour
         if (File.Exists(loadpath))
         {
             string readstring = File.ReadAllText(loadpath);
-            if(readstring != "")
+            if (readstring != "")
             {
                 dataSave = JsonUtility.FromJson<SaveObject>(readstring);
-            }         
+            }
         }
         else
         {
@@ -151,21 +187,93 @@ public class Taskmaster : MonoBehaviour
     }
     public void CheckDeadlinesTask()
     {
-            foreach (Task t in (dataSave.GetList()).ToArray())
+        foreach (Task t in (dataSave.GetList()).ToArray())
+        {
+            if (t.Deadline != null && t.Deadline.Length != 0)
             {
-                if (t.Deadline != null && t.Deadline.Length != 0)
-            {
-                    if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
-                    {
-                        print("Checkout");
-                        RemoveTask(t);
-                        FindObjectOfType<ToDoPageController>().FetchTasks(); // Refernez Sache anpssen Scenenwechesl etc beachten 
+                if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
+                {
+                    print("Checkout");
+                    t.Done = true;
+                    RemoveTask(t);
+                    Subject.current.Trigger_ExpiredDeadline();
 
-                    }
+
+
                 }
             }
-        
+        }
+
     }
+
+    public void ManageTaskReturn(Taskmaster.Task oldtask, string t, string d, int[] dt, float prio)
+    {
+        dataSave.RemoveFromArchieList(oldtask);
+        CreateNewTask(t, d, dt, prio);
+    }
+
+    public string AvoidDoubleName(string titel)
+    {
+        string checkedtitel = titel;
+        bool doublefound = true;
+        int repeating = 0;
+        while (doublefound)
+        {
+            
+            doublefound = false;
+            print("Round" + repeating);
+            foreach (Task task in dataSave.GetList())
+            {
+                if (checkedtitel == task.Titel)
+                {
+                    print("double");
+
+                    repeating++;
+                    checkedtitel = titel + "(" + repeating + ")";
+                    doublefound = true;
+                    break;
+                }
+            }
+
+        }
+        return checkedtitel;
+       
+    }
+
+    public void SubscribeToEvents_Start()
+    {
+        Subject.current.OnTaskSetDone += RemoveTask;
+        Subject.current.OnNewTask += CreateNewTask;
+        Subject.current.OnTaskChange += ChangeTask;
+        Subject.current.OnTaskReturning += ManageTaskReturn;
+
+
+    }
+
+    public void UnsubscribeToAllEvents()
+    {
+        Subject.current.OnTaskSetDone -= RemoveTask;
+        Subject.current.OnNewTask -= CreateNewTask;
+        Subject.current.OnTaskChange -= ChangeTask;
+        Subject.current.OnTaskReturning -= ManageTaskReturn;
+    }
+    
+    private void OnDestroy()
+    {
+        UnsubscribeToAllEvents();
+        print("2xxxx");
+
+    }
+    private void OnEnable()
+    {
+        SubscribeToEvents_Start();
+        
+        Debug.Log("OnEnable");
+    }
+  
+
+
+
 
     ///////////// Task ////////////
     [Serializable]
@@ -173,15 +281,19 @@ public class Taskmaster : MonoBehaviour
     {
         [SerializeField] string titel;
         [SerializeField] string description;
-        [SerializeField] int[] deadline;  /// DateTime nicht so leicht serizaible | dewegen int[]
+        [SerializeField] int[] deadline;  /// DateTime nicht (so leicht) serizaible | dewegen int[]
 
         [SerializeField] int deadlineChannel_ID = 0;
         [SerializeField] float prio;
-        
 
-        bool redo = false;
-        bool done = false;
-        bool sucess = false;
+        [SerializeField] bool redo = false;
+
+        //   [SerializeField] int returningDtDayes = 0;
+       // [SerializeField] int[] resultingDTReturing = null;
+
+        [SerializeField] bool sucess = false;
+        [SerializeField] bool done = false;
+       
 
         public Task(string t, string d, int[] dt, float p)
         {
@@ -198,12 +310,16 @@ public class Taskmaster : MonoBehaviour
             prio = p;
             deadlineChannel_ID = dlID;
         }
+      
 
         public string Titel { get => titel; set => titel = value; }
         public string Description { get => description; set => description = value; }
         public float Prio { get => prio; set => prio = value; }
         public int[] Deadline { get => deadline; set => deadline = value; }
         public int DeadlineChannel_ID { get => deadlineChannel_ID; set => deadlineChannel_ID = value; }
+        public bool Done { get => done; set => done = value; }
+        public bool Redo { get => redo; set => redo = value; }
+        public bool Sucess { get => sucess; set => sucess = value; }
     }
 
     /////// Save Object
@@ -212,6 +328,7 @@ public class Taskmaster : MonoBehaviour
    public class SaveObject
    {
         [SerializeField] List<Task> tasklist = new List<Task>();
+        [SerializeField] List<Task> archivedTasks = new List<Task>();
         public void AddNewToList(Task addT)
         {
             tasklist.Add(addT);
@@ -221,18 +338,32 @@ public class Taskmaster : MonoBehaviour
             tasklist.RemoveAt(i);
             return tasklist.Count;
         }
-        public int RemoveFromList(Task tk)
+        public int RemoveFromListAndGiveCount(Task tk) // veraltet ??
         {
             tasklist.Remove(tk);
             return tasklist.Count;
+        }
+        public void RemoveFromList(Task tk)
+        {
+            tasklist.Remove(tk);
+            archivedTasks.Add(tk);
+        }
+        public void RemoveFromArchieList(Task tk)
+        {
+            archivedTasks.Remove(tk);
         }
         public List<Task> GetList()
         {
             return tasklist;
         }
+        public List<Task> GetArchivedList()
+        {
+            return archivedTasks;
+        }
         public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id)
         {
-            int index = tasklist.FindLastIndex(task => task.Titel == t); //Kann nur klappen wenn allles Unterschidlich heißt anpassen!!!
+            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich heißt anpassen!!!
+            print(index);
             tasklist[index] = new Task(t, d, dt, p,id);     
         }        
    }

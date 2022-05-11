@@ -129,7 +129,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 36.72632, y: -112.61932, z: 163.0365, w: 15.136333}
+  m_margin: {x: 36.72632, y: -112.61932, z: 294.58838, w: 15.136333}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -307,8 +307,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1175.8427, y: 5.7726}
-  m_SizeDelta: {x: 134.4773, y: 357.1111}
+  m_AnchoredPosition: {x: 1106.3069, y: 7.6519}
+  m_SizeDelta: {x: 270.2069, y: 338.3177}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4136480611108318398
 CanvasRenderer:
@@ -391,7 +391,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6588739486915769145}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 2814354614230403387}
+        m_TargetAssemblyTypeName: TaskPrototype, Assembly-CSharp
+        m_MethodName: ButtonReaction
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2814354613551324542
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,7 +642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.01886791, g: 0.01886791, b: 0.01886791, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -668,7 +680,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 0.122641504, g: 0.122641504, b: 0.122641504, a: 1}
+    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
     m_HighlightedColor: {r: 0.121568635, g: 0.121568635, b: 0.121568635, a: 1}
     m_PressedColor: {r: 0.36200002, g: 0.36200002, b: 0.36200002, a: 1}
     m_SelectedColor: {r: 0.121568635, g: 0.121568635, b: 0.121568635, a: 1}
@@ -1115,7 +1127,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 30.863937, y: 0, z: 67.90105, w: 23.147995}
+  m_margin: {x: -13.130212, y: 0, z: 16.735893, w: 23.147995}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

@@ -10,7 +10,7 @@ public class DatePicker : MonoBehaviour, IObserver<int>
 
     void Start()
     {
-        InitializeDropdowns();
+        // InitializeDropdowns(); //Weg lassen da es sont Action von SetSelectedDate(int[] dt) überschreibt
     }
 
     void OnEnable()
@@ -105,6 +105,8 @@ public class DatePicker : MonoBehaviour, IObserver<int>
         string dateTimeString = yearDropdown.GetCurrentOption() + "-" + monthDropdown.GetCurrentOption() + "-" + dayDropdown.GetCurrentOption() 
                                     + " " + hourDropdown.GetCurrentOption() + ":" + minuteDropdown.GetCurrentOption() + ":00.0";
 
+        print(dateTimeString);
+
         DateTime dateTime;
         bool success = DateTime.TryParse(dateTimeString, out dateTime);
 
@@ -114,6 +116,24 @@ public class DatePicker : MonoBehaviour, IObserver<int>
         }
 
         return dateTime;
+    }
+    //
+    public void SetSelectedDate(int[] dt)
+    {
+        DateTime datetime = new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0);
+
+        print(datetime.Day.ToString());
+        hourDropdown.SetCurrentOption(datetime.Hour.ToString());
+        minuteDropdown.SetCurrentOption(datetime.Minute.ToString());
+        dayDropdown.SetCurrentOption(datetime.Day.ToString());
+        monthDropdown.SetCurrentOption(datetime.Month.ToString());
+        yearDropdown.SetCurrentOption(datetime.Year.ToString());
+
+        SetInteractability();
+
+
+
+
     }
     
 }

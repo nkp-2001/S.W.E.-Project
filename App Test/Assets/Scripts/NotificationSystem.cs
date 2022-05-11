@@ -3,22 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Notifications.Android;
 using System;
+using UnityEngine.SceneManagement;
 
-public class NotificationSystem : MonoBehaviour
+public class NotificationSystem : MonoBehaviour , IObserver
 {
+    Taskmaster taskmaster;
     private void Awake() 
     {
-        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Singleton , Scenenwechesel löscht es nicht 
+        NotificationSystem[] objs = FindObjectsOfType<NotificationSystem>(); //Singleton , Scenenwechesel löscht es nicht 
 
         if (objs.Length > 1)
         {
             Destroy(this.gameObject);
+            return;
         }
 
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(this.gameObject);       
     }
+       
     void Start() //Register 
     {
+        taskmaster = FindObjectOfType<Taskmaster>();
+        
+
         var channel = new AndroidNotificationChannel()
         {
             Id = "Channel-To-Do-List",
@@ -29,6 +36,8 @@ public class NotificationSystem : MonoBehaviour
         };
         channel.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channel);
+
+       
     }
     public void NotficationStatusReaction(bool ListEmpty)
     {
@@ -49,6 +58,18 @@ public class NotificationSystem : MonoBehaviour
             }
         }
     }
+
+    public void NotficationStatusReaction(string t, string d, int[] dt, float prio) //!! vllt anders als mit diesen "Toten" Parameter 
+    {
+        NotficationStatusReaction(false);
+        print("Reaction on new Task");
+    }
+    public void NotficationStatusReaction(Taskmaster.Task task,string t, string d, int[] dt, float prio) //!! vllt anders als mit diesen "Toten" Parameter 
+    {
+        NotficationStatusReaction(false);
+        print("Reaction on new Task");
+    }
+
     public void SendNewGeneralNotifcation()
     {
         var notification = new AndroidNotification(
@@ -233,8 +254,67 @@ public class NotificationSystem : MonoBehaviour
     }
     public void CancelDeadlineNotificationsX(int id)
     {
+       
         AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
 
+    public void CancelDeadlineNotificationsX(Taskmaster.Task oldtask, string t, string d, int[] dt, float p) //!! vllt anders als mit diesen "Toten" Parameter 
+    {
+        
+        if (oldtask.Deadline != dt && oldtask.Deadline != null)
+        {
+            CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
+            print("Reaction on Deadline remove");
+        }
 
+
+    }
+    public void CancelNotificationsX(Taskmaster.Task task)
+    {
+        int id = task.DeadlineChannel_ID;
+        if (id != 0)
+        {
+            AndroidNotificationCenter.DeleteNotificationChannel("" + id);
+        }
+        print("Event noticed" + taskmaster.GetTaskListLenght());
+        if (taskmaster.GetTaskListLenght() == 0) //vllt Listelänge anderes Vermittlen , ohne aufruf aus Speicher? 
+        {
+            print("Zero bei Liste Länge");
+            NotficationStatusReaction(true);
+        }
+       
+       
+    }
+   
+
+    public void SubscribeToEvents_Start()
+    {
+        Subject.current.OnTaskSetDone += CancelNotificationsX;
+        Subject.current.OnNewTask += NotficationStatusReaction;
+        Subject.current.OnTaskReturning += NotficationStatusReaction;
+        Subject.current.OnTaskChange += CancelDeadlineNotificationsX;
+        Subject.current.SetonRequest_NotiID(SendNewDeadlineNotificationsX);
+
+        // if (oldtask.Deadline != dt)
+    }
+
+    public void UnsubscribeToAllEvents()
+    {
+        Subject.current.OnTaskSetDone -= CancelNotificationsX;
+        Subject.current.OnNewTask -= NotficationStatusReaction;
+        Subject.current.OnTaskChange -= CancelDeadlineNotificationsX;
+        Subject.current.OnTaskReturning -= NotficationStatusReaction;
+    }
+    private void OnDisable()
+    {
+        UnsubscribeToAllEvents();
+        print("2xxxx");
+
+    }
+    private void OnEnable()
+    {
+        SubscribeToEvents_Start();   
+        Debug.Log("OnEnable");
+    }
+   
 }
