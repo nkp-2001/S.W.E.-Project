@@ -78,7 +78,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
     {
         ClearScrollView();
 
-        if (taskmaster.GetTasks() is not null)
+        if (taskmaster.GetArchivedTasks() is not null)
         {
             foreach (Taskmaster.Task task in taskmaster.GetArchivedTasks())
             {

@@ -37,7 +37,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         channel.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channel);
 
-       
+        SubscribeToEvents_Start();
     }
     public void NotficationStatusReaction(bool ListEmpty)
     {
@@ -289,6 +289,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
 
     public void SubscribeToEvents_Start()
     {
+      
         Subject.current.OnTaskSetDone += CancelNotificationsX;
         Subject.current.OnNewTask += NotficationStatusReaction;
         Subject.current.OnTaskReturning += NotficationStatusReaction;
@@ -313,7 +314,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
     }
     private void OnEnable()
     {
-        SubscribeToEvents_Start();   
+       
         Debug.Log("OnEnable");
     }
    

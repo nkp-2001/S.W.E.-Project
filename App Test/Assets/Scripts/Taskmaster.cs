@@ -34,6 +34,8 @@ public class Taskmaster : MonoBehaviour, IObserver
        // notificationSystem = FindObjectOfType<NotificationSystem>(); // nicht mehr nötig
        
         CheckDeadlinesTask();
+
+      
     }
 
     private void OnApplicationFocus(bool focus) // vllt noch stattdessen anderes Call Event dafür benutzten
@@ -297,15 +299,15 @@ public class Taskmaster : MonoBehaviour, IObserver
     {
         [SerializeField] string titel;
         [SerializeField] string description;
-        [SerializeField] int[] deadline;  /// DateTime nicht (so leicht) serizaible | dewegen int[]
+        [SerializeField] int[] deadline;  /// DateTime nicht (so leicht) serizaible | dewegen muss auf int[] ausgeweischt werden
 
         [SerializeField] int deadlineChannel_ID = 0;
         [SerializeField] float prio;
 
         [SerializeField] bool redo = false;
 
-        //   [SerializeField] int returningDtDayes = 0;
-       // [SerializeField] int[] resultingDTReturing = null;
+        [SerializeField] int nextDeadlineIndex = 0;
+        [SerializeField] public int[] nextDeadline = null;
 
         [SerializeField] bool sucess = false;
         [SerializeField] bool done = false;
@@ -326,7 +328,18 @@ public class Taskmaster : MonoBehaviour, IObserver
             prio = p;
             deadlineChannel_ID = dlID;
         }
-      
+        public Task(string t, string d, int[] dt, float p, int dlID,int retDtDayes)
+        {
+            titel = t;
+            description = d;
+            deadline = dt;
+            prio = p;
+            deadlineChannel_ID = dlID;
+
+            nextDeadlineIndex = retDtDayes;
+        }
+
+
 
         public string Titel { get => titel; set => titel = value; }
         public string Description { get => description; set => description = value; }
@@ -336,6 +349,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         public bool Done { get => done; set => done = value; }
         public bool Redo { get => redo; set => redo = value; }
         public bool Sucess { get => sucess; set => sucess = value; }
+        public int NextDeadlineIndex { get => nextDeadlineIndex; set => nextDeadlineIndex = value; }
     }
 
     /////// Save Object
@@ -354,7 +368,7 @@ public class Taskmaster : MonoBehaviour, IObserver
             tasklist.RemoveAt(i);
             return tasklist.Count;
         }
-        public int RemoveFromListAndGiveCount(Task tk) // veraltet ??
+        public int RemoveFromListAndGiveCount(Task tk) // veraltet 
         {
             tasklist.Remove(tk);
             return tasklist.Count;
@@ -362,8 +376,35 @@ public class Taskmaster : MonoBehaviour, IObserver
         public void RemoveFromList(Task tk)
         {
             tasklist.Remove(tk);
+            if(tk.Redo == true && tk.Sucess == true)
+            {
+                tk.nextDeadline = CaculuateNextDT(tk);
+
+            }
             archivedTasks.Add(tk);
         }
+
+        private int[] CaculuateNextDT(Task tk)
+        {
+            DateTime dateTime = new DateTime();
+            switch (tk.NextDeadlineIndex)
+            {
+                case 1:
+                    dateTime = new DateTime(tk.Deadline[4], tk.Deadline[3], tk.Deadline[2], tk.Deadline[1], tk.Deadline[0], 0).AddDays(1);
+                    break;
+                case 2:
+                    dateTime = new DateTime(tk.Deadline[4], tk.Deadline[3], tk.Deadline[2], tk.Deadline[1], tk.Deadline[0], 0).AddDays(7);
+                    break;
+                case 3:
+                    dateTime = new DateTime(tk.Deadline[4], tk.Deadline[3], tk.Deadline[2], tk.Deadline[1], tk.Deadline[0], 0).AddMonths(1);
+                    break;
+                case 4:
+                    dateTime = new DateTime(tk.Deadline[4], tk.Deadline[3], tk.Deadline[2], tk.Deadline[1], tk.Deadline[0], 0).AddYears(1);
+                    break;
+            }
+            return new int[] { dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute };
+        }
+
         public void RemoveFromArchieList(Task tk)
         {
             archivedTasks.Remove(tk);
@@ -375,6 +416,10 @@ public class Taskmaster : MonoBehaviour, IObserver
         public List<Task> GetArchivedList()
         {
             return archivedTasks;
+        }
+        public void ClearArchviedList()
+        {
+            archivedTasks.Clear();
         }
         public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id)
         {
