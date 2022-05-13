@@ -378,28 +378,28 @@ public class Taskmaster : MonoBehaviour, IObserver
             tasklist.Remove(tk);
             if(tk.Redo == true && tk.Sucess == true)
             {
-                tk.nextDeadline = CaculuateNextDT(tk);
+                tk.nextDeadline = CaculuateNextDT(tk.NextDeadlineIndex,tk.Deadline);
 
             }
             archivedTasks.Add(tk);
         }
 
-        private int[] CaculuateNextDT(Task tk)
+        private int[] CaculuateNextDT(int nextDeadlineIndex, int[] currentDeadline)
         {
-            DateTime dateTime = new DateTime();
-            switch (tk.NextDeadlineIndex)
+            DateTime dateTime = new DateTime(currentDeadline[4], currentDeadline[3], currentDeadline[2], currentDeadline[1], currentDeadline[0], 0);
+            switch (nextDeadlineIndex)
             {
                 case 1:
-                    dateTime = new DateTime(tk.Deadline[4], tk.Deadline[3], tk.Deadline[2], tk.Deadline[1], tk.Deadline[0], 0).AddDays(1);
+                    dateTime = dateTime.AddDays(1);
                     break;
                 case 2:
-                    dateTime = new DateTime(tk.Deadline[4], tk.Deadline[3], tk.Deadline[2], tk.Deadline[1], tk.Deadline[0], 0).AddDays(7);
+                    dateTime = dateTime.AddDays(7);
                     break;
                 case 3:
-                    dateTime = new DateTime(tk.Deadline[4], tk.Deadline[3], tk.Deadline[2], tk.Deadline[1], tk.Deadline[0], 0).AddMonths(1);
+                    dateTime = dateTime.AddMonths(1);
                     break;
                 case 4:
-                    dateTime = new DateTime(tk.Deadline[4], tk.Deadline[3], tk.Deadline[2], tk.Deadline[1], tk.Deadline[0], 0).AddYears(1);
+                    dateTime = dateTime.AddYears(1);
                     break;
             }
             return new int[] { dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute };
