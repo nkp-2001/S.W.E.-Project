@@ -90,6 +90,10 @@ public class Taskmaster : MonoBehaviour, IObserver
         //{
         //    notificationSystem.NotficationStatusReaction(true);
         //}
+        if (tk.NextDeadlineIndex != 0)
+        {
+
+        }
 
         dataSave.RemoveFromList(tk);
         SaveList();
@@ -215,12 +219,10 @@ public class Taskmaster : MonoBehaviour, IObserver
                     t.Done = true;
                     RemoveTask(t);
                     Subject.current.Trigger_ExpiredDeadline();
-
-
-
                 }
             }
         }
+
 
     }
 
@@ -337,6 +339,7 @@ public class Taskmaster : MonoBehaviour, IObserver
             deadlineChannel_ID = dlID;
 
             nextDeadlineIndex = retDtDayes;
+
         }
 
 
@@ -376,11 +379,6 @@ public class Taskmaster : MonoBehaviour, IObserver
         public void RemoveFromList(Task tk)
         {
             tasklist.Remove(tk);
-            if(tk.Redo == true && tk.Sucess == true)
-            {
-                tk.nextDeadline = CaculuateNextDT(tk.NextDeadlineIndex,tk.Deadline);
-
-            }
             archivedTasks.Add(tk);
         }
 
