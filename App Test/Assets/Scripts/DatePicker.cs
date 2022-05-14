@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DatePicker : MonoBehaviour, IObserver<int>
+public class DatePicker : MonoBehaviour
 {
     [SerializeField] private Toggle isInteractibleToggle;
     [SerializeField] private TimeDropdownField hourDropdown, minuteDropdown, dayDropdown, monthDropdown, yearDropdown;
@@ -54,9 +54,6 @@ public class DatePicker : MonoBehaviour, IObserver<int>
         monthDropdown.SetOptions(monthOptions);
         yearDropdown.SetOptions(yearOptions);
 
-        monthDropdown.AddObserver(this);
-        yearDropdown.AddObserver(this);
-
         hourDropdown.SetCurrentOption(currentDateTime.Hour.ToString());
         minuteDropdown.SetCurrentOption(currentDateTime.Minute.ToString());
         dayDropdown.SetCurrentOption(currentDateTime.Day.ToString());
@@ -93,7 +90,7 @@ public class DatePicker : MonoBehaviour, IObserver<int>
         SetInteractability();
     }
 
-    public void Notify<T>(T _)
+    public void UpdateDaysList()
     {
         DateTime selectedDate = GetSelectedDate();
         List<string> daysInSelectedMonth = GetStringListOfDaysInMonth(selectedDate.Year, selectedDate.Month);
