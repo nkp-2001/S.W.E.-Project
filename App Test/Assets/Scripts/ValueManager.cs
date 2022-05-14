@@ -22,6 +22,7 @@ public class ValueManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI HeadTitle;
     [SerializeField] TextMeshProUGUI ButtonText;
+    [SerializeField] TMP_Dropdown repeatDropDown;
 
     void Start()
     {
@@ -51,10 +52,12 @@ public class ValueManager : MonoBehaviour
       
        DateTime dtraw = datePicker.GetSelectedDate();
        int[] dt;
+       int repeatIndex = 0;
        if (dltoggle.isOn)
        {
-             dt = new int[]{dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year};
-       }
+            dt = new int[]{dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year};
+            repeatIndex = repeatDropDown.value;
+        }
        else
        {
             dt = null;
@@ -64,17 +67,17 @@ public class ValueManager : MonoBehaviour
         // tm.CreateNewTask(titel.text, discrip.text,dt, prio.value);
         if (taskOnEdit == null)
         {
-            Subject.current.Trigger_OnNewTask(titel.text, discrip.text, dt, prio.value);
+            Subject.current.Trigger_OnNewTask(titel.text, discrip.text, dt, prio.value, repeatIndex);
         }
         else
         {
             if (!tastReturninEdit)
             {
-                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value);
+                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value,repeatIndex);
             }
             else
             {
-                Subject.current.Trigger_OnTaskReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value);
+                Subject.current.Trigger_OnTaskReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value,repeatIndex);
                 tastReturninEdit = false;
             }
 

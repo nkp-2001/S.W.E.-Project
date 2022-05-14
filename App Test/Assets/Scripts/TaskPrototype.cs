@@ -39,29 +39,32 @@ public class TaskPrototype : MonoBehaviour, IObserver
         transform.SetParent(taskContainer);
         transform.localScale = Vector3.one;
         gameObject.SetActive(true);
+
+        if (t.NextDeadlineIndex != 0 && ( t.Failedtimes + t.Sucessedtimes) > 0)
+        {
+            if (t.Failedprevios == true)
+            {
+                ChangeColorBanner(new Color32(0, 50, 0, 255), new Color32(0, 20, 0, 255));
+            }
+            else
+            {
+                ChangeColorBanner(new Color32(50, 0, 0, 255), new Color32(20, 0, 0, 255));
+            }
+        }
     }
     public void Setup_OldTask(Taskmaster.Task t, Transform taskContainer)
     {      
         Setup( t,  taskContainer);        
-        Button button = GetComponentInChildren<Button>();
+       
         if (t.Sucess)
         {
-            GetComponentInChildren<Image>().color = new Color32(0, 180, 0, 255);
-            ColorBlock cb = button.colors;
-            cb.normalColor = new Color32(0, 180, 0, 255);
-            cb.highlightedColor = new Color32(0, 100, 0, 255);
-            cb.pressedColor = new Color32(0, 100, 0, 255);
-            button.colors = cb;
+            ChangeColorBanner(new Color32(0, 180, 0, 255),new Color32(0, 100, 0, 255));
 
         }
         else
         {
-            GetComponentInChildren<Image>().color = new Color32(180, 0, 0, 255);
-            ColorBlock cb = button.colors;
-            cb.normalColor = new Color32(180, 0, 0, 255);
-            cb.highlightedColor = new Color32(180, 0, 0, 255);
-            cb.pressedColor = new Color32(100, 0, 0, 255);
-            button.colors = cb;
+            ChangeColorBanner(new Color32(180, 0, 0, 255), new Color32(100, 0, 0, 255));
+           
         }
         transform.GetChild(1).gameObject.SetActive(false);
         transform.GetChild(0).GetChild(2).GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = "Do it \n again"; //vllt doch per Feld machen , aber da nur einmal benutzt eigentlich überflüssig
@@ -70,11 +73,23 @@ public class TaskPrototype : MonoBehaviour, IObserver
 
     }
 
+    private void ChangeColorBanner(Color32 newColor,Color32 highlightcolor)
+    {
+        Button button = GetComponentInChildren<Button>();
+        GetComponentInChildren<Image>().color = newColor;
+        ColorBlock cb = button.colors;
+        cb.normalColor = newColor;
+        cb.highlightedColor = highlightcolor;
+        cb.pressedColor = highlightcolor;
+        button.colors = cb;
+    }
 
     public void SetTaskToDone()
     {
-        task.Sucess = true;
+        task.Sucess = true; // *
         task.Done = true;
+        task.Sucessedtimes++;
+        task.Failedprevios = false; // -sehen ob es nur mit succes auch geht
         for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Verhinderer , Obersever Anpassung ?
         {
             transform.parent.GetChild(index).GetComponent<TaskPrototype>().HideDescription();
@@ -159,11 +174,11 @@ public class TaskPrototype : MonoBehaviour, IObserver
            
             if (dt.Length == 0)
             {
-                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio);
+                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio,task.NextDeadlineIndex);
             }
             else if ((new System.DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0) > System.DateTime.Now))
             {
-                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio);
+                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio, task.NextDeadlineIndex);
             }
             else
             {
