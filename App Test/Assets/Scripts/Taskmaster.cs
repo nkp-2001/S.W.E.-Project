@@ -232,6 +232,7 @@ public class Taskmaster : MonoBehaviour, IObserver
                 t.Deadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);
                 t.DeadlineChannel_ID = Subject.current.Trigger_Request_NotiID(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
                 dataSave.AddNewToList(t);
+                Subject.current.Trigger_ExpiredDeadline();
             }
         }
        
