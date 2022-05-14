@@ -87,7 +87,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
         }
     }
 
-    public void FetchTasks(Taskmaster.Task task, string t, string d, int[] dt, float prio)
+    public void FetchTasks(Taskmaster.Task task, string t, string d, int[] dt, float prio,int i)
     {
         FetchTasks();
     }

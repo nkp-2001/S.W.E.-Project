@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class TaskPrototype : MonoBehaviour, IObserver
 {   //!nicht die Child Strukur anfassen
     private Taskmaster taskMaster;
-    private Taskmaster.Task task;
+   [SerializeField] private Taskmaster.Task task;
     RectTransform rect;
     bool showingOldTask = false;
     GameObject dircTobj;
@@ -33,23 +33,30 @@ public class TaskPrototype : MonoBehaviour, IObserver
         }
         dircTobj = transform.GetChild(0).GetChild(2).gameObject;
 
-        dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priotät: " + t.Prio + "\n Discirption: " + t.Description;
+       
         dircTobj.SetActive(false);
 
         transform.SetParent(taskContainer);
         transform.localScale = Vector3.one;
         gameObject.SetActive(true);
 
-        if (t.NextDeadlineIndex != 0 && ( t.Failedtimes + t.Sucessedtimes) > 0)
+        // Bei Repeat 
+        if (t.NextDeadlineIndex != 0 & ( t.Failedtimes + t.Sucessedtimes) > 0)
         {
-            if (t.Failedprevios == true)
+            dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priotät: " + t.Prio + "      ||Sucess:" +t.Sucessedtimes +"|Failed:"+ t.Failedtimes + "|| \n Discirption: " + t.Description;
+            print("Im have come again");
+            if (!t.Failedprevios)
             {
-                ChangeColorBanner(new Color32(0, 50, 0, 255), new Color32(0, 20, 0, 255));
+                ChangeColorBanner(new Color32(0, 90, 0, 255), new Color32(0, 50, 0, 255));
             }
             else
             {
-                ChangeColorBanner(new Color32(50, 0, 0, 255), new Color32(20, 0, 0, 255));
+                ChangeColorBanner(new Color32(90, 0, 0, 255), new Color32(50, 0, 0, 255));
             }
+        }
+        else
+        {
+            dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priotät: " + t.Prio + "\n Discirption: " + t.Description;
         }
     }
     public void Setup_OldTask(Taskmaster.Task t, Transform taskContainer)

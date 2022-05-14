@@ -28,6 +28,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         DontDestroyOnLoad(this.gameObject);
 
         LoadList();
+
     }
     private void Start()
     {
@@ -35,7 +36,9 @@ public class Taskmaster : MonoBehaviour, IObserver
        
         CheckDeadlinesTask();
 
-      
+       
+
+
     }
 
     private void OnApplicationFocus(bool focus) // vllt noch stattdessen anderes Call Event dafür benutzten
@@ -207,13 +210,12 @@ public class Taskmaster : MonoBehaviour, IObserver
             {
                 if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
                 {
-                    t.Failedtimes++;
-                    t.Failedprevios = true;
-                    print("Checkout");
                     if (t.NextDeadlineIndex != 0)
-                    {
-                       
-                        t.Deadline = CaculuateNextDT(t.NextDeadlineIndex,t.Deadline);
+                    {                 
+                        
+                         dataSave.ChangeTaskCauseRepeat(t, CaculuateNextDT(t.NextDeadlineIndex,t.Deadline));
+                         SaveList();
+
                     }
                     else
                     {
@@ -294,7 +296,7 @@ public class Taskmaster : MonoBehaviour, IObserver
                 dateTime = dateTime.AddYears(1);
                 break;
         }
-        return new int[] { dateTime.Year, dateTime.Month, dateTime.Day, dateTime.Hour, dateTime.Minute };
+        return new int[] { dateTime.Minute, dateTime.Hour, dateTime.Day, dateTime.Month, dateTime.Year };
     }
 
     public void SubscribeToEvents_Start()
@@ -345,8 +347,8 @@ public class Taskmaster : MonoBehaviour, IObserver
 
         [SerializeField] bool redo = false;
         [SerializeField] bool failedprevios = false;
-        int failedtimes = 0;
-        int sucessedtimes = 0;
+        [SerializeField] int failedtimes = 0;
+        [SerializeField] int sucessedtimes = 0;
 
         [SerializeField] int nextDeadlineIndex = 0;
        
@@ -439,6 +441,11 @@ public class Taskmaster : MonoBehaviour, IObserver
         {
             archivedTasks.Remove(tk);
         }
+        public void RemoveFromWaitList(Task tk)
+        {
+            repeatingTaskOnWait.Remove(tk);
+        }
+      
         public List<Task> GetList()
         {
             return tasklist;
@@ -455,12 +462,23 @@ public class Taskmaster : MonoBehaviour, IObserver
         {
             archivedTasks.Clear();
         }
+        public void ClearCurrentList()
+        {
+            tasklist.Clear();
+        }
         public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id,int rindex)
         {
-            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich heißt anpassen!!!
+            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich , dewegen Avoiddoubblename !!
             print(index);
             tasklist[index] = new Task(t, d, dt, p,id,rindex);
             tasklist[index].Redo = rindex != 0;
-        }        
+        }
+        public void ChangeTaskCauseRepeat(Task altertT, int[] newDealine)
+        {
+            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel);
+            tasklist[index].Deadline = newDealine;
+            tasklist[index].Failedprevios = true;
+            tasklist[index].Failedtimes++;       
+        }
    }
 }

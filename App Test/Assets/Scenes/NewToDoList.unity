@@ -1975,6 +1975,7 @@ MonoBehaviour:
   dataSave:
     tasklist: []
     archivedTasks: []
+    repeatingTaskOnWait: []
   notificationSystem: {fileID: 0}
 --- !u!4 &861728027
 Transform:
@@ -3595,7 +3596,7 @@ MonoBehaviour:
   taskContainer: {fileID: 769708911}
   taskPrototype: {fileID: 2814354614230403389, guid: ae39324eed83fc042a5afc266da07748, type: 3}
   ShowOldTask: 0
-  ButtonText: {fileID: 0}
+  ButtonText: {fileID: 694043335}
 --- !u!4 &1844853684
 Transform:
   m_ObjectHideFlags: 0
