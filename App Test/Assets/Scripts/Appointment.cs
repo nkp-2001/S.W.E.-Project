@@ -8,6 +8,7 @@ using UnityEngine;
 public class Appointment // : Taskmaster.Task
 {
     string titel;
+    string desp;
     int[] startTime;
     int[] endTime;
     int repeat;
@@ -24,14 +25,15 @@ public class Appointment // : Taskmaster.Task
     public int[] StartTime { get => startTime; set => startTime = value; }
     public int[] EndTime { get => endTime; set => endTime = value; }
     public int Repeat { get => repeat; set => repeat = value; }
+    public string Desp { get => desp; set => desp = value; }
 
-    public DateTime AppointmentonThisDay(DateTime selectDay)
+    public bool AppointmentonThisDay(DateTime selectDay)
     {
         DateTime CurrenStart = new DateTime(startTime[4], startTime[3], startTime[2]);
         
         if (selectDay == CurrenStart)
         {
-            return new DateTime(startTime[4], startTime[3], startTime[2],startTime[1],startTime[0],0); // oder nur Uhrzeit wenn sinnvoll/möglich
+            return true;
             
         }
         if ((repeat != 0) & (selectDay >= CurrenStart))
@@ -39,10 +41,10 @@ public class Appointment // : Taskmaster.Task
             int daydiff = (selectDay - CurrenStart).Days;
             if (daydiff % repeat == 0)
             {
-                return new DateTime(startTime[4], startTime[3], startTime[2], startTime[1], startTime[0], 0).AddDays(daydiff);
+                return true;
             } 
         }
-        return DateTime.MinValue;
+        return false;
 
 
     }
