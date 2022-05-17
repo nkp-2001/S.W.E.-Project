@@ -13,6 +13,8 @@ public class Appointment // : Taskmaster.Task
     int[] endTime;
     int repeat;
 
+    int repeattimes; // gucken ob es verwendet wird, wenn ja  AppointmentonThisDay(DateTime selectDay) anpassen
+
     public Appointment(string t,int[] stT,int[] enT,int reIn)
     {
         titel = t;
