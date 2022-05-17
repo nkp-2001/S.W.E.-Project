@@ -241,7 +241,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     }
 
-    public System.DateTime ConvertIntArray_toDeadline(int[] toconvert)
+    public System.DateTime ConvertIntArray_toDatetime(int[] toconvert)
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }

@@ -94,10 +94,11 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
 
     void Start()
-    {
-      
-        FetchTasks();
+    {     
+       
         SubscribeToEvents_Start();
+        FetchTasks();
+        StartCoroutine(FetchUpdate());
     }
 
     private void OnEnable()
@@ -105,6 +106,15 @@ public class ToDoPageController : MonoBehaviour,IObserver
         sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
         taskmaster = FindObjectOfType<Taskmaster>();
         FetchTasks(); 
+    }
+    IEnumerator FetchUpdate()
+    {
+        while (true)
+        {            
+            yield return new WaitForSeconds(60);
+            FetchTasks();
+        }
+       
     }
 
     public void SubscribeToEvents_Start()
