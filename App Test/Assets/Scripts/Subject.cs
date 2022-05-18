@@ -39,15 +39,15 @@ public class Subject : MonoBehaviour
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    public event Action<string, string, int[], float> OnNewTask;
-    public void Trigger_OnNewTask(string t, string d, int[] dt, float prio ) { if (OnNewTask != null) { OnNewTask(t, d,  dt, prio); } }
+    public event Action<string, string, int[], float,int> OnNewTask;
+    public void Trigger_OnNewTask(string t, string d, int[] dt, float prio,int repeatindex ) { if (OnNewTask != null) { OnNewTask(t, d,  dt, prio,repeatindex); } }
 
-    public event Action<Taskmaster.Task,string,string,int[], float > OnTaskChange;
-    public void TriggerOnTaskChange(Taskmaster.Task oldtask, string t, string d, int[] dt, float p) { if (OnTaskChange != null) { OnTaskChange(oldtask, t, d, dt, p); } }
+    public event Action<Taskmaster.Task,string,string,int[], float , int> OnTaskChange;
+    public void TriggerOnTaskChange(Taskmaster.Task oldtask, string t, string d, int[] dt, float p,int repeatIndex) { if (OnTaskChange != null) { OnTaskChange(oldtask, t, d, dt, p, repeatIndex); } }
 
-    public event Action<Taskmaster.Task, string, string, int[], float> OnTaskReturning; // 
-    public void Trigger_OnTaskReturning(Taskmaster.Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrio)
-    {  if (OnTaskReturning != null) { OnTaskReturning(oldtask, potNewname, potNewDiscp, potNewDt, potNewPrio);} }
+    public event Action<Taskmaster.Task, string, string, int[], float,int> OnTaskReturning; // 
+    public void Trigger_OnTaskReturning(Taskmaster.Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrioint , int repeatIndex)
+    {  if (OnTaskReturning != null) { OnTaskReturning(oldtask, potNewname, potNewDiscp, potNewDt, potNewPrioint, repeatIndex);} }
 
 
     ///funcs

@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class DatePicker : MonoBehaviour
 {
     [SerializeField] private Toggle isInteractibleToggle;
     [SerializeField] private TimeDropdownField hourDropdown, minuteDropdown, dayDropdown, monthDropdown, yearDropdown;
+    [SerializeField] TMP_Dropdown repeatDropDown;
 
     void Start()
     {
@@ -76,18 +78,22 @@ public class DatePicker : MonoBehaviour
         return daysInSelectedMonth;
     }
 
-    public void SetInteractability()
+    public void SetInteractability() // noch überdenken wegen den ungleicheit mit repeatDropDown
     {
         TimeDropdownField[] dropdowns = { hourDropdown, minuteDropdown, dayDropdown, monthDropdown, yearDropdown };
         foreach (TimeDropdownField dropdown in dropdowns)
         {
             dropdown.SetInteractible(isInteractibleToggle.isOn);
         }
+        repeatDropDown.interactable = isInteractibleToggle.isOn;
+
+
     }
 
     public void OnInteractibleChanged()
     {
         SetInteractability();
+
     }
 
     public void UpdateDaysList()

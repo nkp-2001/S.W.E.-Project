@@ -78,7 +78,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
     {
         ClearScrollView();
 
-        if (taskmaster.GetTasks() is not null)
+        if (taskmaster.GetArchivedTasks() is not null)
         {
             foreach (Taskmaster.Task task in taskmaster.GetArchivedTasks())
             {
@@ -87,17 +87,18 @@ public class ToDoPageController : MonoBehaviour,IObserver
         }
     }
 
-    public void FetchTasks(Taskmaster.Task task, string t, string d, int[] dt, float prio)
+    public void FetchTasks(Taskmaster.Task task, string t, string d, int[] dt, float prio,int i)
     {
         FetchTasks();
     }
 
 
     void Start()
-    {
-      
-        FetchTasks();
+    {     
+       
         SubscribeToEvents_Start();
+        FetchTasks();
+        StartCoroutine(FetchUpdate());
     }
 
     private void OnEnable()
@@ -105,6 +106,15 @@ public class ToDoPageController : MonoBehaviour,IObserver
         sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
         taskmaster = FindObjectOfType<Taskmaster>();
         FetchTasks(); 
+    }
+    IEnumerator FetchUpdate()
+    {
+        while (true)
+        {            
+            yield return new WaitForSeconds(60);
+            FetchTasks();
+        }
+       
     }
 
     public void SubscribeToEvents_Start()
