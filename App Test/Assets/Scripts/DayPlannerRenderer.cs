@@ -9,7 +9,7 @@ public class DayPlannerRenderer : Graphic
     [SerializeField] private float thickness;
     [SerializeField] private int numHoursOnScreen;
 
-    [SerializeField] private GameObject entryVisualPrototype;
+    [SerializeField] private DayPlannerEntry entryVisualPrototype;
     [SerializeField] private List<DayPlannerEntryPlaceholder> entries;
 
     private DateTime selectedDay;
@@ -95,10 +95,7 @@ public class DayPlannerRenderer : Graphic
                     float normalizedYstart = ConvertTimeToNormalizedCoordinates(startTime);
                     float normalizedYend = ConvertTimeToNormalizedCoordinates(endTime);
 
-                    GameObject visualEntry = Instantiate(entryVisualPrototype, transform);
-                    visualEntry.GetComponent<DayPlannerEntry>().SetNormalizedYcoordinates(normalizedYstart, normalizedYend);
-                    visualEntry.SetActive(true);
-
+                    entryVisualPrototype.Instantiate(entry.title, normalizedYstart, normalizedYend, transform);
                     isToBeDisplayed[entry] = false;
                 }
             }
