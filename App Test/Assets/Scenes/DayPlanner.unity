@@ -565,6 +565,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dataSave:
     tasklist: []
+    archivedTasks: []
+    repeatingTaskOnWait: []
   notificationSystem: {fileID: 0}
 --- !u!4 &861728027
 Transform:
@@ -613,6 +615,7 @@ MonoBehaviour:
   activePage: {fileID: 1844853685}
   registeredPages:
   - {fileID: 1844853685}
+  PageObject: []
 --- !u!4 &868579549
 Transform:
   m_ObjectHideFlags: 0
