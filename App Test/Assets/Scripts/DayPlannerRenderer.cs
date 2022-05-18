@@ -9,6 +9,8 @@ public class DayPlannerRenderer : Graphic
     [SerializeField] private float thickness;
     [SerializeField] private int numHoursOnScreen;
 
+    [SerializeField] private GameObject currentTimeIndicator;
+
     [SerializeField] private DayPlannerEntry entryVisualPrototype;
     [SerializeField] private List<DayPlannerEntryPlaceholder> entries;
 
@@ -40,6 +42,7 @@ public class DayPlannerRenderer : Graphic
     {
         DisplayTimeLabels();
         DisplayDayPlannerEntries();
+        UpdateCurrentTimeIndicator();
     }
 
     private bool IsToBeDisplayed(DayPlannerEntryPlaceholder entry)
@@ -132,10 +135,13 @@ public class DayPlannerRenderer : Graphic
         }
     }
 
-    private void DisplayCurrentTimeLine(VertexHelper vh)
+    private void UpdateCurrentTimeIndicator()
     {
-        float y = ConvertTimeToNormalizedCoordinates(DateTime.Now);
-        DrawLine(vh, 0, y, 1, y, thickness, Color.red);
+        float y = ConvertTimeToNormalizedCoordinates(DateTime.Now) * rectTransform.rect.height;
+        currentTimeIndicator.GetComponent<RectTransform>().position = new Vector3(0, y);
+
+        int indexOfLastSibling = transform.childCount - 1;
+        currentTimeIndicator.transform.SetSiblingIndex(indexOfLastSibling);
     }
 
 
