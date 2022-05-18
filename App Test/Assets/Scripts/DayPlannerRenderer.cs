@@ -40,9 +40,12 @@ public class DayPlannerRenderer : Graphic
 
     void OnGUI()
     {
-        DisplayTimeLabels();
-        DisplayDayPlannerEntries();
-        UpdateCurrentTimeIndicator();
+        if (Application.isPlaying)
+        {
+            DisplayTimeLabels();
+            DisplayDayPlannerEntries();
+            UpdateCurrentTimeIndicator();
+        }
     }
 
     private bool IsToBeDisplayed(DayPlannerEntryPlaceholder entry)
@@ -85,7 +88,7 @@ public class DayPlannerRenderer : Graphic
                 {
                     DateTime startTime, endTime;
 
-                    if(!DateTime.TryParse(entry.StartTime, out startTime))
+                    if (!DateTime.TryParse(entry.StartTime, out startTime))
                     {
                         throw new Exception("Invalid StartTime in entry");
                     }
