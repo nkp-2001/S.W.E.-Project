@@ -9,10 +9,10 @@ public class AppointmentMaster : DataMaster
     {
         LoadList();
     }
-    public void CreateNewTask(string titel, string desp, int[] startTime, int[] endTime, int repeat)
+    public void CreateNewTask(string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID)
     {
         titel = AvoidDoubleName(titel);
-        dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat));
+        dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, notficID));
         SaveList();
     }
     public List<Appointment> GiveAppoints_ofThisDay()
@@ -33,13 +33,11 @@ public class AppointmentMaster : DataMaster
         SaveList();
     }
 
-    public void ChangeAppointment(Appointment oldAppointment,string titel, string desp, int[] startTime, int[] endTime, int repeat)
+    public void ChangeAppointment(Appointment oldAppointment,string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID)
     {
-        dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat);
+        dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, notficID);
         SaveList();
     }
-
-
 
     public string AvoidDoubleName(string titel) // ! bzgl Vererbung bedenken 
     {
