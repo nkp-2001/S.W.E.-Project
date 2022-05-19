@@ -34,19 +34,19 @@ public class Subject : MonoBehaviour
     public event Action OnExpiredDealine;
     public void Trigger_ExpiredDeadline() { if (OnExpiredDealine != null) { OnExpiredDealine(); } }
 
-    public event Action<Taskmaster.Task> OnTaskSetDone; 
-    public void Trigger_TaskSetDone(Taskmaster.Task doneTask) { print("Task Set "); if (OnTaskSetDone != null) { print("Task Set Done" ); OnTaskSetDone(doneTask); } }
+    public event Action<Task> OnTaskSetDone; 
+    public void Trigger_TaskSetDone(Task doneTask) { print("Task Set "); if (OnTaskSetDone != null) { print("Task Set Done" ); OnTaskSetDone(doneTask); } }
 
     ////////////////////////////////////////////////////////////////////////////////
 
     public event Action<string, string, int[], float,int> OnNewTask;
     public void Trigger_OnNewTask(string t, string d, int[] dt, float prio,int repeatindex ) { if (OnNewTask != null) { OnNewTask(t, d,  dt, prio,repeatindex); } }
 
-    public event Action<Taskmaster.Task,string,string,int[], float , int> OnTaskChange;
-    public void TriggerOnTaskChange(Taskmaster.Task oldtask, string t, string d, int[] dt, float p,int repeatIndex) { if (OnTaskChange != null) { OnTaskChange(oldtask, t, d, dt, p, repeatIndex); } }
+    public event Action<Task,string,string,int[], float , int> OnTaskChange;
+    public void TriggerOnTaskChange(Task oldtask, string t, string d, int[] dt, float p,int repeatIndex) { if (OnTaskChange != null) { OnTaskChange(oldtask, t, d, dt, p, repeatIndex); } }
 
-    public event Action<Taskmaster.Task, string, string, int[], float,int> OnTaskReturning; // 
-    public void Trigger_OnTaskReturning(Taskmaster.Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrioint , int repeatIndex)
+    public event Action<Task, string, string, int[], float,int> OnTaskReturning; // 
+    public void Trigger_OnTaskReturning(Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrioint , int repeatIndex)
     {  if (OnTaskReturning != null) { OnTaskReturning(oldtask, potNewname, potNewDiscp, potNewDt, potNewPrioint, repeatIndex);} }
 
 

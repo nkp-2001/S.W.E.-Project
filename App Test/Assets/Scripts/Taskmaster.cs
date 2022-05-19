@@ -17,7 +17,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     private void Awake()
     {
-        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Singleton , Scenenwechesel loescht es nicht 
+        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Scenenwechesel loescht es nicht 
 
         if (objs.Length > 1)
         {
@@ -130,8 +130,6 @@ public class Taskmaster : MonoBehaviour, IObserver
     {
         return GetTasks().Count;
     }
-
-
     public List<Task> GetSortedTasks(int sortBy)
     {
         List<Task> unsort = dataSave.GetList();
@@ -246,7 +244,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
 
-    public void ManageTaskReturn(Taskmaster.Task oldtask, string t, string d, int[] dt, float prio,int repeatindex)
+    public void ManageTaskReturn(Task oldtask, string t, string d, int[] dt, float prio,int repeatindex)
     {
         dataSave.RemoveFromArchieList(oldtask);
         CreateNewTask(t, d, dt, prio,repeatindex);     
@@ -330,156 +328,6 @@ public class Taskmaster : MonoBehaviour, IObserver
         
         Debug.Log("OnEnable");
     }
-  
 
-
-
-
-    ///////////// Task ////////////
-    [Serializable]
-    public class Task
-    {
-        [SerializeField] string titel;
-        [SerializeField] string description;
-        [SerializeField] int[] deadline;  /// DateTime nicht (so leicht) serizaible | dewegen muss auf int[] ausgeweischt werden
-
-        [SerializeField] int deadlineChannel_ID = 0;
-        [SerializeField] float prio;
-
-        [SerializeField] bool redo = false;
-        [SerializeField] bool failedprevios = false;
-        [SerializeField] int failedtimes = 0;
-        [SerializeField] int sucessedtimes = 0;
-
-        [SerializeField] int nextDeadlineIndex = 0;
-       
-
-        [SerializeField] bool sucess = false;
-        [SerializeField] bool done = false;
-       
-
-        public Task(string t, string d, int[] dt, float p)
-        {
-            titel = t;
-            description = d;
-            deadline = dt;
-            prio = p;       
-        }
-        public Task(string t, string d, int[] dt, float p,int dlID)
-        {
-            titel = t;
-            description = d;
-            deadline = dt;
-            prio = p;
-            deadlineChannel_ID = dlID;
-        }
-        public Task(string t, string d, int[] dt, float p, int dlID,int retDtDayes)
-        {
-            titel = t;
-            description = d;
-            deadline = dt;
-            prio = p;
-            deadlineChannel_ID = dlID;
-            nextDeadlineIndex = retDtDayes;
-            redo = retDtDayes != 0;
-        }
-        
-
-
-
-
-        public string Titel { get => titel; set => titel = value; }
-        public string Description { get => description; set => description = value; }
-        public float Prio { get => prio; set => prio = value; }
-        public int[] Deadline { get => deadline; set => deadline = value; }
-        public int DeadlineChannel_ID { get => deadlineChannel_ID; set => deadlineChannel_ID = value; }
-        public bool Done { get => done; set => done = value; }
-        public bool Redo { get => redo; set => redo = value; }
-        public bool Sucess { get => sucess; set => sucess = value; }
-        public int NextDeadlineIndex { get => nextDeadlineIndex; set => nextDeadlineIndex = value; }
-        public bool Failedprevios { get => failedprevios; set => failedprevios = value; }
-        public int Failedtimes { get => failedtimes; set => failedtimes = value; }
-        public int Sucessedtimes { get => sucessedtimes; set => sucessedtimes = value; }
-    }
-
-    /////// Save Object
-    
-   [Serializable]
-   public class SaveObject
-   {
-        [SerializeField] List<Task> tasklist = new List<Task>();
-        [SerializeField] List<Task> archivedTasks = new List<Task>();
-       
-        [SerializeField] List<Task> repeatingTaskOnWait = new List<Task>(); // !Start neuer Ansatz noch nicht implentiert
-        public void AddNewToList(Task addT)
-        {
-            tasklist.Add(addT);
-        }
-        public int RemoveFromList(int i)
-        {
-            tasklist.RemoveAt(i);
-            return tasklist.Count;
-        }
-        public int RemoveFromListAndGiveCount(Task tk) // veraltet 
-        {
-            tasklist.Remove(tk);
-            return tasklist.Count;
-        }
-        public void RemoveFromList(Task tk)
-        {
-            tasklist.Remove(tk);
-            if (tk.NextDeadlineIndex == 0)
-            {
-                archivedTasks.Add(tk);
-            }
-            else
-            {
-                repeatingTaskOnWait.Add(tk);
-            }
-           
-        }
-        public void RemoveFromArchieList(Task tk)
-        {
-            archivedTasks.Remove(tk);
-        }
-        public void RemoveFromWaitList(Task tk)
-        {
-            repeatingTaskOnWait.Remove(tk);
-        }
-      
-        public List<Task> GetList()
-        {
-            return tasklist;
-        }
-        public List<Task> GetArchivedList()
-        {
-            return archivedTasks;
-        }
-        public List<Task> GetWaitingList()
-        {
-            return repeatingTaskOnWait;
-        }
-        public void ClearArchviedList()
-        {
-            archivedTasks.Clear();
-        }
-        public void ClearCurrentList()
-        {
-            tasklist.Clear();
-        }
-        public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id,int rindex)
-        {
-            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich , dewegen Avoiddoubblename !!
-            print(index);
-            tasklist[index] = new Task(t, d, dt, p,id,rindex);
-            tasklist[index].Redo = rindex != 0;
-        }
-        public void ChangeTaskCauseRepeat(Task altertT, int[] newDealine)
-        {
-            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel);
-            tasklist[index].Deadline = newDealine;
-            tasklist[index].Failedprevios = true;
-            tasklist[index].Failedtimes++;       
-        }
-   }
+   
 }

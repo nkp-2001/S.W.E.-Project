@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class TaskPrototype : MonoBehaviour, IObserver
 {   //!nicht die Child Strukur anfassen
     private Taskmaster taskMaster;
-   [SerializeField] private Taskmaster.Task task;
+   [SerializeField] private Task task;
     RectTransform rect;
     bool showingOldTask = false;
     GameObject dircTobj;
@@ -19,7 +19,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
         
         SubscribeToEvents_Start();
     }
-    public void Setup(Taskmaster.Task t, Transform taskContainer)
+    public void Setup(Task t, Transform taskContainer)
     {
         task = t;
 
@@ -59,7 +59,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
             dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priotät: " + t.Prio + "\n Discirption: " + t.Description;
         }
     }
-    public void Setup_OldTask(Taskmaster.Task t, Transform taskContainer)
+    public void Setup_OldTask(Task t, Transform taskContainer)
     {      
         Setup( t,  taskContainer);        
        

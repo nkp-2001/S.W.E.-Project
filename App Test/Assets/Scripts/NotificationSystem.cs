@@ -10,7 +10,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
     Taskmaster taskmaster;
     private void Awake() 
     {
-        NotificationSystem[] objs = FindObjectsOfType<NotificationSystem>(); //Singleton , Scenenwechesel löscht es nicht 
+        NotificationSystem[] objs = FindObjectsOfType<NotificationSystem>(); // Scenenwechesel löscht es nicht 
 
         if (objs.Length > 1)
         {
@@ -64,7 +64,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         NotficationStatusReaction(false);
         print("Reaction on new Task");
     }
-    public void NotficationStatusReaction(Taskmaster.Task task,string t, string d, int[] dt, float prio,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
+    public void NotficationStatusReaction(Task task,string t, string d, int[] dt, float prio,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
     {
         NotficationStatusReaction(false);
         print("Reaction on new Task");
@@ -258,7 +258,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
 
-    public void CancelDeadlineNotificationsX(Taskmaster.Task oldtask, string t, string d, int[] dt, float p,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
+    public void CancelDeadlineNotificationsX(Task oldtask, string t, string d, int[] dt, float p,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
     {
         
         if (oldtask.Deadline != dt && oldtask.Deadline != null)
@@ -269,7 +269,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
 
 
     }
-    public void CancelNotificationsX(Taskmaster.Task task)
+    public void CancelNotificationsX(Task task)
     {
         int id = task.DeadlineChannel_ID;
         if (id != 0)
