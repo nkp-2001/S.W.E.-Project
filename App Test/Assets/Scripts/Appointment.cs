@@ -7,11 +7,11 @@ using UnityEngine;
 [Serializable]
 public class Appointment // : Taskmaster.Task
 {
-    string titel;
-    string desp;
-    int[] startTime;
-    int[] endTime;
-    int repeat;
+   [SerializeField] string titel;
+    [SerializeField] string desp;
+    [SerializeField] int[] startTime;
+    [SerializeField] int[] endTime;
+    [SerializeField] int repeat;
 
     int notifcation_id;
 

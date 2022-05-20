@@ -8,7 +8,7 @@ using System;
  {
         [SerializeField] string titel;
         [SerializeField] string description;
-        [SerializeField] int[] deadline;  /// DateTime nicht (so leicht) serizaible | dewegen muss auf int[] ausgeweischt werden
+        [SerializeField] int[] deadline = null;  /// DateTime nicht (so leicht) serizaible | dewegen muss auf int[] ausgeweischt werden
 
         [SerializeField] int deadlineChannel_ID = 0;
         [SerializeField] float prio;
@@ -67,5 +67,6 @@ using System;
         public bool Failedprevios { get => failedprevios; set => failedprevios = value; }
         public int Failedtimes { get => failedtimes; set => failedtimes = value; }
         public int Sucessedtimes { get => sucessedtimes; set => sucessedtimes = value; }
- }
+      
+}
 

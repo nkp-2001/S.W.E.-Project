@@ -122,6 +122,7 @@ public class ValueManager : MonoBehaviour
         titel.text = taskOnEdit.Titel;
         discrip.text = taskOnEdit.Description;
         prio.value = taskOnEdit.Prio;
+        repeatDropDown.value = taskOnEdit.NextDeadlineIndex;
       
         if (taskOnEdit.Deadline.Length ==0)
         {

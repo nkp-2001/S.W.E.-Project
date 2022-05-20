@@ -1977,7 +1977,6 @@ MonoBehaviour:
     archivedTasks: []
     repeatingTaskOnWait: []
     appointmentlist: []
-  notificationSystem: {fileID: 0}
 --- !u!4 &861728027
 Transform:
   m_ObjectHideFlags: 0

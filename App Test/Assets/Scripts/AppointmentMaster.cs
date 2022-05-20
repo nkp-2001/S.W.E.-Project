@@ -9,25 +9,19 @@ public class AppointmentMaster : DataMaster
     {
         LoadList();
     }
-    public void CreateNewTask(string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID)
+    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat)
     {
         titel = AvoidDoubleName(titel);
+        int notficID = Subject.current.Triggeer_Reques_NotiIDAppointment(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel);
+        if (notficID == 0)
+        {
+            print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiIDAppointent hasen`t been assigend by it");
+        }
         dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, notficID));
         SaveList();
     }
-    public List<Appointment> GiveAppoints_ofThisDay()
-    {
-        List<Appointment> DayList = new List<Appointment>();
-        foreach (Appointment appo in dataSave.GetAppoitmentList())
-        {
-            if (appo.AppointmentonThisDay(DateTime.Now.Date))
-            {
-                DayList.Add(appo);
-            }
-        }
-        return DayList;
-    }
-    public void DeleteAppitment(Appointment appo)
+   
+    public void DeleteAppoitment(Appointment appo)
     {
         dataSave.RemoveAppointment(appo);
         SaveList();
@@ -65,4 +59,18 @@ public class AppointmentMaster : DataMaster
         }
         return checkedtitel;
     }
+
+    public List<Appointment> GiveAppoints_ofThisDay()
+    {
+        List<Appointment> DayList = new List<Appointment>();
+        foreach (Appointment appo in dataSave.GetAppoitmentList())
+        {
+            if (appo.AppointmentonThisDay(DateTime.Now.Date))
+            {
+                DayList.Add(appo);
+            }
+        }
+        return DayList;
+    }
+   
 }

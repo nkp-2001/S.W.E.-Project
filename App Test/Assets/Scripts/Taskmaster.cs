@@ -12,7 +12,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
     string filename = "SavedList.txt";
-    [SerializeField] NotificationSystem notificationSystem; // nicht mehr nötig
+   // [SerializeField] NotificationSystem notificationSystem; // nicht mehr nötig
 
 
     private void Awake()
@@ -32,13 +32,12 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     private void Start()
     {
-       // notificationSystem = FindObjectOfType<NotificationSystem>(); // nicht mehr nötig
-       
+       // notificationSystem = FindObjectOfType<NotificationSystem>(); // nicht mehr nötig    
         CheckDeadlinesTask();
+        SubscribeToEvents_Start();
 
-       
-
-
+        StartCoroutine(GreateTest());
+          
     }
 
     private void OnApplicationFocus(bool focus) // vllt noch stattdessen anderes Call Event dafür benutzten
@@ -48,23 +47,26 @@ public class Taskmaster : MonoBehaviour, IObserver
     public void CreateNewTask(string t, string d, int[] dt, float p,int repeatindex)
     {
         t = AvoidDoubleName(t); // Namecheck  , keine Doppelten
-        if (dt != null & dt.Length != 0)
+        if (dt != null)
         {
-            print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
-           // int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));           
-            int id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-            if (id != 0)
-            {
-                print("System plugged");
-                Task new_task = new Task(t, d, dt, p, id, repeatindex);
-                dataSave.AddNewToList(new_task);
-            }
-            else 
-            {
-                print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiID hasen`t been assigend by it");
-                Task new_task = new Task(t, d, dt, p);
-                dataSave.AddNewToList(new_task);
-            } 
+           if (dt.Length != 0) // noch mal drüber gucken warum manchmal lengt 0 aber nicht null
+           {
+                print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
+                // int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));           
+                int id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+                if (id != 0)
+                {
+                    print("System plugged");
+                    Task new_task = new Task(t, d, dt, p, id, repeatindex);
+                    dataSave.AddNewToList(new_task);
+                }
+                else
+                {
+                    print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiID hasen`t been assigend by it");
+                    Task new_task = new Task(t, d, dt, p);
+                    dataSave.AddNewToList(new_task);
+                }
+           }
         }
         else
         {
@@ -72,6 +74,7 @@ public class Taskmaster : MonoBehaviour, IObserver
             dataSave.AddNewToList(new_task);
         }
         SaveList();
+        print("x");
        // notificationSystem.NotficationStatusReaction(false);
     }
 
@@ -227,6 +230,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         {
             if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
             {
+                dataSave.RemoveFromWaitList(t); // Änd.
                 t.Deadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);
                 t.DeadlineChannel_ID = Subject.current.Trigger_Request_NotiID(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
                 dataSave.AddNewToList(t);
@@ -242,6 +246,10 @@ public class Taskmaster : MonoBehaviour, IObserver
     public System.DateTime ConvertIntArray_toDatetime(int[] toconvert)
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
+    }
+    public int[] ConvertDatetime_toIntArray(DateTime toconvert)
+    {
+        return new int[] { toconvert.Minute, toconvert.Hour, toconvert.Day, toconvert.Month, toconvert.Year };
     }
 
     public void ManageTaskReturn(Task oldtask, string t, string d, int[] dt, float prio,int repeatindex)
@@ -298,8 +306,79 @@ public class Taskmaster : MonoBehaviour, IObserver
         return new int[] { dateTime.Minute, dateTime.Hour, dateTime.Day, dateTime.Month, dateTime.Year };
     }
 
+    ///!!!! ////////////////////////////////////////////////////////////////////////////////// Appointmenmts Vererbansatz sollte diskutiert werden , dobbelter SaveObject Problem dabei diskutiren (siehe DataMaster.cs)
+
+    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat)
+    {
+        titel = AvoidDoubleNameAppo(titel);
+        int notficID = Subject.current.Triggeer_Reques_NotiIDAppointment(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel);
+        if (notficID == 0)
+        {
+            print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiIDAppointent hasen`t been assigend by it");
+        }
+        dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, notficID));
+        SaveList();
+    }
+
+    public void DeleteAppoitment(Appointment appo)
+    {
+        dataSave.RemoveAppointment(appo);
+        SaveList();
+    }
+
+    public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID)
+    {
+        dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, notficID);
+        SaveList();
+    }
+
+    public string AvoidDoubleNameAppo(string titel) // ! bzgl Vererbung bedenken 
+    {
+        string checkedtitel = titel;
+        bool doublefound = true;
+        int repeating = 0;
+        while (doublefound)
+        {
+
+            doublefound = false;
+            print("Round" + repeating);
+            foreach (Appointment appo in dataSave.GetAppoitmentList())
+            {
+                if (checkedtitel == appo.Titel)
+                {
+                    print("double");
+
+                    repeating++;
+                    checkedtitel = titel + "(" + repeating + ")";
+                    doublefound = true;
+                    break;
+                }
+            }
+
+        }
+        return checkedtitel;
+    }
+
+    public List<Appointment> GiveAppoints_ofThisDay()
+    {
+        List<Appointment> DayList = new List<Appointment>();
+        foreach (Appointment appo in dataSave.GetAppoitmentList())
+        {
+            if (appo.AppointmentonThisDay(DateTime.Now.Date))
+            {
+                DayList.Add(appo);
+            }
+        }
+        return DayList;
+    }
+
+
+    /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     public void SubscribeToEvents_Start()
     {
+        print(Subject.current);
         Subject.current.OnTaskSetDone += RemoveTask;
         Subject.current.OnNewTask += CreateNewTask;
         Subject.current.OnTaskChange += ChangeTask;
@@ -324,10 +403,16 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     private void OnEnable()
     {
-        SubscribeToEvents_Start();
+       
         
         Debug.Log("OnEnable");
     }
 
+    IEnumerator GreateTest()
+    {
+        yield return  new WaitForSeconds(5);
+        CreateNewAppointment("Test", "bla bla", ConvertDatetime_toIntArray(new DateTime(2022, 5, 20, 16, 0, 0)), ConvertDatetime_toIntArray(new DateTime(2022, 5, 20, 17,0 , 0)), 0); // Test Appoinment
+        SaveList();
+    }
    
 }

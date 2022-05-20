@@ -7,7 +7,7 @@ using System.Linq;
 
 public class DataMaster : MonoBehaviour
 {
-    protected SaveObject dataSave = new SaveObject();
+    [SerializeField] protected SaveObject dataSave = new SaveObject();
     protected string directory = "/SavedData/";
     protected string filename = "SavedList.txt";
 

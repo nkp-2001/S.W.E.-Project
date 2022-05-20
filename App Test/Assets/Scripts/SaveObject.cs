@@ -17,8 +17,6 @@ public class SaveObject
         tasklist.Add(addT);
     }
    
-
-
     public int RemoveFromList(int i)
     {
         tasklist.RemoveAt(i);
@@ -87,7 +85,6 @@ public class SaveObject
     public void ChangeTask(Task altertT, string t, string d, int[] dt, float p, int id, int rindex)
     {
         int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich , dewegen Avoiddoubblename !!
-        
         tasklist[index] = new Task(t, d, dt, p, id, rindex);
         tasklist[index].Redo = rindex != 0;
     }
