@@ -411,7 +411,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     IEnumerator GreateTest()
     {
         yield return  new WaitForSeconds(5);
-        CreateNewAppointment("Test", "bla bla", ConvertDatetime_toIntArray(new DateTime(2022, 5, 20, 16, 0, 0)), ConvertDatetime_toIntArray(new DateTime(2022, 5, 20, 17,0 , 0)), 0); // Test Appoinment
+        CreateNewAppointment("Test", "bla bla", ConvertDatetime_toIntArray(new DateTime(2022, 5, 22, 18, 55, 0)), ConvertDatetime_toIntArray(new DateTime(2022, 5, 20, 21,0 , 0)), 0); // Test Appoinment
         SaveList();
     }
    

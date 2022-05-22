@@ -310,10 +310,12 @@ public class NotificationSystem : MonoBehaviour , IObserver
         channelAppointmentNew.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channelAppointmentNew);
 
+        var notification_OnStartpre = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will start 1 Hour", StartTime.AddHours(-1));
+
         var notification_OnStart = new AndroidNotification( "Appointment Notice:" + titel,  " appointment:" + titel + " has started", StartTime );
         notification_OnStart.ShowTimestamp = true;
         //////////////////////////////////////////////////////
-        var notification_OnEnd = new AndroidNotification("Appointment Notice:" + titel," appointment:" + titel + " os over now", EndTime );
+        var notification_OnEnd = new AndroidNotification("Appointment Notice:" + titel," appointment:" + titel + " is over now", EndTime );
         notification_OnStart.ShowTimestamp = true;
 
         if (repeat != 0)
@@ -321,9 +323,11 @@ public class NotificationSystem : MonoBehaviour , IObserver
             TimeSpan repeatTime = new TimeSpan(repeat, 0, 0, 0);
             notification_OnStart.RepeatInterval = repeatTime;
             notification_OnEnd.RepeatInterval = repeatTime;
+            notification_OnStartpre.RepeatInterval = repeatTime;
         }
         AndroidNotificationCenter.SendNotification(notification_OnStart, channelAppointmentNew.Id);
         AndroidNotificationCenter.SendNotification(notification_OnEnd, channelAppointmentNew.Id);
+        AndroidNotificationCenter.SendNotification(notification_OnStartpre, channelAppointmentNew.Id);
         print("________________Channle createtd with : " +appo_id);
         return appo_id;
     }
