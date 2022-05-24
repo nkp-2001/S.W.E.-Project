@@ -91,7 +91,7 @@ public class SaveObject
     public void ChangeTaskCauseRepeat(Task altertT, int[] newDealine)
     {
         int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel);
-        tasklist[index].DeadlineChannel_ID = Subject.current.Trigger_Request_NotiID(altertT.Titel, DateTime(newDealine[4], newDealine[3], newDealine[2], newDealine[1], newDealine[0], 0));
+        tasklist[index].DeadlineChannel_ID = Subject.current.Trigger_Request_NotiID(altertT.Titel, new DateTime(newDealine[4], newDealine[3], newDealine[2], newDealine[1], newDealine[0], 0));
         tasklist[index].Deadline = newDealine;
         tasklist[index].Failedprevios = true;
         tasklist[index].Failedtimes++;
