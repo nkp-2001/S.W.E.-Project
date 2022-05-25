@@ -10,8 +10,6 @@ public class DayPlannerEntry : MonoBehaviour
     [SerializeField] private string title;
     [SerializeField] private string Description;
 
-    [SerializeField] private float margin;
-
     [SerializeField] private TextMeshProUGUI titleTMP;
 
     public DateTime StartTime{
@@ -34,7 +32,9 @@ public class DayPlannerEntry : MonoBehaviour
 
     public void Instantiate(string title, float normalizedYstart, float normalizedYend, Transform parent)
     {
-        GameObject instance = Instantiate(gameObject, parent);
+        GameObject instance = Instantiate(gameObject);
+        instance.transform.SetParent(parent, false);
+
         instance.GetComponent<DayPlannerEntry>().SetTitle(title);
         instance.GetComponent<DayPlannerEntry>().SetNormalizedYcoordinates(normalizedYstart, normalizedYend);
         instance.SetActive(true);
@@ -53,10 +53,6 @@ public class DayPlannerEntry : MonoBehaviour
 
         rect.anchorMin = new Vector2(0, yMin);
         rect.anchorMax = new Vector2(1, yMax);
-
-        Vector2 marginVector = new Vector2(margin, margin);
-        rect.offsetMin = marginVector;
-        rect.offsetMax = marginVector;
     }
 
     public void OnClick()
