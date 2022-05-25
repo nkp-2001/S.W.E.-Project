@@ -30,7 +30,6 @@ public class DayPlannerEntry : MonoBehaviour
     void Awake()
     {
         rect = GetComponent<RectTransform>();
-        Debug.Log(rect);
     }
 
     public void Instantiate(string title, float normalizedYstart, float normalizedYend, Transform parent)

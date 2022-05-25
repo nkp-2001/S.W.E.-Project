@@ -1,14 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DayPlannerRenderer : Graphic
+public class DayPlannerRenderer : MonoBehaviour
 {
-    [SerializeField] private float thickness;
     [SerializeField] private int numHoursOnScreen;
 
+    [SerializeField] private GameObject	hourSegmentPrefab;
     [SerializeField] private GameObject currentTimeIndicator;
 
     [SerializeField] private DayPlannerEntry entryVisualPrototype;
@@ -17,35 +18,24 @@ public class DayPlannerRenderer : Graphic
     private DateTime selectedDay;
     private Dictionary<DayPlannerEntryPlaceholder, bool> isToBeDisplayed = new();
 
-    protected override void OnPopulateMesh(VertexHelper vh)
-    {
-        float w = rectTransform.rect.width;
-        float h = rectTransform.rect.height;
+    private RectTransform rectTransform;
 
-        vh.Clear();
-
-        DrawRect(vh, -w / 2, -h / 2, w, h, Color.white);
-
-        for (int i = 0; i < numHoursOnScreen; ++i)
-        {
-            float y = i * h / numHoursOnScreen - h / 2;
-            DrawLine(vh, -w / 2, y, w / 2, y, thickness, Color.gray);
-        }
-    }
-
-    protected override void Awake()
+    void Awake()
     {
         UpdateEntries();
     }
 
-    void OnGUI()
+    void Start()
     {
-        if (Application.isPlaying)
-        {
-            DisplayTimeLabels();
-            DisplayDayPlannerEntries();
-            UpdateCurrentTimeIndicator();
-        }
+        rectTransform = GetComponent<RectTransform>();
+        Display();
+    }
+
+    private void Display()
+    {
+        DisplayHours();
+        DisplayDayPlannerEntries();
+        UpdateCurrentTimeIndicator();
     }
 
     private bool IsToBeDisplayed(DayPlannerEntryPlaceholder entry)
@@ -60,6 +50,23 @@ public class DayPlannerRenderer : Graphic
         foreach (DayPlannerEntryPlaceholder entry in entries)
         {
             isToBeDisplayed.Add(entry, true);
+        }
+    }
+
+    private void DisplayHours()
+    {
+        for(int i = 0; i < numHoursOnScreen; ++i)
+        {
+            GameObject hourSegment = Instantiate(hourSegmentPrefab, transform);
+            RectTransform rectTransform = hourSegment.GetComponent<RectTransform>();
+
+            DateTime hourDateTime = new DateTime(2000, 1, 1, i, 0, 0);
+            float y = ConvertTimeToNormalizedCoordinates(hourDateTime);
+
+            rectTransform.anchorMin = new Vector2(0, y);
+            rectTransform.anchorMax = new Vector2(1, y);
+
+            hourSegment.GetComponentInChildren<TextMeshProUGUI>().text = i.ToString("D2") + ":00";
         }
     }
 
@@ -121,23 +128,6 @@ public class DayPlannerRenderer : Graphic
         return normalizedY;
     }
 
-    private void DisplayTimeLabels()
-    {
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 50; //TODO: make this adjust to screen size
-        GUI.color = Color.black;
-
-        for (int i = 0; i < numHoursOnScreen; ++i)
-        {
-            float w = rectTransform.rect.width;
-            float h = rectTransform.rect.height;
-
-            float y = i * h / numHoursOnScreen;
-
-            GUI.Label(new Rect(0, y, w, h / numHoursOnScreen), i.ToString("D2") + ":00", style);
-        }
-    }
-
     private void UpdateCurrentTimeIndicator()
     {
         float y = ConvertTimeToNormalizedCoordinates(DateTime.Now) * rectTransform.rect.height;
@@ -145,52 +135,6 @@ public class DayPlannerRenderer : Graphic
 
         int indexOfLastSibling = transform.childCount - 1;
         currentTimeIndicator.transform.SetSiblingIndex(indexOfLastSibling);
-    }
-
-
-    private void DrawRect(VertexHelper vh, float x, float y, float w, float h, Color c)
-    {
-        UIVertex vertex = UIVertex.simpleVert;
-        vertex.color = c;
-
-        vertex.position = new Vector3(x, y);
-        vh.AddVert(vertex);
-
-        vertex.position = new Vector3(x, y + h);
-        vh.AddVert(vertex);
-
-        vertex.position = new Vector3(x + w, y + h);
-        vh.AddVert(vertex);
-
-        vertex.position = new Vector3(x + w, y);
-        vh.AddVert(vertex);
-
-        vh.AddTriangle(vh.currentVertCount - 4, vh.currentVertCount - 3, vh.currentVertCount - 2);
-        vh.AddTriangle(vh.currentVertCount - 2, vh.currentVertCount - 1, vh.currentVertCount - 4);
-    }
-
-    private void DrawLine(VertexHelper vh, float x1, float y1, float x2, float y2, float thickness, Color c)
-    {
-        Vector3 fromPoint1ToPoint2 = new Vector3(x2 - x1, y2 - y1, 0);
-        Vector3 perpendicularScaledToThickness = Vector3.Cross(fromPoint1ToPoint2, Vector3.forward) * thickness / fromPoint1ToPoint2.magnitude;
-
-        UIVertex vertex = UIVertex.simpleVert;
-        vertex.color = c;
-
-        vertex.position = new Vector3(x1, y1) + perpendicularScaledToThickness;
-        vh.AddVert(vertex);
-
-        vertex.position = new Vector3(x2, y2) + perpendicularScaledToThickness;
-        vh.AddVert(vertex);
-
-        vertex.position = new Vector3(x2, y2) - perpendicularScaledToThickness;
-        vh.AddVert(vertex);
-
-        vertex.position = new Vector3(x1, y1) - perpendicularScaledToThickness;
-        vh.AddVert(vertex);
-
-        vh.AddTriangle(vh.currentVertCount - 4, vh.currentVertCount - 3, vh.currentVertCount - 2);
-        vh.AddTriangle(vh.currentVertCount - 2, vh.currentVertCount - 1, vh.currentVertCount - 4);
     }
 
 }
