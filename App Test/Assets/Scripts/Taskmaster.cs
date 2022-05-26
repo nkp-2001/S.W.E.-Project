@@ -36,7 +36,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         CheckDeadlinesTask();
         SubscribeToEvents_Start();
 
-        StartCoroutine(GreateTest());
+       // StartCoroutine(GreateTest());
           
     }
 
@@ -332,7 +332,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         SaveList();
     }
 
-    public string AvoidDoubleNameAppo(string titel) // ! bzgl Vererbung bedenken 
+    public string AvoidDoubleNameAppo(string titel) // ! bzgl potizialler Vererbung  bedenken 
     {
         string checkedtitel = titel;
         bool doublefound = true;

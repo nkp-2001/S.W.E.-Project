@@ -52,7 +52,7 @@ using System;
         }
         
 
-
+        
 
 
         public string Titel { get => titel; set => titel = value; }

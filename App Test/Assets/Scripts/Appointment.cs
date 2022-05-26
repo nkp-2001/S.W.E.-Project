@@ -13,11 +13,11 @@ public class Appointment // : Taskmaster.Task
     [SerializeField] int[] endTime;
     [SerializeField] int repeat;
 
-    int notifcation_id;
+    [SerializeField] int notifcation_id;
 
 
-    int repeattimes; // gucken ob es verwendet wird, wenn ja  AppointmentonThisDay(DateTime selectDay) anpassen
-
+    [SerializeField] int repeattimes; // gucken ob es verwendet wird, wenn ja  AppointmentonThisDay(DateTime selectDay) anpassen
+   
     public Appointment(string t,string d,int[] stT,int[] enT,int reIn, int notficID)
     {
         titel = t;
