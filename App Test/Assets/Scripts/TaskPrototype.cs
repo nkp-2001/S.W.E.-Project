@@ -8,10 +8,11 @@ using UnityEngine.SceneManagement;
 public class TaskPrototype : MonoBehaviour, IObserver
 {   //!nicht die Child Strukur anfassen
     private Taskmaster taskMaster;
-   [SerializeField] private Task task;
+    [SerializeField] private Task task;
+    [SerializeField] AudioClip pingSound;
     RectTransform rect;
     bool showingOldTask = false;
-    GameObject dircTobj;
+    [SerializeField] GameObject dircTobj;
     private void Start()
     {
         taskMaster = FindObjectOfType<Taskmaster>();
@@ -22,6 +23,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
     public void Setup(Task t, Transform taskContainer)
     {
         task = t;
+       // dircTobj = transform.GetChild(0).GetChild(2).gameObject;
 
         transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>()[0].text = t.Titel;
 
@@ -31,7 +33,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
                  "DT:" + string.Format("{0:00}", t.Deadline[2]) + "." + string.Format("{0:00}", t.Deadline[3]) + "."
                  + t.Deadline[4] + "|" + string.Format("{0:00}", t.Deadline[1]) + ":" + string.Format("{0:00}", t.Deadline[0]);
         }
-        dircTobj = transform.GetChild(0).GetChild(2).gameObject;
+       
 
        
         dircTobj.SetActive(false);
@@ -93,6 +95,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
 
     public void SetTaskToDone()
     {
+        AudioSource.PlayClipAtPoint(pingSound, Camera.main.transform.position);
         task.Sucess = true; // *
         task.Done = true;
         task.Sucessedtimes++;
