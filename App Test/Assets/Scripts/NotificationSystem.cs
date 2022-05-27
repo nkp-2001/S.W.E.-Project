@@ -5,7 +5,7 @@ using Unity.Notifications.Android;
 using System;
 using UnityEngine.SceneManagement;
 
-public class NotificationSystem : MonoBehaviour , IObserver
+public class NotificationSystem : MonoBehaviour , IObserver, /* (Dependecy Inversion:) */ IDataMasterNOSClient 
 {
     Taskmaster taskmaster;
     private void Awake() 
@@ -86,7 +86,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
 
     }
 
-    public List<int> SendNewDeadlineNotifications(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz
+    public List<int> SendNewDeadlineNotifications_Other(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz
     {
         int dayleft = (expireTime - System.DateTime.Now).Days;
         List<int> Notifi_ID = new List<int>();
@@ -149,7 +149,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         return Notifi_ID;
     }
 
-    public int SendNewDeadlineNotificationsX(string titel, DateTime expireTime)
+    public int SendNewDeadlineNotifications(string titel, DateTime expireTime)
     {
         int id = GetFreeNotiChannelId();
         var channelDealineNew = new AndroidNotificationChannel()
@@ -227,7 +227,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         return id;
     }
 
-    private static int GetFreeNotiChannelId()
+    private int GetFreeNotiChannelId()
     {
         int id = 1;
         List<int> t = new List<int>();
@@ -340,7 +340,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         Subject.current.OnNewTask += NotficationStatusReaction;
         Subject.current.OnTaskReturning += NotficationStatusReaction;
         Subject.current.OnTaskChange += CancelDeadlineNotificationsX;
-        Subject.current.SetonRequest_NotiIDDeadline(SendNewDeadlineNotificationsX);
+        Subject.current.SetonRequest_NotiIDDeadline(SendNewDeadlineNotifications);
         Subject.current.SetonRequest_NotiIDAppointment(SendAppointmentNotifcations);
 
         
