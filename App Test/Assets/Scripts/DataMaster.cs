@@ -42,7 +42,8 @@ public class DataMaster : MonoBehaviour
             {
                
                 dataSave = JsonUtility.FromJson<SaveObject>(readstring);
-               
+              //  JsonUtility.FromJsonOverwrite(readstring, dataSave);
+
             }
         }
         else

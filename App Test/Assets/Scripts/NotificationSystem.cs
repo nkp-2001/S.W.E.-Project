@@ -5,7 +5,7 @@ using Unity.Notifications.Android;
 using System;
 using UnityEngine.SceneManagement;
 
-public class NotificationSystem : MonoBehaviour , IObserver, /* (Dependecy Inversion:) */ IDataMasterNOSClient 
+public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Inversion: */ IDataMasterNOSClient 
 {
     Taskmaster taskmaster;
     private void Awake() 
@@ -27,6 +27,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* (Dependecy Inver
         SubscribeToEvents_Start();
 
         taskmaster = FindObjectOfType<Taskmaster>();
+        taskmaster.SetNotificatioSystem(this);
       
 
         var channel = new AndroidNotificationChannel()
@@ -151,6 +152,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* (Dependecy Inver
 
     public int SendNewDeadlineNotifications(string titel, DateTime expireTime)
     {
+       
         int id = GetFreeNotiChannelId();
         var channelDealineNew = new AndroidNotificationChannel()
         {
@@ -224,6 +226,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* (Dependecy Inver
         notificationDeadline.ShowTimestamp = true;
         AndroidNotificationCenter.SendNotification(notificationDeadline, "" + id);
         ///////////////
+        print("Notication ertsellt" + id + expireTime.ToString());
         return id;
     }
 
@@ -263,7 +266,6 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* (Dependecy Inver
     }
     public void CancelDNotificationsByID(int id)
     {
-       
         AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
 
@@ -340,8 +342,8 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* (Dependecy Inver
         Subject.current.OnNewTask += NotficationStatusReaction;
         Subject.current.OnTaskReturning += NotficationStatusReaction;
         Subject.current.OnTaskChange += CancelDeadlineNotificationsX;
-        Subject.current.SetonRequest_NotiIDDeadline(SendNewDeadlineNotifications);
-        Subject.current.SetonRequest_NotiIDAppointment(SendAppointmentNotifcations);
+      //  Subject.current.SetonRequest_NotiIDDeadline(SendNewDeadlineNotifications);
+       // Subject.current.SetonRequest_NotiIDAppointment(SendAppointmentNotifcations);
 
         
     }

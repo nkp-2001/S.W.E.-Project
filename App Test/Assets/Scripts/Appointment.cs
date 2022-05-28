@@ -33,6 +33,7 @@ public class Appointment // : Taskmaster.Task
     public int[] EndTime { get => endTime; set => endTime = value; }
     public int Repeat { get => repeat; set => repeat = value; }
     public string Desp { get => desp; set => desp = value; }
+    public int Notifcation_id { get => notifcation_id; set => notifcation_id = value; }
 
     public bool AppointmentonThisDay(DateTime selectDay)
     {
