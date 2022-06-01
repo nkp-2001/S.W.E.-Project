@@ -10,7 +10,7 @@ public class TimeDropdownField : MonoBehaviour
     private TMP_Dropdown dropdown;
     private Dictionary<string, int> indexOfOption = new Dictionary<string, int>();
 
-    void Awake()
+    public void Initialize()
     {
         dropdown = GetComponent<TMP_Dropdown>();
 

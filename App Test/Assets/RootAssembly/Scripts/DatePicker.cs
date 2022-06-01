@@ -10,11 +10,6 @@ public class DatePicker : MonoBehaviour
     [SerializeField] private TimeDropdownField hourDropdown, minuteDropdown, dayDropdown, monthDropdown, yearDropdown;
     [SerializeField] TMP_Dropdown repeatDropDown;
 
-    void Start()
-    {
-        // InitializeDropdowns(); //Weg lassen da es sont Action von SetSelectedDate(int[] dt) überschreibt
-    }
-
     void OnEnable()
     {
         InitializeDropdowns();
@@ -22,6 +17,12 @@ public class DatePicker : MonoBehaviour
 
     private void InitializeDropdowns()
     {
+        hourDropdown.Initialize();
+        minuteDropdown.Initialize();
+        dayDropdown.Initialize();
+        monthDropdown.Initialize();
+        yearDropdown.Initialize();
+
         DateTime currentDateTime = DateTime.Now;
 
         List<string> hourOptions = new List<string>();
