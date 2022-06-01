@@ -17,7 +17,7 @@ public class ValueManager : MonoBehaviour
     Taskmaster tm;
     SceneLoader sceneLoader;
 
-    public static Taskmaster.Task taskOnEdit = null; //muss noch mit potinziallen wegfallen von Szenenwechsel überdenkt werden / Andere Lösung allg. vllt 
+    public static Task taskOnEdit = null; //muss noch mit potinziallen wegfallen von Szenenwechsel überdenkt werden / Andere Lösung allg. vllt 
     public static bool tastReturninEdit = false;
 
     [SerializeField] TextMeshProUGUI HeadTitle;
@@ -86,7 +86,7 @@ public class ValueManager : MonoBehaviour
      sceneLoader.LoadScene(0);
    }    
     /// <EditMode> ///
-   public void StartEditMode(Taskmaster.Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
+   public void StartEditMode(Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
    {
       
 
@@ -122,6 +122,7 @@ public class ValueManager : MonoBehaviour
         titel.text = taskOnEdit.Titel;
         discrip.text = taskOnEdit.Description;
         prio.value = taskOnEdit.Prio;
+        repeatDropDown.value = taskOnEdit.NextDeadlineIndex;
       
         if (taskOnEdit.Deadline.Length ==0)
         {

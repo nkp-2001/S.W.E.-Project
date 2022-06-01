@@ -902,6 +902,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bcaf9f3f88b76449bbc7093eb9606a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  task:
+    titel: 
+    description: 
+    deadline: 
+    deadlineChannel_ID: 0
+    prio: 0
+    redo: 0
+    failedprevios: 0
+    failedtimes: 0
+    sucessedtimes: 5
+    nextDeadlineIndex: 0
+    sucess: 1
+    done: 1
+  pingSound: {fileID: 8300000, guid: 8dee6731a50e4494a8a6a38fd59cee72, type: 3}
+  dircTobj: {fileID: 3358741570897459758}
 --- !u!114 &1635411245835987818
 MonoBehaviour:
   m_ObjectHideFlags: 0

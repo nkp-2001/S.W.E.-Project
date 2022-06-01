@@ -7,20 +7,25 @@ using UnityEngine;
 [Serializable]
 public class Appointment // : Taskmaster.Task
 {
-    string titel;
-    string desp;
-    int[] startTime;
-    int[] endTime;
-    int repeat;
+   [SerializeField] string titel;
+    [SerializeField] string desp;
+    [SerializeField] int[] startTime;
+    [SerializeField] int[] endTime;
+    [SerializeField] int repeat;
 
-    int repeattimes; // gucken ob es verwendet wird, wenn ja  AppointmentonThisDay(DateTime selectDay) anpassen
+    [SerializeField] int notifcation_id;
 
-    public Appointment(string t,int[] stT,int[] enT,int reIn)
+
+    [SerializeField] int repeattimes; // gucken ob es verwendet wird, wenn ja  AppointmentonThisDay(DateTime selectDay) anpassen
+   
+    public Appointment(string t,string d,int[] stT,int[] enT,int reIn, int notficID)
     {
         titel = t;
+        desp = d;
         startTime = stT;
         endTime = enT;
         repeat = reIn;
+        notifcation_id = notficID;
     }
 
     public string Titel { get => titel; set => titel = value; }
@@ -28,6 +33,7 @@ public class Appointment // : Taskmaster.Task
     public int[] EndTime { get => endTime; set => endTime = value; }
     public int Repeat { get => repeat; set => repeat = value; }
     public string Desp { get => desp; set => desp = value; }
+    public int Notifcation_id { get => notifcation_id; set => notifcation_id = value; }
 
     public bool AppointmentonThisDay(DateTime selectDay)
     {

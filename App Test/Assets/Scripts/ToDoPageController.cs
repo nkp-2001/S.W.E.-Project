@@ -14,12 +14,12 @@ public class ToDoPageController : MonoBehaviour,IObserver
     [SerializeField] TextMeshProUGUI ButtonText;
     TMPro.TMP_Dropdown sortByDropdown;
 
-    public void AddTask(Taskmaster.Task t)
+    public void AddTask(Task t)
     {
         GameObject tp = Instantiate(taskPrototype);
         tp.GetComponent<TaskPrototype>().Setup(t, taskContainer); 
     }
-    public void AddOldTask(Taskmaster.Task t)
+    public void AddOldTask(Task t)
     {
         GameObject tp = Instantiate(taskPrototype);
         tp.GetComponent<TaskPrototype>().Setup_OldTask(t, taskContainer);
@@ -32,10 +32,10 @@ public class ToDoPageController : MonoBehaviour,IObserver
             //clear and fill UI with existing tasks   
             ClearScrollView();
 
-            List<Taskmaster.Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
+            List<Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
             if (tasks is not null)
             {
-                foreach (Taskmaster.Task task in tasks)
+                foreach (Task task in tasks)
                 {
                     AddTask(task);
                 }
@@ -80,14 +80,14 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
         if (taskmaster.GetArchivedTasks() is not null)
         {
-            foreach (Taskmaster.Task task in taskmaster.GetArchivedTasks())
+            foreach (Task task in taskmaster.GetArchivedTasks())
             {
                 AddOldTask(task);
             }
         }
     }
 
-    public void FetchTasks(Taskmaster.Task task, string t, string d, int[] dt, float prio,int i)
+    public void FetchTasks(Task task, string t, string d, int[] dt, float prio,int i)
     {
         FetchTasks();
     }

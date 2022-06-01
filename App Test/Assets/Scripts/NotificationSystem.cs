@@ -5,12 +5,12 @@ using Unity.Notifications.Android;
 using System;
 using UnityEngine.SceneManagement;
 
-public class NotificationSystem : MonoBehaviour , IObserver
+public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Inversion: */ IDataMasterNOSClient 
 {
     Taskmaster taskmaster;
     private void Awake() 
     {
-        NotificationSystem[] objs = FindObjectsOfType<NotificationSystem>(); //Singleton , Scenenwechesel löscht es nicht 
+        NotificationSystem[] objs = FindObjectsOfType<NotificationSystem>(); // Scenenwechesel löscht es nicht 
 
         if (objs.Length > 1)
         {
@@ -18,13 +18,17 @@ public class NotificationSystem : MonoBehaviour , IObserver
             return;
         }
 
-        DontDestroyOnLoad(this.gameObject);       
+        DontDestroyOnLoad(this.gameObject);
+        
     }
        
     void Start() //Register 
     {
+        SubscribeToEvents_Start();
+
         taskmaster = FindObjectOfType<Taskmaster>();
-        
+        taskmaster.SetNotificatioSystem(this);
+      
 
         var channel = new AndroidNotificationChannel()
         {
@@ -37,7 +41,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         channel.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channel);
 
-        SubscribeToEvents_Start();
+       
     }
     public void NotficationStatusReaction(bool ListEmpty)
     {
@@ -64,7 +68,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
         NotficationStatusReaction(false);
         print("Reaction on new Task");
     }
-    public void NotficationStatusReaction(Taskmaster.Task task,string t, string d, int[] dt, float prio,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
+    public void NotficationStatusReaction(Task task,string t, string d, int[] dt, float prio,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
     {
         NotficationStatusReaction(false);
         print("Reaction on new Task");
@@ -83,7 +87,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
 
     }
 
-    public List<int> SendNewDeadlineNotifications(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz
+    public List<int> SendNewDeadlineNotifications_Other(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz
     {
         int dayleft = (expireTime - System.DateTime.Now).Days;
         List<int> Notifi_ID = new List<int>();
@@ -146,33 +150,14 @@ public class NotificationSystem : MonoBehaviour , IObserver
         return Notifi_ID;
     }
 
-    public int SendNewDeadlineNotificationsX(string titel, DateTime expireTime)
+    public int SendNewDeadlineNotifications(string titel, DateTime expireTime)
     {
-        List<int> t = new List<int>();
-        int id = 1;
-        foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
-        {
-            print(x.Id);
-            try
-            {
-               
-                t.Add(Int32.Parse(x.Id));
-            }
-            catch (FormatException) {   }
-
-        }
-        t.Sort();
-        foreach (int i in t)
-        {
-           if (id == i)
-           {
-                id++;
-           } 
-        }
+       
+        int id = GetFreeNotiChannelId();
         var channelDealineNew = new AndroidNotificationChannel()
         {
-            Id = ""+ id,
-            Name = "id" + id,
+            Id = "" + id,
+            Name = "TaskDeadline" + id,
             Importance = Importance.Default,
             Description = "Channel for the App",
 
@@ -195,9 +180,9 @@ public class NotificationSystem : MonoBehaviour , IObserver
             }
             for (int i = weeks; i >= 1; i--)
             {
-                DateTime DT = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, System.DateTime.Now.Day, expireTime.Hour, expireTime.Minute,0);
-                
-                
+                DateTime DT = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, System.DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
+
+
 
                 var notificationDeadlines = new AndroidNotification(
                 "Deadline Alert:" + titel,
@@ -206,7 +191,7 @@ public class NotificationSystem : MonoBehaviour , IObserver
                 /////////////////////////////////////////
 
                 notificationDeadlines.ShowTimestamp = true;
-                
+
                 AndroidNotificationCenter.SendNotification(notificationDeadlines, "" + id);
             }
         }
@@ -215,9 +200,9 @@ public class NotificationSystem : MonoBehaviour , IObserver
         if (singleDays == 0 && dayleft != 0)
         {
             singleDays = 6;
-            
+
         }
-       
+
         for (int i = singleDays; i >= 1; i--)
         {
             print(i);
@@ -241,6 +226,33 @@ public class NotificationSystem : MonoBehaviour , IObserver
         notificationDeadline.ShowTimestamp = true;
         AndroidNotificationCenter.SendNotification(notificationDeadline, "" + id);
         ///////////////
+        print("Notication ertsellt" + id + expireTime.ToString());
+        return id;
+    }
+
+    private int GetFreeNotiChannelId()
+    {
+        int id = 1;
+        List<int> t = new List<int>();
+        foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
+        {
+            print(x.Id);
+            try
+            {
+
+                t.Add(Int32.Parse(x.Id));
+            }
+            catch (FormatException) { }
+
+        }
+        t.Sort();
+        foreach (int i in t)
+        {
+            if (id == i)
+            {
+                id++;
+            }
+        }
         return id;
     }
 
@@ -252,24 +264,23 @@ public class NotificationSystem : MonoBehaviour , IObserver
             AndroidNotificationCenter.CancelNotification(id);
         }
     }
-    public void CancelDeadlineNotificationsX(int id)
+    public void CancelDNotificationsByID(int id)
     {
-       
         AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
 
-    public void CancelDeadlineNotificationsX(Taskmaster.Task oldtask, string t, string d, int[] dt, float p,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
+    public void CancelDeadlineNotificationsX(Task oldtask, string t, string d, int[] dt, float p,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
     {
         
         if (oldtask.Deadline != dt && oldtask.Deadline != null)
         {
-            CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
+            CancelDNotificationsByID(oldtask.DeadlineChannel_ID);
             print("Reaction on Deadline remove");
         }
 
 
     }
-    public void CancelNotificationsX(Taskmaster.Task task)
+    public void CancelNotificationsX(Task task)
     {
         int id = task.DeadlineChannel_ID;
         if (id != 0)
@@ -287,16 +298,54 @@ public class NotificationSystem : MonoBehaviour , IObserver
     }
    
 
+    public int SendAppointmentNotifcations(DateTime StartTime,DateTime EndTime,int repeat,string titel)
+    {       
+        int appo_id = GetFreeNotiChannelId();
+        var channelAppointmentNew = new AndroidNotificationChannel()
+        {
+            Id = "" + appo_id,
+            Name = "Appointment" + appo_id,
+            Importance = Importance.Default,
+            Description = "Channel for the Appointment",
+
+        };
+        channelAppointmentNew.EnableVibration = true;
+        AndroidNotificationCenter.RegisterNotificationChannel(channelAppointmentNew);
+
+        var notification_OnStartpre = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will start 1 Hour", StartTime.AddHours(-1));
+
+        var notification_OnStart = new AndroidNotification( "Appointment Notice:" + titel,  " appointment:" + titel + " has started", StartTime );
+        notification_OnStart.ShowTimestamp = true;
+        //////////////////////////////////////////////////////
+        var notification_OnEnd = new AndroidNotification("Appointment Notice:" + titel," appointment:" + titel + " is over now", EndTime );
+        notification_OnStart.ShowTimestamp = true;
+
+        if (repeat != 0)
+        {
+            TimeSpan repeatTime = new TimeSpan(repeat, 0, 0, 0);
+            notification_OnStart.RepeatInterval = repeatTime;
+            notification_OnEnd.RepeatInterval = repeatTime;
+            notification_OnStartpre.RepeatInterval = repeatTime;
+        }
+        AndroidNotificationCenter.SendNotification(notification_OnStart, channelAppointmentNew.Id);
+        AndroidNotificationCenter.SendNotification(notification_OnEnd, channelAppointmentNew.Id);
+        AndroidNotificationCenter.SendNotification(notification_OnStartpre, channelAppointmentNew.Id);
+        print("________________Channle createtd with : " +appo_id);
+        return appo_id;
+    }
+
+
     public void SubscribeToEvents_Start()
     {
-      
+        print("I have assigend my Stuff");
         Subject.current.OnTaskSetDone += CancelNotificationsX;
         Subject.current.OnNewTask += NotficationStatusReaction;
         Subject.current.OnTaskReturning += NotficationStatusReaction;
         Subject.current.OnTaskChange += CancelDeadlineNotificationsX;
-        Subject.current.SetonRequest_NotiID(SendNewDeadlineNotificationsX);
+      //  Subject.current.SetonRequest_NotiIDDeadline(SendNewDeadlineNotifications);
+       // Subject.current.SetonRequest_NotiIDAppointment(SendAppointmentNotifcations);
 
-        // if (oldtask.Deadline != dt)
+        
     }
 
     public void UnsubscribeToAllEvents()

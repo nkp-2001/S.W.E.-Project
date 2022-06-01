@@ -9,15 +9,16 @@ using UnityEngine.SceneManagement;
 
 public class Taskmaster : MonoBehaviour, IObserver
 {
+    IDataMasterNOSClient clientNotificationSystem; // entfernen bei Vererbung
     [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
     string filename = "SavedList.txt";
-    [SerializeField] NotificationSystem notificationSystem; // nicht mehr nötig
+   // [SerializeField] NotificationSystem notificationSystem; // nicht mehr nötig
 
 
     private void Awake()
     {
-        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Singleton , Scenenwechesel loescht es nicht 
+        Taskmaster[] objs = FindObjectsOfType<Taskmaster>(); //Scenenwechesel loescht es nicht 
 
         if (objs.Length > 1)
         {
@@ -32,13 +33,13 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     private void Start()
     {
-       // notificationSystem = FindObjectOfType<NotificationSystem>(); // nicht mehr nötig
-       
+
+        // notificationSystem = FindObjectOfType<NotificationSystem>(); // nicht mehr nötig    
         CheckDeadlinesTask();
+        SubscribeToEvents_Start();
 
-       
-
-
+       // StartCoroutine(GreateTest());
+          
     }
 
     private void OnApplicationFocus(bool focus) // vllt noch stattdessen anderes Call Event dafür benutzten
@@ -48,23 +49,27 @@ public class Taskmaster : MonoBehaviour, IObserver
     public void CreateNewTask(string t, string d, int[] dt, float p,int repeatindex)
     {
         t = AvoidDoubleName(t); // Namecheck  , keine Doppelten
-        if (dt != null & dt.Length != 0)
+        if (dt != null)
         {
-            print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
-           // int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));           
-            int id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-            if (id != 0)
-            {
-                print("System plugged");
-                Task new_task = new Task(t, d, dt, p, id, repeatindex);
-                dataSave.AddNewToList(new_task);
-            }
-            else 
-            {
-                print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiID hasen`t been assigend by it");
-                Task new_task = new Task(t, d, dt, p);
-                dataSave.AddNewToList(new_task);
-            } 
+           if (dt.Length != 0) // noch mal drüber gucken warum manchmal lengt 0 aber nicht null
+           {
+                print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
+                // int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));           
+                //int id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+                if (clientNotificationSystem != null) //(id != 0 )
+                {
+                    print("System plugged");
+                    int id = clientNotificationSystem.SendNewDeadlineNotifications(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+                    Task new_task = new Task(t, d, dt, p, id, repeatindex);
+                    dataSave.AddNewToList(new_task);
+                }
+                else
+                {
+                    print("[ManuelWarning] The NotficationSystem is not plugged");
+                    Task new_task = new Task(t, d, dt, p);
+                    dataSave.AddNewToList(new_task);
+                }
+           }
         }
         else
         {
@@ -72,6 +77,7 @@ public class Taskmaster : MonoBehaviour, IObserver
             dataSave.AddNewToList(new_task);
         }
         SaveList();
+        print("x");
        // notificationSystem.NotficationStatusReaction(false);
     }
 
@@ -95,23 +101,29 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p,int rindex)
     {
-        t = AvoidDoubleName(t); // Namecheck  , keine Doppelten
+        if (t != oldtask.Titel)
+        {
+            t = AvoidDoubleName(t);// Namecheck  , keine Doppelten
 
+        }
         if (dt == null)
         {
             dataSave.ChangeTask(oldtask, t, d, dt, p, 0,0); //0 = keine Meldungen , Cancel der Alten über das Event (im Notfi)
         }
         else if (oldtask.Deadline != dt)
         {
-           // notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
-            int new_id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-            if (new_id != 0)
+            // notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
+            // int new_id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+           
+
+            if (clientNotificationSystem != null) //(id != 0 )
             {
+                int new_id = clientNotificationSystem.SendNewDeadlineNotifications(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
                 dataSave.ChangeTask(oldtask, t, d, dt, p, new_id,rindex);
             }
             else
             {
-                print("[ManuelWarning] The NotficationSystem is not plugged here. It is either not in the Scene anymore, wasen`t in it in the first place or onRequest_NotiID hasen`t been assigend by it");
+                print("[ManuelWarning] The NotficationSystem is not plugged here.");
                 dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID, rindex);
             }
            
@@ -130,8 +142,6 @@ public class Taskmaster : MonoBehaviour, IObserver
     {
         return GetTasks().Count;
     }
-
-
     public List<Task> GetSortedTasks(int sortBy)
     {
         List<Task> unsort = dataSave.GetList();
@@ -211,9 +221,10 @@ public class Taskmaster : MonoBehaviour, IObserver
                 if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
                 {
                     if (t.NextDeadlineIndex != 0)
-                    {                 
-                        
-                         dataSave.ChangeTaskCauseRepeat(t, CaculuateNextDT(t.NextDeadlineIndex,t.Deadline));
+                    {
+                         int[] NextDeadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);
+                         int NextDeadlineNotifId = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, ConvertIntArray_toDatetime(NextDeadline)); // ex: Subject.current.Trigger_Request_NotiID
+                         dataSave.ChangeTaskCauseRepeat(t, NextDeadline,NextDeadlineNotifId) ;
                          SaveList();
 
                     }
@@ -229,8 +240,10 @@ public class Taskmaster : MonoBehaviour, IObserver
         {
             if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
             {
+                dataSave.RemoveFromWaitList(t); // Änd.
                 t.Deadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);
-                t.DeadlineChannel_ID = Subject.current.Trigger_Request_NotiID(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
+               // t.DeadlineChannel_ID = Subject.current.Trigger_Request_NotiID(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
+                t.DeadlineChannel_ID = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
                 dataSave.AddNewToList(t);
                 Subject.current.Trigger_ExpiredDeadline();
             }
@@ -245,8 +258,12 @@ public class Taskmaster : MonoBehaviour, IObserver
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
+    public int[] ConvertDatetime_toIntArray(DateTime toconvert)
+    {
+        return new int[] { toconvert.Minute, toconvert.Hour, toconvert.Day, toconvert.Month, toconvert.Year };
+    }
 
-    public void ManageTaskReturn(Taskmaster.Task oldtask, string t, string d, int[] dt, float prio,int repeatindex)
+    public void ManageTaskReturn(Task oldtask, string t, string d, int[] dt, float prio,int repeatindex)
     {
         dataSave.RemoveFromArchieList(oldtask);
         CreateNewTask(t, d, dt, prio,repeatindex);     
@@ -300,8 +317,100 @@ public class Taskmaster : MonoBehaviour, IObserver
         return new int[] { dateTime.Minute, dateTime.Hour, dateTime.Day, dateTime.Month, dateTime.Year };
     }
 
+    ///!!!! ////////////////////////////////////////////////////////////////////////////////// Appointmenmts Vererbansatz sollte diskutiert werden , dobbelter SaveObject Problem dabei diskutiren (siehe DataMaster.cs)
+
+    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat)
+    {
+        titel = AvoidDoubleNameAppo(titel);
+        int notficID = 0;
+        if (clientNotificationSystem != null)
+        {
+            notficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel);
+        }
+        else
+        {
+            print("[ManuelWarning] The NotficationSystem is not plugged");
+        }
+        dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, notficID));
+        SaveList();
+    }
+
+    public void DeleteAppoitment(Appointment appo)
+    {
+        dataSave.RemoveAppointment(appo);
+        SaveList();
+    }
+
+    public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID)
+    {
+        if (oldAppointment.StartTime != startTime | oldAppointment.EndTime != endTime)
+        {
+            if (clientNotificationSystem != null)
+            {
+                int newnotficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel);
+                dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, newnotficID);
+            }
+            else
+            {
+                print("[ManuelWarning] The NotficationSystem is not plugged");
+                dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, 0);
+            }
+            
+        }
+        else
+        {
+            dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, oldAppointment.Notifcation_id);
+        }
+        SaveList();
+    }
+
+    public string AvoidDoubleNameAppo(string titel) // ! bzgl potizialler Vererbung  bedenken 
+    {
+        string checkedtitel = titel;
+        bool doublefound = true;
+        int repeating = 0;
+        while (doublefound)
+        {
+
+            doublefound = false;
+            print("Round" + repeating);
+            foreach (Appointment appo in dataSave.GetAppoitmentList())
+            {
+                if (checkedtitel == appo.Titel)
+                {
+                    print("double");
+
+                    repeating++;
+                    checkedtitel = titel + "(" + repeating + ")";
+                    doublefound = true;
+                    break;
+                }
+            }
+
+        }
+        return checkedtitel;
+    }
+
+    public List<Appointment> GiveAppoints_ofThisDay()
+    {
+        List<Appointment> DayList = new List<Appointment>();
+        foreach (Appointment appo in dataSave.GetAppoitmentList())
+        {
+            if (appo.AppointmentonThisDay(DateTime.Now.Date))
+            {
+                DayList.Add(appo);
+            }
+        }
+        return DayList;
+    }
+
+
+    /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
     public void SubscribeToEvents_Start()
     {
+        print(Subject.current);
         Subject.current.OnTaskSetDone += RemoveTask;
         Subject.current.OnNewTask += CreateNewTask;
         Subject.current.OnTaskChange += ChangeTask;
@@ -326,160 +435,20 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     private void OnEnable()
     {
-        SubscribeToEvents_Start();
+       
         
         Debug.Log("OnEnable");
     }
-  
 
-
-
-
-    ///////////// Task ////////////
-    [Serializable]
-    public class Task
+    IEnumerator GreateTest()
     {
-        [SerializeField] string titel;
-        [SerializeField] string description;
-        [SerializeField] int[] deadline;  /// DateTime nicht (so leicht) serizaible | dewegen muss auf int[] ausgeweischt werden
-
-        [SerializeField] int deadlineChannel_ID = 0;
-        [SerializeField] float prio;
-
-        [SerializeField] bool redo = false;
-        [SerializeField] bool failedprevios = false;
-        [SerializeField] int failedtimes = 0;
-        [SerializeField] int sucessedtimes = 0;
-
-        [SerializeField] int nextDeadlineIndex = 0;
-       
-
-        [SerializeField] bool sucess = false;
-        [SerializeField] bool done = false;
-       
-
-        public Task(string t, string d, int[] dt, float p)
-        {
-            titel = t;
-            description = d;
-            deadline = dt;
-            prio = p;       
-        }
-        public Task(string t, string d, int[] dt, float p,int dlID)
-        {
-            titel = t;
-            description = d;
-            deadline = dt;
-            prio = p;
-            deadlineChannel_ID = dlID;
-        }
-        public Task(string t, string d, int[] dt, float p, int dlID,int retDtDayes)
-        {
-            titel = t;
-            description = d;
-            deadline = dt;
-            prio = p;
-            deadlineChannel_ID = dlID;
-            nextDeadlineIndex = retDtDayes;
-            redo = retDtDayes != 0;
-        }
-        
-
-
-
-
-        public string Titel { get => titel; set => titel = value; }
-        public string Description { get => description; set => description = value; }
-        public float Prio { get => prio; set => prio = value; }
-        public int[] Deadline { get => deadline; set => deadline = value; }
-        public int DeadlineChannel_ID { get => deadlineChannel_ID; set => deadlineChannel_ID = value; }
-        public bool Done { get => done; set => done = value; }
-        public bool Redo { get => redo; set => redo = value; }
-        public bool Sucess { get => sucess; set => sucess = value; }
-        public int NextDeadlineIndex { get => nextDeadlineIndex; set => nextDeadlineIndex = value; }
-        public bool Failedprevios { get => failedprevios; set => failedprevios = value; }
-        public int Failedtimes { get => failedtimes; set => failedtimes = value; }
-        public int Sucessedtimes { get => sucessedtimes; set => sucessedtimes = value; }
+        yield return  new WaitForSeconds(5);
+        CreateNewAppointment("Test", "bla bla", ConvertDatetime_toIntArray(new DateTime(2022, 5, 22, 18, 55, 0)), ConvertDatetime_toIntArray(new DateTime(2022, 5, 20, 21,0 , 0)), 0); // Test Appoinment
+        SaveList();
     }
-
-    /////// Save Object
-    
-   [Serializable]
-   public class SaveObject
-   {
-        [SerializeField] List<Task> tasklist = new List<Task>();
-        [SerializeField] List<Task> archivedTasks = new List<Task>();
-       
-        [SerializeField] List<Task> repeatingTaskOnWait = new List<Task>(); // !Start neuer Ansatz noch nicht implentiert
-        public void AddNewToList(Task addT)
-        {
-            tasklist.Add(addT);
-        }
-        public int RemoveFromList(int i)
-        {
-            tasklist.RemoveAt(i);
-            return tasklist.Count;
-        }
-        public int RemoveFromListAndGiveCount(Task tk) // veraltet 
-        {
-            tasklist.Remove(tk);
-            return tasklist.Count;
-        }
-        public void RemoveFromList(Task tk)
-        {
-            tasklist.Remove(tk);
-            if (tk.NextDeadlineIndex == 0)
-            {
-                archivedTasks.Add(tk);
-            }
-            else
-            {
-                repeatingTaskOnWait.Add(tk);
-            }
-           
-        }
-        public void RemoveFromArchieList(Task tk)
-        {
-            archivedTasks.Remove(tk);
-        }
-        public void RemoveFromWaitList(Task tk)
-        {
-            repeatingTaskOnWait.Remove(tk);
-        }
-      
-        public List<Task> GetList()
-        {
-            return tasklist;
-        }
-        public List<Task> GetArchivedList()
-        {
-            return archivedTasks;
-        }
-        public List<Task> GetWaitingList()
-        {
-            return repeatingTaskOnWait;
-        }
-        public void ClearArchviedList()
-        {
-            archivedTasks.Clear();
-        }
-        public void ClearCurrentList()
-        {
-            tasklist.Clear();
-        }
-        public void ChangeTask(Task altertT, string t, string d, int[] dt, float p,int id,int rindex)
-        {
-            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich , dewegen Avoiddoubblename !!
-            print(index);
-            tasklist[index] = new Task(t, d, dt, p,id,rindex);
-            tasklist[index].Redo = rindex != 0;
-        }
-        public void ChangeTaskCauseRepeat(Task altertT, int[] newDealine)
-        {
-            int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel);
-            tasklist[index].Deadline = newDealine;
-            tasklist[index].Failedprevios = true;
-            tasklist[index].Failedtimes++;       
-        }
-   }
+    public void SetNotificatioSystem(IDataMasterNOSClient notS) // Muss von Außen getezt werden
+    {
+        clientNotificationSystem = notS;
+    }
+   
 }
