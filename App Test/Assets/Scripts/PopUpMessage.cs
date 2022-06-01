@@ -41,13 +41,13 @@ public class PopUpMessage : MonoBehaviour
         }
     //}
 
-    public void ShowBoxTaskChange(Taskmaster.Task oldtask, string t, string d, int[] dt, float p, int repeatIndex)
+    public void ShowBoxTaskChange(Task oldtask, string t, string d, int[] dt, float p, int repeatIndex)
     {
         Debug.Log("222");
         StartCoroutine(ShowText("Task was changed"));
     }
 
-    public void ShowBoxTaskDone(Taskmaster.Task doneTask)
+    public void ShowBoxTaskDone(Task doneTask)
     {
         Debug.Log("333");
 
@@ -64,7 +64,7 @@ public class PopUpMessage : MonoBehaviour
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
 
-    public void ShowBoxTaskReturn(Taskmaster.Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrioint, int repeatIndex)
+    public void ShowBoxTaskReturn(Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrioint, int repeatIndex)
     {
         Debug.Log("444");
         StartCoroutine(ShowText("You have a new task to do"));
