@@ -49,15 +49,21 @@ public class PopUpMessage : MonoBehaviour
 
     public void ShowBoxTaskDone(Task doneTask)
     {
-        Debug.Log("333");
+        if (doneTask.Deadline.Length != 0)
+        {
+            DateTime expDate = ConvertIntArray_toDatetime(doneTask.Deadline);
+            DateTime localDate = System.DateTime.Now;
+            print(localDate);
+            int remain = (expDate - localDate).Days;
+            print(remain);
 
-        DateTime expDate = ConvertIntArray_toDatetime(doneTask.Deadline);
-        DateTime localDate = System.DateTime.Now;
-        print(localDate);
-        int remain = (expDate - localDate).Days;
-        print(remain);
-
-        StartCoroutine(ShowText("You have completed the task" + " " + remain + " " + "days before deadline"));
+            StartCoroutine(ShowText("You have completed the task" + " " + remain + " " + "days before deadline"));
+        }
+        else
+        {
+            StartCoroutine(ShowText("You have completed the task"));
+        }
+       
     }
     public System.DateTime ConvertIntArray_toDatetime(int[] toconvert)
     {
@@ -79,10 +85,21 @@ public class PopUpMessage : MonoBehaviour
     IEnumerator ShowText(string text)
     {
         HeaderBox.color = new Color32(0, 0, 0, 190);
-        MessageBox.color = new Color32(54, 99, 99, 212);
+        MessageBox.color = new Color32(54, 99, 99, 200);
         headerText.text = "Message!";
         messagerText.text = text;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(2);
+        for (byte i = 200; i >= 1; i--)
+        {
+            HeaderBox.color = new Color32(0, 0, 0, i);
+            MessageBox.color = new Color32(54, 99, 99, i);
+
+            headerText.color = new Color32(255, 0, 0, i);
+            messagerText.color = new Color32(255, 255, 255, i);
+            yield return new WaitForSeconds(0.0075f);
+
+
+        }
         messagerText.text = "";
         headerText.text = "";
         MessageBox.color = new Color32(0, 0, 0, 0);
