@@ -319,13 +319,13 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     ///!!!! ////////////////////////////////////////////////////////////////////////////////// Appointmenmts Vererbansatz sollte diskutiert werden , dobbelter SaveObject Problem dabei diskutiren (siehe DataMaster.cs)
 
-    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat,int repeatTimes)
+    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat,int repeatTimes,int[] preW)
     {
         titel = AvoidDoubleNameAppo(titel);
         int notficID = 0;
         if (clientNotificationSystem != null)
         {
-            notficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel);
+            notficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel,repeatTimes,preW);
         }
         else
         {
@@ -341,13 +341,13 @@ public class Taskmaster : MonoBehaviour, IObserver
         SaveList();
     }
 
-    public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID, int repeatTimes)
+    public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID, int repeatTimes,int[] preW)
     {
         if (oldAppointment.StartTime != startTime | oldAppointment.EndTime != endTime)
         {
             if (clientNotificationSystem != null)
             {
-                int newnotficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel);
+                int newnotficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel, repeatTimes, preW);
                 dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, newnotficID, repeatTimes);
             }
             else
