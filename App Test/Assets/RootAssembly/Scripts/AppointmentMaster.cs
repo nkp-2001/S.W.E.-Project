@@ -27,9 +27,9 @@ public class AppointmentMaster : DataMaster
         SaveList();
     }
 
-    public void ChangeAppointment(Appointment oldAppointment,string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID)
+    public void ChangeAppointment(Appointment oldAppointment,string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID,int repTimes)
     {
-        dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, notficID);
+        dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, notficID, repTimes);
         SaveList();
     }
 

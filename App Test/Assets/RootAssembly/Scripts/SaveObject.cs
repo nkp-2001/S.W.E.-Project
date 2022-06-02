@@ -97,10 +97,10 @@ public class SaveObject
         tasklist[index].Failedtimes++;
     }
 
-    public void ChangeAppointment(Appointment appo, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notiID)
+    public void ChangeAppointment(Appointment appo, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notiID, int repeatTimes)
     {
         int index = tasklist.FindLastIndex(appoT => appoT.Titel == appo.Titel);
-        appointmentlist[index] = new Appointment(titel, desp, startTime, endTime,repeat,notiID);
+        appointmentlist[index] = new Appointment(titel, desp, startTime, endTime,repeat,notiID,repeatTimes);
 
     }
 }

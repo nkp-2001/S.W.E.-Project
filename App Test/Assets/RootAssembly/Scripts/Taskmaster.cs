@@ -319,7 +319,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     ///!!!! ////////////////////////////////////////////////////////////////////////////////// Appointmenmts Vererbansatz sollte diskutiert werden , dobbelter SaveObject Problem dabei diskutiren (siehe DataMaster.cs)
 
-    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat)
+    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat,int repeatTimes)
     {
         titel = AvoidDoubleNameAppo(titel);
         int notficID = 0;
@@ -331,7 +331,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         {
             print("[ManuelWarning] The NotficationSystem is not plugged");
         }
-        dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, notficID));
+        dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, notficID, repeatTimes));
         SaveList();
     }
 
@@ -341,25 +341,25 @@ public class Taskmaster : MonoBehaviour, IObserver
         SaveList();
     }
 
-    public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID)
+    public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID, int repeatTimes)
     {
         if (oldAppointment.StartTime != startTime | oldAppointment.EndTime != endTime)
         {
             if (clientNotificationSystem != null)
             {
                 int newnotficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel);
-                dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, newnotficID);
+                dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, newnotficID, repeatTimes);
             }
             else
             {
                 print("[ManuelWarning] The NotficationSystem is not plugged");
-                dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, 0);
+                dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, 0, repeatTimes);
             }
             
         }
         else
         {
-            dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, oldAppointment.Notifcation_id);
+            dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, oldAppointment.Notifcation_id, repeatTimes);
         }
         SaveList();
     }
@@ -440,12 +440,6 @@ public class Taskmaster : MonoBehaviour, IObserver
         Debug.Log("OnEnable");
     }
 
-    IEnumerator GreateTest()
-    {
-        yield return  new WaitForSeconds(5);
-        CreateNewAppointment("Test", "bla bla", ConvertDatetime_toIntArray(new DateTime(2022, 5, 22, 18, 55, 0)), ConvertDatetime_toIntArray(new DateTime(2022, 5, 20, 21,0 , 0)), 0); // Test Appoinment
-        SaveList();
-    }
     public void SetNotificatioSystem(IDataMasterNOSClient notS) // Muss von Außen getezt werden
     {
         clientNotificationSystem = notS;
