@@ -38,6 +38,19 @@ public class DayPlannerEntry : MonoBehaviour
         instance.GetComponent<DayPlannerEntry>().SetTitle(title);
         instance.GetComponent<DayPlannerEntry>().SetNormalizedYcoordinates(normalizedYstart, normalizedYend);
         instance.SetActive(true);
+
+    }
+    public void SetHighlight(bool highlighted)
+    {
+        if (highlighted)
+        {
+            GetComponent<Image>().color = Color.red;
+        }
+        else
+        {
+            GetComponent<Image>().color = Color.white;
+        }
+        Debug.Log("sethighlight" + highlighted);
     }
 
     public void SetTitle(string t)

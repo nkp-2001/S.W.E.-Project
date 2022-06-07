@@ -6,3 +6,4 @@ public class DayPlannerEntriesContainerPlaceholder : MonoBehaviour
 {
     public DayPlannerEntryPlaceholder[] entries;
 }
+

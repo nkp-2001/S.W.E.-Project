@@ -18,15 +18,22 @@ public class DayPlannerRenderer : MonoBehaviour
     [SerializeField] private DayPlannerEntry entryVisualPrototype;
     [SerializeField] private List<DayPlannerEntryPlaceholder> entries;
 
+    [SerializeField] GameObject RedLine;
+
     private DateTime selectedDay;
 
+    //public static float start;
+    //public static float end;
+
     private RectTransform rectTransform;
+
 
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
 
         InvokeRepeating("UpdateCurrentTimeIndicator", 0, 1);
+        InvokeRepeating("UpdateHighlight", 0, 1);
 
         DisplayHours();
         UpdateDisplay();
@@ -60,6 +67,7 @@ public class DayPlannerRenderer : MonoBehaviour
             Destroy(child);
         }
 
+
         foreach (DayPlannerEntryPlaceholder entry in entries)
         {
             DateTime startTime, endTime;
@@ -77,9 +85,14 @@ public class DayPlannerRenderer : MonoBehaviour
             float normalizedYstart = ConvertTimeToNormalizedY(startTime);
             float normalizedYend = ConvertTimeToNormalizedY(endTime);
 
+            //start = normalizedYstart;
+            //end = normalizedYend;
+
             entryVisualPrototype.Instantiate(entry.title, normalizedYstart, normalizedYend, dayPlannerEntriesContainer);
+
         }
     }
+
 
     private float ConvertTimeToNormalizedY(DateTime dateTime)
     {
@@ -103,4 +116,24 @@ public class DayPlannerRenderer : MonoBehaviour
         currentTimeIndicator.transform.SetSiblingIndex(indexOfLastSibling);
     }
 
+    private void UpdateHighlight()
+    {
+        foreach (DayPlannerEntryPlaceholder entry in entries)
+        {
+            DateTime startTime;
+            DateTime.TryParse(entry.StartTime, out startTime);
+            DateTime endTime;
+            DateTime.TryParse(entry.EndTime, out endTime);
+            Debug.Log(startTime < DateTime.Now);
+            if (startTime < DateTime.Now && endTime > DateTime.Now)
+            {
+                entryVisualPrototype.SetHighlight(true);
+            }
+            else
+            {
+                entryVisualPrototype.SetHighlight(false);
+            }
+        }
+        
+    }
 }
