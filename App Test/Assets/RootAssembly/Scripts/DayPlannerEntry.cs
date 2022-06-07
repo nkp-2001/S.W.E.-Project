@@ -12,6 +12,8 @@ public class DayPlannerEntry : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI titleTMP;
 
+    [SerializeField] private Color highlightColor = Color.red;
+
     public DateTime StartTime{
         get;
         set;
@@ -30,12 +32,14 @@ public class DayPlannerEntry : MonoBehaviour
         rect = GetComponent<RectTransform>();
     }
 
-    public void Instantiate(string title, float normalizedYstart, float normalizedYend, Transform parent)
+    public void Instantiate(string title, DateTime startTime, DateTime endTime, float normalizedYstart, float normalizedYend, Transform parent)
     {
         GameObject instance = Instantiate(gameObject);
         instance.transform.SetParent(parent, false);
 
         instance.GetComponent<DayPlannerEntry>().SetTitle(title);
+        instance.GetComponent<DayPlannerEntry>().StartTime = startTime;
+        instance.GetComponent<DayPlannerEntry>().EndTime = endTime;
         instance.GetComponent<DayPlannerEntry>().SetNormalizedYcoordinates(normalizedYstart, normalizedYend);
         instance.SetActive(true);
 
@@ -44,13 +48,12 @@ public class DayPlannerEntry : MonoBehaviour
     {
         if (highlighted)
         {
-            GetComponent<Image>().color = Color.red;
+            GetComponent<Image>().color = highlightColor;
         }
         else
         {
             GetComponent<Image>().color = Color.white;
         }
-        Debug.Log("sethighlight" + highlighted);
     }
 
     public void SetTitle(string t)

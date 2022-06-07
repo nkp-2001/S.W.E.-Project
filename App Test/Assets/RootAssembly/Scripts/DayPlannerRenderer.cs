@@ -18,12 +18,7 @@ public class DayPlannerRenderer : MonoBehaviour
     [SerializeField] private DayPlannerEntry entryVisualPrototype;
     [SerializeField] private List<DayPlannerEntryPlaceholder> entries;
 
-    [SerializeField] GameObject RedLine;
-
     private DateTime selectedDay;
-
-    //public static float start;
-    //public static float end;
 
     private RectTransform rectTransform;
 
@@ -85,14 +80,10 @@ public class DayPlannerRenderer : MonoBehaviour
             float normalizedYstart = ConvertTimeToNormalizedY(startTime);
             float normalizedYend = ConvertTimeToNormalizedY(endTime);
 
-            //start = normalizedYstart;
-            //end = normalizedYend;
-
-            entryVisualPrototype.Instantiate(entry.title, normalizedYstart, normalizedYend, dayPlannerEntriesContainer);
+            entryVisualPrototype.Instantiate(entry.title, startTime, endTime, normalizedYstart, normalizedYend, dayPlannerEntriesContainer);
 
         }
     }
-
 
     private float ConvertTimeToNormalizedY(DateTime dateTime)
     {
@@ -118,20 +109,17 @@ public class DayPlannerRenderer : MonoBehaviour
 
     private void UpdateHighlight()
     {
-        foreach (DayPlannerEntryPlaceholder entry in entries)
+        for(int i = 0; i < dayPlannerEntriesContainer.childCount; ++i)
         {
-            DateTime startTime;
-            DateTime.TryParse(entry.StartTime, out startTime);
-            DateTime endTime;
-            DateTime.TryParse(entry.EndTime, out endTime);
-            Debug.Log(startTime < DateTime.Now);
-            if (startTime < DateTime.Now && endTime > DateTime.Now)
+            DayPlannerEntry entry = dayPlannerEntriesContainer.GetChild(i).GetComponent<DayPlannerEntry>();
+            
+            if (entry.StartTime < DateTime.Now && entry.EndTime > DateTime.Now)
             {
-                entryVisualPrototype.SetHighlight(true);
+                entry.SetHighlight(true);
             }
             else
             {
-                entryVisualPrototype.SetHighlight(false);
+                entry.SetHighlight(false);
             }
         }
         
