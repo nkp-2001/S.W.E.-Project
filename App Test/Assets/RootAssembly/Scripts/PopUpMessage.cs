@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-public class PopUpMessage : MonoBehaviour
+public class PopUpMessage : MonoBehaviour,IObserver
 {
 
     [SerializeField] Image MessageBox;
@@ -126,7 +126,7 @@ public class PopUpMessage : MonoBehaviour
         Subject.current.OnExpiredDealine += ShowBoxTaskExpired;
     }
 
-    public void UnsubscribeToAllEvent()
+    public void UnsubscribeToAllEvents()
     {
         Subject.current.OnNewTask -= ShowBoxNewTask;
         Subject.current.OnTaskChange -= ShowBoxTaskChange;
@@ -142,11 +142,8 @@ public class PopUpMessage : MonoBehaviour
 
     private void OnDestroy()
     {
-        UnsubscribeToAllEvent();
+        UnsubscribeToAllEvents();
     }
 
-    public void UnsubscribeToAllEvents()
-    {
-        throw new System.NotImplementedException();
-    }
+   
 }

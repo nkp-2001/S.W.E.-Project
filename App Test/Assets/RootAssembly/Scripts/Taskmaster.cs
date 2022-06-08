@@ -34,7 +34,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     private void Start()
     {
 
-        // notificationSystem = FindObjectOfType<NotificationSystem>(); // nicht mehr nötig    
+       
         CheckDeadlinesTask();
         SubscribeToEvents_Start();
 
@@ -391,12 +391,12 @@ public class Taskmaster : MonoBehaviour, IObserver
         return checkedtitel;
     }
 
-    public List<Appointment> GiveAppoints_ofThisDay()
+    public List<Appointment> GiveAppoints_ofThisDay(DateTime askedday)
     {
         List<Appointment> DayList = new List<Appointment>();
         foreach (Appointment appo in dataSave.GetAppoitmentList())
         {
-            if (appo.AppointmentonThisDay(DateTime.Now.Date))
+            if (appo.AppointmentonThisDay(askedday))
             {
                 DayList.Add(appo);
             }

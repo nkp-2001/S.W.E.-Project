@@ -278,7 +278,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   title: gut gemacht
   description: 
-  StartTime: 2022-06-12 18:45:00.0
+  StartTime: 2022-06-12 15:45:00.0
   EndTime: 2022-06-12 23:59:00.0
 --- !u!4 &408909993
 Transform:
@@ -853,7 +853,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1449266300
 Transform:
   m_ObjectHideFlags: 0
