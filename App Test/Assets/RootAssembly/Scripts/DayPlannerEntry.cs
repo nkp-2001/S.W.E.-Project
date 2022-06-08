@@ -12,8 +12,6 @@ public class DayPlannerEntry : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI titleTMP;
 
-    [SerializeField] private Color highlightColor = Color.red;
-
     public DateTime StartTime{
         get;
         set;
@@ -44,11 +42,12 @@ public class DayPlannerEntry : MonoBehaviour
         instance.SetActive(true);
 
     }
+
     public void SetHighlight(bool highlighted)
     {
         if (highlighted)
         {
-            GetComponent<Image>().color = highlightColor;
+            GetComponent<Image>().color = new Color32(255, 117, 108, 255);
         }
         else
         {
