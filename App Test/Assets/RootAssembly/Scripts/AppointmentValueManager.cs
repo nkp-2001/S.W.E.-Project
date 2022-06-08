@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AppointmenValueManager : ValueManager
+public class AppointmentValueManager : ValueManager
 {
 
     [SerializeField] private DatePicker endTimePicker;
