@@ -298,8 +298,10 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
     }
    
 
-    public int SendAppointmentNotifcations(DateTime StartTime,DateTime EndTime,int repeat,string titel)
-    {       
+    public int SendAppointmentNotifcations(DateTime StartTime,DateTime EndTime,int repeat,string titel,int repeattimes, int[] preWarn)
+    {
+        List<AndroidNotification> allNotication = new List<AndroidNotification>();
+
         int appo_id = GetFreeNotiChannelId();
         var channelAppointmentNew = new AndroidNotificationChannel()
         {
@@ -311,25 +313,67 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         };
         channelAppointmentNew.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channelAppointmentNew);
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        ///
 
-        var notification_OnStartpre = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will start 1 Hour", StartTime.AddHours(-1));
-
-        var notification_OnStart = new AndroidNotification( "Appointment Notice:" + titel,  " appointment:" + titel + " has started", StartTime );
-        notification_OnStart.ShowTimestamp = true;
-        //////////////////////////////////////////////////////
-        var notification_OnEnd = new AndroidNotification("Appointment Notice:" + titel," appointment:" + titel + " is over now", EndTime );
-        notification_OnStart.ShowTimestamp = true;
-
-        if (repeat != 0)
+        foreach(int i in preWarn)
         {
-            TimeSpan repeatTime = new TimeSpan(repeat, 0, 0, 0);
-            notification_OnStart.RepeatInterval = repeatTime;
-            notification_OnEnd.RepeatInterval = repeatTime;
-            notification_OnStartpre.RepeatInterval = repeatTime;
+            AndroidNotification preNoti = new AndroidNotification();
+            switch (i)
+            {
+                case 1:
+                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will Start in 1 Hour ", StartTime.AddHours(-1));
+                    break;
+                case 2:
+                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will Start in 1 Day ", StartTime.AddDays(-1));
+                    break;
+                case 3:
+                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will Start in 1 Mounth ", StartTime.AddMonths(-1));
+                    break;
+                case 4:
+                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will Start in 1 Years ", StartTime.AddYears(-1));
+                    break;
+                default:
+                    break;
+            }
+            preNoti.ShowTimestamp = true;
+            if (repeat != 0 & repeattimes == 0)
+            {
+                preNoti.RepeatInterval = new TimeSpan(repeat, 0, 0, 0);
+                allNotication.Add(preNoti);
+            }
+            else if (repeat != 0 & repeattimes > 0)
+            {
+                allNotication.Add(preNoti);
+                for (int it = repeattimes; repeattimes > 0; it--) // in AndroidNotification ist keinen Parameter den man setzten kann das eine Meldung begrenzte mal Widerholt werden  kann deswegenn das:
+                {
+                    preNoti.FireTime = preNoti.FireTime + new TimeSpan(repeat, 0, 0, 0);
+                    allNotication.Add(preNoti);
+
+                }
+            }
+            else
+            {
+                allNotication.Add(preNoti);
+            }
+          
+            
         }
-        AndroidNotificationCenter.SendNotification(notification_OnStart, channelAppointmentNew.Id);
-        AndroidNotificationCenter.SendNotification(notification_OnEnd, channelAppointmentNew.Id);
-        AndroidNotificationCenter.SendNotification(notification_OnStartpre, channelAppointmentNew.Id);
+
+        AndroidNotification atStart = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " has started", StartTime);
+        AndroidNotification atEnd = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " is over now", EndTime);
+        atEnd.ShowTimestamp = true;
+        atStart.ShowTimestamp = true; 
+        allNotication.Add(atStart);
+        allNotication.Add(atEnd);   
+
+        foreach (AndroidNotification Noti in allNotication)
+        {
+            if (DateTime.Now < Noti.FireTime)
+            {
+                AndroidNotificationCenter.SendNotification(Noti, channelAppointmentNew.Id);
+            }      
+        }   
         print("________________Channle createtd with : " +appo_id);
         return appo_id;
     }
