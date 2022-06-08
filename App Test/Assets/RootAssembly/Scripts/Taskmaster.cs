@@ -13,8 +13,6 @@ public class Taskmaster : MonoBehaviour, IObserver
     [SerializeField] SaveObject dataSave = new SaveObject();
     string directory = "/SavedData/";
     string filename = "SavedList.txt";
-   // [SerializeField] NotificationSystem notificationSystem; // nicht mehr nötig
-
 
     private void Awake()
     {
@@ -22,24 +20,22 @@ public class Taskmaster : MonoBehaviour, IObserver
 
         if (objs.Length > 1)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
             return;
         }
 
-        DontDestroyOnLoad(this.gameObject);
+        DontDestroyOnLoad(gameObject);
 
         LoadList();
 
     }
     private void Start()
+
     {
 
        
         CheckDeadlinesTask();
         SubscribeToEvents_Start();
-
-       // StartCoroutine(GreateTest());
-          
     }
 
     private void OnApplicationFocus(bool focus) // vllt noch stattdessen anderes Call Event dafür benutzten
@@ -77,28 +73,19 @@ public class Taskmaster : MonoBehaviour, IObserver
             dataSave.AddNewToList(new_task);
         }
         SaveList();
-        print("x");
-       // notificationSystem.NotficationStatusReaction(false);
     }
 
     public void RemoveTask(int index) 
-    {
-       
+    {       
         dataSave.RemoveFromList(dataSave.GetList()[index].DeadlineChannel_ID);
         SaveList();
     }
     public void RemoveTask(Task tk)
     {
-
-        //notificationSystem.CancelDeadlineNotificationsX(tk.DeadlineChannel_ID);
-
-        //if (dataSave.RemoveFromList(tk) == 0)
-        //{
-        //    notificationSystem.NotficationStatusReaction(true);
-        //}
         dataSave.RemoveFromList(tk);
         SaveList();
     }
+
     public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p,int rindex)
     {
         if (t != oldtask.Titel)
@@ -191,8 +178,6 @@ public class Taskmaster : MonoBehaviour, IObserver
         string saveJason = JsonUtility.ToJson(dataSave);
 
         File.WriteAllText(dir + filename, saveJason);
-
-
     }
     private void LoadList()
     {
@@ -319,7 +304,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     ///!!!! ////////////////////////////////////////////////////////////////////////////////// Appointmenmts Vererbansatz sollte diskutiert werden , dobbelter SaveObject Problem dabei diskutiren (siehe DataMaster.cs)
 
-    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat,int repeatTimes,int[] preW)
+    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat, int repeatTimes,int[] preW)
     {
         titel = AvoidDoubleNameAppo(titel);
         int notficID = 0;
@@ -404,9 +389,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         return DayList;
     }
 
-
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
     public void SubscribeToEvents_Start()
     {
@@ -416,7 +399,9 @@ public class Taskmaster : MonoBehaviour, IObserver
         Subject.current.OnTaskChange += ChangeTask;
         Subject.current.OnTaskReturning += ManageTaskReturn;
 
-
+        Subject.current.OnNewAppointment += CreateNewAppointment;
+        /*Subject.current.OnAppointmentChange += ChangeAppointment;
+        Subject.current.OnAppointmentReturning += ManageAppointmentReturn;*/
     }
 
     public void UnsubscribeToAllEvents()
@@ -430,14 +415,6 @@ public class Taskmaster : MonoBehaviour, IObserver
     private void OnDestroy()
     {
         UnsubscribeToAllEvents();
-        print("2xxxx");
-
-    }
-    private void OnEnable()
-    {
-       
-        
-        Debug.Log("OnEnable");
     }
 
     public void SetNotificatioSystem(IDataMasterNOSClient notS) // Muss von Außen getezt werden

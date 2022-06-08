@@ -7,32 +7,27 @@ using UnityEngine.UI;
 
 public class ValueManager : MonoBehaviour
 {
-    TMP_InputField titel;
-    TMP_InputField discrip;
+    protected TMP_InputField titel;
+    protected TMP_InputField discrip;
     [SerializeField] Toggle dltoggle;
 
-    DatePicker datePicker;
+    [SerializeField] protected DatePicker datePicker;
 
     [SerializeField] Slider prio;
-    Taskmaster tm;
-    SceneLoader sceneLoader;
+    protected SceneLoader sceneLoader;
 
     public static Task taskOnEdit = null; //muss noch mit potinziallen wegfallen von Szenenwechsel überdenkt werden / Andere Lösung allg. vllt 
     public static bool tastReturninEdit = false;
 
-    [SerializeField] TextMeshProUGUI HeadTitle;
-    [SerializeField] TextMeshProUGUI ButtonText;
-    [SerializeField] TMP_Dropdown repeatDropDown;
+    [SerializeField] protected TextMeshProUGUI HeadTitle;
+    [SerializeField] protected TextMeshProUGUI ButtonText;
+    [SerializeField] protected TMP_Dropdown repeatDropDown;
 
     void Start()
     {
-       
         titel = transform.GetChild(0).GetComponent<TMP_InputField>();
         discrip = transform.GetChild(1).GetComponent<TMP_InputField>();
-       
-        datePicker = FindObjectOfType<DatePicker>();
         
-        tm = FindObjectOfType<Taskmaster>();
         sceneLoader = FindObjectOfType<SceneLoader>();
 
         if (taskOnEdit != null) // !! noch überdenken , bei Wegfallen von Szenewecx
@@ -46,7 +41,6 @@ public class ValueManager : MonoBehaviour
         // Valid-check
        if ((titel.text == ""))
        {
-            MessageBox.ShowMessage("Please enter a Title");
             return;
        }
       
@@ -84,9 +78,10 @@ public class ValueManager : MonoBehaviour
             StopFromEditMode(); //
         }
      sceneLoader.LoadScene(0);
-   }    
+   }
+
     /// <EditMode> ///
-   public void StartEditMode(Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
+    public void StartEditMode(Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
    {
       
 
@@ -96,7 +91,7 @@ public class ValueManager : MonoBehaviour
         prio.value = oldtask.Prio;
         if (oldtask.Deadline != null)
         {
-            datePicker.SetInteractability();
+            datePicker.OnInteractibleChanged(true);
         }
         else
         {
@@ -126,7 +121,7 @@ public class ValueManager : MonoBehaviour
       
         if (taskOnEdit.Deadline.Length ==0)
         {
-            datePicker.SetInteractability();
+            datePicker.OnInteractibleChanged(false);
         }
         else
         {

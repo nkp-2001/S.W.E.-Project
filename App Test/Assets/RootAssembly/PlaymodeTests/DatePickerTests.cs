@@ -7,6 +7,7 @@ using UnityEngine.TestTools;
 using System;
 
 using TMPro;
+using UnityEngine.UI;
 
 public class DatePickerBuilder
 {
@@ -88,5 +89,45 @@ public class DatePickerTests
 
         DateTime dateTime = new DateTime(dateArray[4], dateArray[3], dateArray[2], dateArray[1], dateArray[0], 0);
         Assert.AreEqual(dateTime, datePicker.GetSelectedDate());
+    }
+
+    [UnityTest]
+    public IEnumerator TestSetInteractability_Off()
+    {
+        yield return new WaitForEndOfFrame();
+
+        datePicker.OnInteractibleChanged(false);
+
+        TMP_Dropdown yearDropdown = gameObject.transform.Find("Year").GetComponent<TMP_Dropdown>();
+        TMP_Dropdown monthDropdown = gameObject.transform.Find("Month").GetComponent<TMP_Dropdown>();
+        TMP_Dropdown dayDropdown = gameObject.transform.Find("Day").GetComponent<TMP_Dropdown>();
+        TMP_Dropdown hourDropdown = gameObject.transform.Find("Hour").GetComponent<TMP_Dropdown>();
+        TMP_Dropdown minuteDropdown = gameObject.transform.Find("Minute").GetComponent<TMP_Dropdown>();
+
+        Assert.IsFalse(yearDropdown.interactable);
+        Assert.IsFalse(monthDropdown.interactable);
+        Assert.IsFalse(dayDropdown.interactable);
+        Assert.IsFalse(hourDropdown.interactable);
+        Assert.IsFalse(minuteDropdown.interactable);
+    }
+
+    [UnityTest]
+    public IEnumerator TestSetInteractability_On()
+    {
+        yield return new WaitForEndOfFrame();
+
+        datePicker.OnInteractibleChanged(true);
+
+        TMP_Dropdown yearDropdown = gameObject.transform.Find("Year").GetComponent<TMP_Dropdown>();
+        TMP_Dropdown monthDropdown = gameObject.transform.Find("Month").GetComponent<TMP_Dropdown>();
+        TMP_Dropdown dayDropdown = gameObject.transform.Find("Day").GetComponent<TMP_Dropdown>();
+        TMP_Dropdown hourDropdown = gameObject.transform.Find("Hour").GetComponent<TMP_Dropdown>();
+        TMP_Dropdown minuteDropdown = gameObject.transform.Find("Minute").GetComponent<TMP_Dropdown>();
+
+        Assert.IsTrue(yearDropdown.interactable);
+        Assert.IsTrue(monthDropdown.interactable);
+        Assert.IsTrue(dayDropdown.interactable);
+        Assert.IsTrue(hourDropdown.interactable);
+        Assert.IsTrue(minuteDropdown.interactable);
     }
 }
