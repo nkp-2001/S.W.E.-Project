@@ -46,7 +46,6 @@ public class ValueManager : MonoBehaviour
         // Valid-check
        if ((titel.text == ""))
        {
-            MessageBox.ShowMessage("Please enter a Title");
             return;
        }
       
@@ -84,9 +83,50 @@ public class ValueManager : MonoBehaviour
             StopFromEditMode(); //
         }
      sceneLoader.LoadScene(0);
-   }    
+   }
+
+    public void CreateAppointmentAndValidate()
+    {
+        if ((titel.text == ""))
+        {
+            return;
+        }
+
+        DateTime dtraw = datePicker.GetSelectedDate();
+        int[] dt;
+        int repeatIndex = 0;
+        if (dltoggle.isOn)
+        {
+            dt = new int[] { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
+            repeatIndex = repeatDropDown.value;
+        }
+        else
+        {
+            dt = null;
+        }
+
+        if (taskOnEdit == null)
+        {
+            Subject.current.TriggerOnNewAppointment(titel.text, discrip.text, dt, dt, repeatIndex);
+        }
+        /*else
+        {
+            if (!tastReturninEdit)
+            {
+                Subject.current.TriggerOnAppointmentChange(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
+            }
+            else
+            {
+                Subject.current.TriggerOnAppointmentReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
+                tastReturninEdit = false;
+            }
+
+            StopFromEditMode();
+        }*/
+        sceneLoader.LoadScene(0);
+    }
     /// <EditMode> ///
-   public void StartEditMode(Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
+    public void StartEditMode(Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
    {
       
 
@@ -96,7 +136,7 @@ public class ValueManager : MonoBehaviour
         prio.value = oldtask.Prio;
         if (oldtask.Deadline != null)
         {
-            datePicker.SetInteractability();
+            datePicker.OnInteractibleChanged(true);
         }
         else
         {
@@ -126,7 +166,7 @@ public class ValueManager : MonoBehaviour
       
         if (taskOnEdit.Deadline.Length ==0)
         {
-            datePicker.SetInteractability();
+            datePicker.OnInteractibleChanged(false);
         }
         else
         {

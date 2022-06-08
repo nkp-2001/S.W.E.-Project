@@ -94,12 +94,9 @@ public class DatePickerTests
     [UnityTest]
     public IEnumerator TestSetInteractability_Off()
     {
-        Toggle toggle = gameObject.transform.Find("Toggle").GetComponent<Toggle>();
-
         yield return new WaitForEndOfFrame();
 
-        toggle.isOn = false;
-        datePicker.SetInteractability();
+        datePicker.OnInteractibleChanged(false);
 
         TMP_Dropdown yearDropdown = gameObject.transform.Find("Year").GetComponent<TMP_Dropdown>();
         TMP_Dropdown monthDropdown = gameObject.transform.Find("Month").GetComponent<TMP_Dropdown>();
@@ -117,12 +114,9 @@ public class DatePickerTests
     [UnityTest]
     public IEnumerator TestSetInteractability_On()
     {
-        Toggle toggle = gameObject.transform.Find("Toggle").GetComponent<Toggle>();
-
         yield return new WaitForEndOfFrame();
 
-        toggle.isOn = true;
-        datePicker.SetInteractability();
+        datePicker.OnInteractibleChanged(true);
 
         TMP_Dropdown yearDropdown = gameObject.transform.Find("Year").GetComponent<TMP_Dropdown>();
         TMP_Dropdown monthDropdown = gameObject.transform.Find("Month").GetComponent<TMP_Dropdown>();
