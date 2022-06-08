@@ -22,11 +22,13 @@ public class DayPlannerRenderer : MonoBehaviour
 
     private RectTransform rectTransform;
 
+
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
 
         InvokeRepeating("UpdateCurrentTimeIndicator", 0, 1);
+        InvokeRepeating("UpdateHighlight", 0, 1);
 
         DisplayHours();
         UpdateDisplay();
@@ -60,6 +62,7 @@ public class DayPlannerRenderer : MonoBehaviour
             Destroy(child);
         }
 
+
         foreach (DayPlannerEntryPlaceholder entry in entries)
         {
             DateTime startTime, endTime;
@@ -77,7 +80,8 @@ public class DayPlannerRenderer : MonoBehaviour
             float normalizedYstart = ConvertTimeToNormalizedY(startTime);
             float normalizedYend = ConvertTimeToNormalizedY(endTime);
 
-            entryVisualPrototype.Instantiate(entry.title, normalizedYstart, normalizedYend, dayPlannerEntriesContainer);
+            entryVisualPrototype.Instantiate(entry.title, startTime, endTime, normalizedYstart, normalizedYend, dayPlannerEntriesContainer);
+
         }
     }
 
@@ -103,4 +107,21 @@ public class DayPlannerRenderer : MonoBehaviour
         currentTimeIndicator.transform.SetSiblingIndex(indexOfLastSibling);
     }
 
+    private void UpdateHighlight()
+    {
+        for(int i = 0; i < dayPlannerEntriesContainer.childCount; ++i)
+        {
+            DayPlannerEntry entry = dayPlannerEntriesContainer.GetChild(i).GetComponent<DayPlannerEntry>();
+            
+            if (entry.StartTime < DateTime.Now && entry.EndTime > DateTime.Now)
+            {
+                entry.SetHighlight(true);
+            }
+            else
+            {
+                entry.SetHighlight(false);
+            }
+        }
+        
+    }
 }

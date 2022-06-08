@@ -16,7 +16,7 @@ public class Appointment // : Taskmaster.Task
     [SerializeField] int notifcation_id;
 
 
-    [SerializeField] int repeattimes; // gucken ob es verwendet wird, wenn ja  AppointmentonThisDay(DateTime selectDay) anpassen
+    [SerializeField] int repeattimes = 0; // gucken ob es verwendet wird, wenn ja  AppointmentonThisDay(DateTime selectDay) anpassen
    
     public Appointment(string t,string d,int[] stT,int[] enT,int reIn, int notficID)
     {
@@ -27,6 +27,18 @@ public class Appointment // : Taskmaster.Task
         repeat = reIn;
         notifcation_id = notficID;
     }
+    public Appointment(string t, string d, int[] stT, int[] enT, int reIn, int notficID,int repTimes)
+    {
+        titel = t;
+        desp = d;
+        startTime = stT;
+        endTime = enT;
+        repeat = reIn;
+        notifcation_id = notficID;
+        repeattimes = repTimes;
+    }
+
+
 
     public string Titel { get => titel; set => titel = value; }
     public int[] StartTime { get => startTime; set => startTime = value; }
@@ -38,39 +50,30 @@ public class Appointment // : Taskmaster.Task
     public bool AppointmentonThisDay(DateTime selectDay)
     {
         DateTime CurrenStart = new DateTime(startTime[4], startTime[3], startTime[2]);
-        
+
         if (selectDay == CurrenStart)
         {
             return true;
             
         }
-        if ((repeat != 0) & (selectDay >= CurrenStart))
-        {          
+        if (repeat == 0)
+        {
+            return false;
+        }
+        else
+        {
             int daydiff = (selectDay - CurrenStart).Days;
-            if (daydiff % repeat == 0)
+            if (daydiff / repeat > repeattimes)
+            {
+                return false;
+            }
+            else if (daydiff % repeat == 0 & (selectDay >= CurrenStart))
             {
                 return true;
-            } 
-        }
-        return false;
+            }
+            return false;
 
-
+        }    
     }
-
-
-
-
-
-    /*
-    public Appointment(string t, string d, int[] dt, float p, int dlID, int retDtDayes)
-    {
-        
-        this.Titel = t;
-        this.Description = d;
-        this.Deadline = dt;
-        this.DeadlineChannel_ID = dlID;
-        this.NextDeadlineIndex = retDtDayes;
-    }
-    */
 
 }

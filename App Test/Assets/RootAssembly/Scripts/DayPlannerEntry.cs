@@ -30,14 +30,29 @@ public class DayPlannerEntry : MonoBehaviour
         rect = GetComponent<RectTransform>();
     }
 
-    public void Instantiate(string title, float normalizedYstart, float normalizedYend, Transform parent)
+    public void Instantiate(string title, DateTime startTime, DateTime endTime, float normalizedYstart, float normalizedYend, Transform parent)
     {
         GameObject instance = Instantiate(gameObject);
         instance.transform.SetParent(parent, false);
 
         instance.GetComponent<DayPlannerEntry>().SetTitle(title);
+        instance.GetComponent<DayPlannerEntry>().StartTime = startTime;
+        instance.GetComponent<DayPlannerEntry>().EndTime = endTime;
         instance.GetComponent<DayPlannerEntry>().SetNormalizedYcoordinates(normalizedYstart, normalizedYend);
         instance.SetActive(true);
+
+    }
+
+    public void SetHighlight(bool highlighted)
+    {
+        if (highlighted)
+        {
+            GetComponent<Image>().color = new Color32(255, 117, 108, 255);
+        }
+        else
+        {
+            GetComponent<Image>().color = Color.white;
+        }
     }
 
     public void SetTitle(string t)
