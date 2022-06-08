@@ -7,32 +7,27 @@ using UnityEngine.UI;
 
 public class ValueManager : MonoBehaviour
 {
-    TMP_InputField titel;
-    TMP_InputField discrip;
+    protected TMP_InputField titel;
+    protected TMP_InputField discrip;
     [SerializeField] Toggle dltoggle;
 
-    DatePicker datePicker;
+    [SerializeField] protected DatePicker datePicker;
 
     [SerializeField] Slider prio;
-    Taskmaster tm;
-    SceneLoader sceneLoader;
+    protected SceneLoader sceneLoader;
 
     public static Task taskOnEdit = null; //muss noch mit potinziallen wegfallen von Szenenwechsel überdenkt werden / Andere Lösung allg. vllt 
     public static bool tastReturninEdit = false;
 
-    [SerializeField] TextMeshProUGUI HeadTitle;
-    [SerializeField] TextMeshProUGUI ButtonText;
-    [SerializeField] TMP_Dropdown repeatDropDown;
+    [SerializeField] protected TextMeshProUGUI HeadTitle;
+    [SerializeField] protected TextMeshProUGUI ButtonText;
+    [SerializeField] protected TMP_Dropdown repeatDropDown;
 
     void Start()
     {
-       
         titel = transform.GetChild(0).GetComponent<TMP_InputField>();
         discrip = transform.GetChild(1).GetComponent<TMP_InputField>();
-       
-        datePicker = FindObjectOfType<DatePicker>();
         
-        tm = FindObjectOfType<Taskmaster>();
         sceneLoader = FindObjectOfType<SceneLoader>();
 
         if (taskOnEdit != null) // !! noch überdenken , bei Wegfallen von Szenewecx
@@ -85,46 +80,6 @@ public class ValueManager : MonoBehaviour
      sceneLoader.LoadScene(0);
    }
 
-    public void CreateAppointmentAndValidate()
-    {
-        if ((titel.text == ""))
-        {
-            return;
-        }
-
-        DateTime dtraw = datePicker.GetSelectedDate();
-        int[] dt;
-        int repeatIndex = 0;
-        if (dltoggle.isOn)
-        {
-            dt = new int[] { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
-            repeatIndex = repeatDropDown.value;
-        }
-        else
-        {
-            dt = null;
-        }
-
-        if (taskOnEdit == null)
-        {
-            Subject.current.TriggerOnNewAppointment(titel.text, discrip.text, dt, dt, repeatIndex);
-        }
-        /*else
-        {
-            if (!tastReturninEdit)
-            {
-                Subject.current.TriggerOnAppointmentChange(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
-            }
-            else
-            {
-                Subject.current.TriggerOnAppointmentReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
-                tastReturninEdit = false;
-            }
-
-            StopFromEditMode();
-        }*/
-        sceneLoader.LoadScene(0);
-    }
     /// <EditMode> ///
     public void StartEditMode(Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
    {

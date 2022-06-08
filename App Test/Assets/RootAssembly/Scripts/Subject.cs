@@ -50,8 +50,8 @@ public class Subject : MonoBehaviour
     { if (OnTaskReturning != null) { OnTaskReturning(oldtask, potNewname, potNewDiscp, potNewDt, potNewPrioint, repeatIndex); } }
 
 
-    public event Action<string, string, int[], int[], int> OnNewAppointment;
-    public void TriggerOnNewAppointment(string title, string description, int[] startTime, int[] endTime, int repeatindex) { OnNewAppointment?.Invoke(title, description, startTime, endTime, repeatindex); }
+    public event Action<string, string, int[], int[], int, int, int[]> OnNewAppointment;
+    public void TriggerOnNewAppointment(string title, string description, int[] startTime, int[] endTime, int repeatindex, int repeatTimes, int[] preW) { OnNewAppointment?.Invoke(title, description, startTime, endTime, repeatindex, repeatTimes, preW); }
 
     /*public event Action<Appointment, string, string, int[], float, int> OnAppointmentChange;
     public void TriggerOnAppointmentChange(Appointment oldAppointment, string t, string d, int[] dt, float p, int repeatIndex) { OnAppointmentChange?.Invoke(oldAppointment, t, d, dt, p, repeatIndex); }

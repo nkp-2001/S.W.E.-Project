@@ -175,8 +175,6 @@ public class Taskmaster : MonoBehaviour, IObserver
         string saveJason = JsonUtility.ToJson(dataSave);
 
         File.WriteAllText(dir + filename, saveJason);
-
-
     }
     private void LoadList()
     {
@@ -303,7 +301,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     ///!!!! ////////////////////////////////////////////////////////////////////////////////// Appointmenmts Vererbansatz sollte diskutiert werden , dobbelter SaveObject Problem dabei diskutiren (siehe DataMaster.cs)
 
-    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat,int repeatTimes,int[] preW)
+    public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat, int repeatTimes,int[] preW)
     {
         titel = AvoidDoubleNameAppo(titel);
         int notficID = 0;
