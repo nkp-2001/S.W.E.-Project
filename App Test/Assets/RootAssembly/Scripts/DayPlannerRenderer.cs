@@ -11,6 +11,7 @@ public class DayPlannerRenderer : MonoBehaviour
 
     [SerializeField] private GameObject hourSegmentPrefab;
     [SerializeField] private GameObject currentTimeIndicator;
+    [SerializeField] private float timeIndicatorThickness = 0.001f;
 
     [SerializeField] private RectTransform dayPlannerEntriesContainer;
     [SerializeField] private RectTransform hourSegmentsContainer;
@@ -77,27 +78,10 @@ public class DayPlannerRenderer : MonoBehaviour
         entries = taskmaster.GiveAppoints_ofThisDay(selectedDay.Date);
         foreach (Appointment entry in entries)
         {
-            // DateTime startTime, endTime;
-
-            /*
-            if (!DateTime.TryParse(entry.StartTime.ToString(), out startTime))
-            {
-                throw new Exception("Invalid StartTime in entry");
-            }
-
-            if (!DateTime.TryParse(entry.EndTime.ToString(), out endTime))
-            {
-                throw new Exception("Invalid EndTime in entry");
-            }
-            */
-
-
-
             float normalizedYstart = ConvertTimeToNormalizedY(entry.StartTimeDT());
             float normalizedYend = ConvertTimeToNormalizedY(entry.EndTimeDT());
 
             entryVisualPrototype.Instantiate(entry.Titel, entry.StartTimeDT(), entry.EndTimeDT(), normalizedYstart, normalizedYend, dayPlannerEntriesContainer);
-
         }
     }
 
@@ -116,17 +100,23 @@ public class DayPlannerRenderer : MonoBehaviour
 
     private void UpdateCurrentTimeIndicator()
     {
+        RectTransform rect = currentTimeIndicator.GetComponent<RectTransform>();
+
         if (showingToday)
         {
-            float y = ConvertTimeToNormalizedY(DateTime.Now) * rectTransform.rect.height;
-            currentTimeIndicator.GetComponent<RectTransform>().position = new Vector3(0, y); // Für GetComponent<RectTransform>() sollte ein Feld gemacht werden 
+            currentTimeIndicator.SetActive(true);
+
+            float y = ConvertTimeToNormalizedY(DateTime.Now);
+
+            rect.anchorMin = new Vector2(0, y - timeIndicatorThickness);
+            rect.anchorMax = new Vector2(1, y + timeIndicatorThickness);
 
             int indexOfLastSibling = transform.childCount - 1;
             currentTimeIndicator.transform.SetSiblingIndex(indexOfLastSibling);
         }
         else
         {
-            currentTimeIndicator.GetComponent<RectTransform>().position = new Vector3(0, 0); // Hier sollte ein Feld gemacht werden 
+            currentTimeIndicator.SetActive(false);
         }
     }
 
@@ -147,12 +137,11 @@ public class DayPlannerRenderer : MonoBehaviour
                     entry.SetHighlight(false);
                 }
             }
-        }
-        
+        }      
     }
+
     public void SelectNewDay(bool nextDay)
     {
-        print("Pressed");
         if (nextDay)
         {
             selectedDay =  selectedDay.AddDays(1);
@@ -166,9 +155,8 @@ public class DayPlannerRenderer : MonoBehaviour
         selectedDayTextUI.text = selectedDay.ToString("d");
         
         showingToday = selectedDay.Date == (DateTime.Now.Date);
-        print(showingToday);
+
         UpdateCurrentTimeIndicator();
         UpdateHighlight();
-
     }
 }
