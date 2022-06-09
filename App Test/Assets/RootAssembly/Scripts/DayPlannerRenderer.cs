@@ -119,7 +119,7 @@ public class DayPlannerRenderer : MonoBehaviour
         if (showingToday)
         {
             float y = ConvertTimeToNormalizedY(DateTime.Now) * rectTransform.rect.height;
-            currentTimeIndicator.GetComponent<RectTransform>().position = new Vector3(0, y); // Für GetComponent<RectTransform>() sollte ein Feld gemacht werden 
+            currentTimeIndicator.GetComponent<RectTransform>().position = new Vector3(0, y+320); // Für GetComponent<RectTransform>() sollte ein Feld gemacht werden // 320 nur Temp wegen bug
 
             int indexOfLastSibling = transform.childCount - 1;
             currentTimeIndicator.transform.SetSiblingIndex(indexOfLastSibling);
