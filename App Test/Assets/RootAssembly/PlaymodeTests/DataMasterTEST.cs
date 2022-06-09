@@ -6,20 +6,36 @@ using UnityEngine.TestTools;
 
 public class DataMasterTEST
 {
-    // A Test behaves as an ordinary method
-    [Test]
-    public void DataMasterTESTSimplePasses()
-    {
-        // Use the Assert class to test conditions
-    }
+    GameObject gameObject;
+    Taskmaster dataMaster;
 
-    // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-    // `yield return null;` to skip a frame.
-    [UnityTest]
-    public IEnumerator DataMasterTESTWithEnumeratorPasses()
+    [SetUp]
+    public void BeforeEveryTest()
     {
-        // Use the Assert class to test conditions.
-        // Use yield to skip a frame.
-        yield return null;
+        gameObject = Resources.Load("Prefabs/Datamaster") as GameObject;
+        dataMaster = gameObject.GetComponent<Taskmaster>();
+        Debug.Log(dataMaster);
+    }
+    [UnityTest]
+    public IEnumerator DataMasterTestconvertToDateTime()
+    {
+        yield return new WaitForEndOfFrame();
+        int[] testValue = new int[]{54,14,1,7, 2022 };
+        System.DateTime testValueinDatetime = dataMaster.ConvertIntArray_toDatetime(testValue);
+
+        CollectionAssert.AreEqual(testValue, dataMaster.ConvertDatetime_toIntArray(testValueinDatetime));
+        
+    }
+    [UnityTest]
+    public IEnumerator DataMasterTestconvertToIntArray()
+    {
+        yield return new WaitForEndOfFrame();
+        System.DateTime testValueDT = new System.DateTime(2022, 7, 1, 14, 54, 0);
+        int[] testValueDTinINTArr = dataMaster.ConvertDatetime_toIntArray(testValueDT);
+
+        
+        Assert.AreEqual(testValueDT, dataMaster.ConvertIntArray_toDatetime(testValueDTinINTArr));
+
+
     }
 }
