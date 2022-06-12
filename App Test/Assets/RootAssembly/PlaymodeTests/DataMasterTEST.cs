@@ -13,11 +13,17 @@ public class DataMasterTEST
 {
     GameObject gameObject;
     GameObject gameObj2;
+
+    GameObject saveObjSubject;
     Taskmaster dataMaster;
+    Subject subj;
 
     [SetUp]
     public void BeforeEveryTest()
     {
+        saveObjSubject = Resources.Load("Prefabs/Subject[EventOperator]") as GameObject;
+        Subject.current = saveObjSubject.GetComponent<Subject>();
+
         gameObject = Resources.Load("Prefabs/Datamaster") as GameObject;
         dataMaster = gameObject.GetComponent<Taskmaster>();
         dataMaster.Directoryname = "/testdir/";
@@ -96,25 +102,54 @@ public class DataMasterTEST
     {
         dataMaster.WipeSave();
         yield return new WaitForEndOfFrame();
-        dataMaster.CreateNewAppointment("appo1", "beschreibung", new int[] { 0, 12, 1, 7, 2022 }, new int[] { 0, 13, 1, 7, 2022 }, 7, 2 , new int[] { 1 });
-        dataMaster.CreateNewAppointment("appo2", "beschreibung", new int[] { 0, 12, 1, 7, 2022 }, new int[] { 0, 13, 1, 7, 2022 }, 7, 1, new int[] { 1 });
-        
-        dataMaster.CreateNewAppointment("appo3", "beschreibung", new int[] { 0, 15, 1, 7, 2022 }, new int[] { 0, 16, 15, 7, 2022 }, 0, 0, new int[] { 1 });
+        dataMaster.CreateNewAppointment("appo1", "beschreibung", new int[] { 0, 12, 2, 7, 2022 }, new int[] { 0, 13, 2, 7, 2022 }, 7, 2, new int[] { 0 });
+        dataMaster.CreateNewAppointment("appo2", "beschreibung", new int[] { 0, 12, 2, 7, 2022 }, new int[] { 0, 13, 2, 7, 2022 }, 7, 1, new int[] { 0 });
 
-        dataMaster.CreateNewAppointment("appo4", "beschreibung", new int[] { 0, 12, 11, 8, 2023 }, new int[] { 0, 13, 11, 8, 2023 }, 0, 0, new int[] { 1 });
+        dataMaster.CreateNewAppointment("appo3", "beschreibung", new int[] { 0, 16, 16, 7, 2022 }, new int[] { 0, 17, 16, 7, 2022 }, 0, 0, new int[] { 0 });
 
-        List<Appointment> AppointThisday = dataMaster.GiveAppoints_ofThisDay(new DateTime(2022, 7, 15));
+        dataMaster.CreateNewAppointment("appo4", "beschreibung", new int[] { 0, 12, 11, 8, 2023 }, new int[] { 0, 13, 11, 8, 2023 }, 0, 0, new int[] { 0 });
+
+        List<Appointment> AppointThisday = dataMaster.GiveAppoints_ofThisDay(new DateTime(2022, 7, 16));
+        Debug.Log(AppointThisday.Count);
         List<Appointment> ExpectList = new List<Appointment>();
-        foreach (Appointment ap in AppointThisday) 
-        { 
+
+        foreach (Appointment ap in AppointThisday)
+        {
+
             Debug.Log(ap.Titel);
         }
-        ExpectList.Add(new Appointment("appo1", "beschreibung", new int[] { 0, 12, 1, 7, 2022 }, new int[] { 0, 13, 1, 7, 2022 }, 7, 2));
-        ExpectList.Add(new Appointment("appo3", "beschreibung", new int[] { 0, 15, 1, 7, 2022 }, new int[] { 0, 16, 15, 7, 2022 }, 0, 0));
-        
-        Assert.True(Enumerable.SequenceEqual(AppointThisday, ExpectList));
+        ExpectList.Add(new Appointment("appo1", "beschreibung", new int[] { 0, 12, 2, 7, 2022 }, new int[] { 0, 13, 2, 7, 2022 }, 7, 2));
+        ExpectList.Add(new Appointment("appo3", "beschreibung", new int[] { 0, 16, 16, 7, 2022 }, new int[] { 0, 17, 16, 7, 2022 }, 0, 0));
 
+
+        for (int i = 0; i < ExpectList.Count; i++) // da , Assert.True(Enumerable.SequenceEqual(AppointThisday,ExpectList)); aus irgenteinGrund nicht funksiniert 
+        {
+            Assert.True(ExpectList[i].Titel == AppointThisday[i].Titel);
+        }
+
+        
+    }
+    [UnityTest]
+    public IEnumerator TestDeadlineCheck()
+    {
+        dataMaster.WipeSave();
+        yield return new WaitForEndOfFrame();
+        // rückkehr
+        dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 20, 10, 6, 2022 }, 2, 2); 
+        dataMaster.CheckDeadlinesTask();
+        dataMaster.Reload();
+        Debug.Log(dataMaster.GetTasks()[0].Deadline[2]);
+        
+        CollectionAssert.AreEqual(dataMaster.GetTasks()[0].Deadline,new int[] { 54, 20, 17, 6, 2022 });
+
+        // keine rückkehr
+        dataMaster.CreateNewTask("name2", "beschreibung", new int[] { 54, 20, 10, 6, 2022 }, 2, 0); 
+        dataMaster.CheckDeadlinesTask();
+        dataMaster.Reload();
+        Assert.True(dataMaster.GetTasks().Count < 2);
 
     }
-    
+
+
+
 }

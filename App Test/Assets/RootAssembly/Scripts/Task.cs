@@ -84,7 +84,7 @@ using System;
     }
     public bool Equals(Task obj)
     {
-        if (obj.Titel == Titel | obj.Description == description | obj.deadline == deadline | obj.DeadlineChannel_ID == DeadlineChannel_ID | obj.Prio == prio)
+        if (obj.Titel == Titel & obj.Description == description & obj.deadline.Equals(deadline) & obj.DeadlineChannel_ID == DeadlineChannel_ID | obj.Prio == prio)
         {
             return true;
         }

@@ -94,14 +94,22 @@ public class Appointment // : Taskmaster.Task
 
     public override bool Equals(object obj)
     {
-        return false;
-    }
-    public bool Equals(Appointment appos)
-    {
-        if( appos.Titel == titel | appos.Desp == desp | appos.StartTime == startTime | appos.EndTime == EndTime | appos.repeat == repeat | appos.notifcation_id == notifcation_id | appos.repeattimes == repeattimes)
+        if (obj.GetType() != typeof(Task))
+        {
+            return false;
+        }
+        else
         {
             return true;
         }
+    }
+    public bool Equals(Appointment appos)
+    {
+        if( appos.Titel == titel & appos.Desp == desp & appos.StartTime.Equals(startTime) & appos.EndTime.Equals(EndTime) & appos.repeat == repeat & appos.repeattimes == repeattimes)
+        {
+            return true;
+        }
+        Debug.Log("Equals brwak");
         return false;
     }
 
