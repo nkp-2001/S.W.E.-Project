@@ -66,7 +66,7 @@ public class DataMasterTEST
     {
         
         yield return new WaitForEndOfFrame();
-      
+        dataMaster.WipeSave();
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1); // string t, string d, int[] dt, float p,int repeatindex
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1); 
         dataMaster.Reload(); // um sicherzugehen dass was abgespeichert ist , das ist was dann geladen wird 
@@ -84,9 +84,37 @@ public class DataMasterTEST
     [UnityTest]
     public IEnumerator TestEdit() 
     {
+        dataMaster.WipeSave();
         yield return new WaitForEndOfFrame();
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1);
         dataMaster.ChangeTask(dataMaster.GetTasks()[0], "nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 7);
         Assert.True(dataMaster.GetTasks()[0].Equals(new Task("nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 7, 1)));
+        
     }
+    [UnityTest]
+    public IEnumerator TestAppoitmentChecks()
+    {
+        dataMaster.WipeSave();
+        yield return new WaitForEndOfFrame();
+        dataMaster.CreateNewAppointment("appo1", "beschreibung", new int[] { 0, 12, 1, 7, 2022 }, new int[] { 0, 13, 1, 7, 2022 }, 7, 2 , new int[] { 1 });
+        dataMaster.CreateNewAppointment("appo2", "beschreibung", new int[] { 0, 12, 1, 7, 2022 }, new int[] { 0, 13, 1, 7, 2022 }, 7, 1, new int[] { 1 });
+        
+        dataMaster.CreateNewAppointment("appo3", "beschreibung", new int[] { 0, 15, 1, 7, 2022 }, new int[] { 0, 16, 15, 7, 2022 }, 0, 0, new int[] { 1 });
+
+        dataMaster.CreateNewAppointment("appo4", "beschreibung", new int[] { 0, 12, 11, 8, 2023 }, new int[] { 0, 13, 11, 8, 2023 }, 0, 0, new int[] { 1 });
+
+        List<Appointment> AppointThisday = dataMaster.GiveAppoints_ofThisDay(new DateTime(2022, 7, 15));
+        List<Appointment> ExpectList = new List<Appointment>();
+        foreach (Appointment ap in AppointThisday) 
+        { 
+            Debug.Log(ap.Titel);
+        }
+        ExpectList.Add(new Appointment("appo1", "beschreibung", new int[] { 0, 12, 1, 7, 2022 }, new int[] { 0, 13, 1, 7, 2022 }, 7, 2));
+        ExpectList.Add(new Appointment("appo3", "beschreibung", new int[] { 0, 15, 1, 7, 2022 }, new int[] { 0, 16, 15, 7, 2022 }, 0, 0));
+        
+        Assert.True(Enumerable.SequenceEqual(AppointThisday, ExpectList));
+
+
+    }
+    
 }

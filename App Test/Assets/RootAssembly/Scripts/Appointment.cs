@@ -91,4 +91,18 @@ public class Appointment // : Taskmaster.Task
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
 
+
+    public override bool Equals(object obj)
+    {
+        return false;
+    }
+    public bool Equals(Appointment appos)
+    {
+        if( appos.Titel == titel | appos.Desp == desp | appos.StartTime == startTime | appos.EndTime == EndTime | appos.repeat == repeat | appos.notifcation_id == notifcation_id | appos.repeattimes == repeattimes)
+        {
+            return true;
+        }
+        return false;
+    }
+
 }

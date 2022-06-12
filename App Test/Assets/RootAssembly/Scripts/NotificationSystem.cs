@@ -302,6 +302,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
     {
         List<AndroidNotification> allNotication = new List<AndroidNotification>();
 
+
         int appo_id = GetFreeNotiChannelId();
         var channelAppointmentNew = new AndroidNotificationChannel()
         {
@@ -347,7 +348,8 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
                 allNotication.Add(preNoti);
                 for (int it = repeattimes; repeattimes > 0; it--) // in AndroidNotification ist keinen Parameter den man setzten kann das eine Meldung begrenzte mal Widerholt werden  kann deswegenn das:
                 {
-                    preNoti.FireTime = preNoti.FireTime + new TimeSpan(repeat, 0, 0, 0);
+                    Debug.Log(preNoti.FireTime);
+                    preNoti.FireTime = preNoti.FireTime.AddDays(repeat);  // + new TimeSpan(repeat, 0, 0, 0);
                     allNotication.Add(preNoti);
 
                 }
