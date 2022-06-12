@@ -226,7 +226,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         notificationDeadline.ShowTimestamp = true;
         AndroidNotificationCenter.SendNotification(notificationDeadline, "" + id);
         ///////////////
-        print("Notication ertsellt" + id + expireTime.ToString());
+        print("Notication ertsellt" + id + "||||"+ expireTime.ToString());
         return id;
     }
 
