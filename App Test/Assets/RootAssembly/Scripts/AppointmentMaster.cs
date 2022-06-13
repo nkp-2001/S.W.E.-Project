@@ -45,7 +45,7 @@ public class AppointmentMaster : DataMaster
             print("Round" + repeating);
             foreach (Appointment appo in dataSave.GetAppoitmentList())
             {
-                if (checkedtitel == appo.Titel)
+                if (checkedtitel == appo.Title)
                 {
                     print("double");
 

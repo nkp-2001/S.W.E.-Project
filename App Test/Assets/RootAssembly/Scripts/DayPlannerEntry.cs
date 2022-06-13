@@ -12,6 +12,8 @@ public class DayPlannerEntry : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI titleTMP;
 
+    private Appointment underlyingAppointment;
+
     public DateTime StartTime{
         get;
         set;
@@ -30,17 +32,18 @@ public class DayPlannerEntry : MonoBehaviour
         rect = GetComponent<RectTransform>();
     }
 
-    public void Instantiate(string title, DateTime startTime, DateTime endTime, float normalizedYstart, float normalizedYend, Transform parent)
+    public void Instantiate(Appointment appointment, float normalizedYstart, float normalizedYend, Transform parent)
     {
         GameObject instance = Instantiate(gameObject);
         instance.transform.SetParent(parent, false);
 
-        instance.GetComponent<DayPlannerEntry>().SetTitle(title);
-        instance.GetComponent<DayPlannerEntry>().StartTime = startTime;
-        instance.GetComponent<DayPlannerEntry>().EndTime = endTime;
+        instance.GetComponent<DayPlannerEntry>().underlyingAppointment = appointment;
+
+        instance.GetComponent<DayPlannerEntry>().SetTitle(appointment.Title);
+        instance.GetComponent<DayPlannerEntry>().StartTime = appointment.StartTimeDT();
+        instance.GetComponent<DayPlannerEntry>().EndTime = appointment.EndTimeDT();
         instance.GetComponent<DayPlannerEntry>().SetNormalizedYcoordinates(normalizedYstart, normalizedYend);
         instance.SetActive(true);
-
     }
 
     public void SetHighlight(bool highlighted)
@@ -72,6 +75,7 @@ public class DayPlannerEntry : MonoBehaviour
 
     public void OnClick()
     {
-
+        AppointmentValueManager.underlyingAppointment = underlyingAppointment;
+        SceneLoader.Load("createAppointment");
     }
 }

@@ -5,32 +5,30 @@ using UnityEngine;
 
 
 [Serializable]
-public class Appointment // : Taskmaster.Task
+public class Appointment
 {
-   [SerializeField] string titel;
-    [SerializeField] string desp;
+    [SerializeField] string title;
+    [SerializeField] string description;
     [SerializeField] int[] startTime;
     [SerializeField] int[] endTime;
     [SerializeField] int repeat;
+    [SerializeField] int repeattimes = 0;
 
     [SerializeField] int notifcation_id;
 
-
-    [SerializeField] int repeattimes = 0; 
-   
-    public Appointment(string t,string d,int[] stT,int[] enT,int reIn, int notficID)
+    public Appointment(string t, string d, int[] stT, int[] enT, int reIn, int notficID)
     {
-        titel = t;
-        desp = d;
+        title = t;
+        description = d;
         startTime = stT;
         endTime = enT;
         repeat = reIn;
         notifcation_id = notficID;
     }
-    public Appointment(string t, string d, int[] stT, int[] enT, int reIn, int notficID,int repTimes)
+    public Appointment(string t, string d, int[] stT, int[] enT, int reIn, int notficID, int repTimes)
     {
-        titel = t;
-        desp = d;
+        title = t;
+        description = d;
         startTime = stT;
         endTime = enT;
         repeat = reIn;
@@ -38,55 +36,52 @@ public class Appointment // : Taskmaster.Task
         repeattimes = repTimes;
     }
 
-
-
-    public string Titel { get => titel; set => titel = value; }
+    public string Title { get => title; set => title = value; }
+    public string Description { get => description; set => description = value; }
     public int[] StartTime { get => startTime; set => startTime = value; }
     public int[] EndTime { get => endTime; set => endTime = value; }
-
-    public System.DateTime StartTimeDT()
-    {
-        return ConvertIntArray_toDatetime(StartTime);
-    }
-    public System.DateTime EndTimeDT()
-    {
-        return ConvertIntArray_toDatetime(EndTime);
-    }
-
     public int Repeat { get => repeat; set => repeat = value; }
-    public string Desp { get => desp; set => desp = value; }
-    public int Notifcation_id { get => notifcation_id; set => notifcation_id = value; }
     public int Repeattimes { get => repeattimes; set => repeattimes = value; }
+    public int Notifcation_id { get => notifcation_id; set => notifcation_id = value; }
+
+    public DateTime StartTimeDT()
+    {
+        return ConvertIntArrayToDatetime(StartTime);
+    }
+    public DateTime EndTimeDT()
+    {
+        return ConvertIntArrayToDatetime(EndTime);
+    }
 
     public bool AppointmentonThisDay(DateTime selectDay)
     {
-        DateTime CurrenStart = new DateTime(startTime[4], startTime[3], startTime[2]);
+        DateTime CurrentStart = new DateTime(startTime[4], startTime[3], startTime[2]);
 
-        if (selectDay == CurrenStart)
+        if (selectDay == CurrentStart)
         {
             return true;
-            
         }
+
         if (repeat == 0)
         {
             return false;
         }
         else
         {
-            int daydiff = (selectDay - CurrenStart).Days;
+            int daydiff = (selectDay - CurrentStart).Days;
             if (daydiff / repeat > repeattimes & repeattimes != 0)
             {
                 return false;
             }
-            else if (daydiff % repeat == 0 & (selectDay >= CurrenStart))
+            else if (daydiff % repeat == 0 & (selectDay >= CurrentStart))
             {
                 return true;
             }
             return false;
 
-        }    
+        }
     }
-    public System.DateTime ConvertIntArray_toDatetime(int[] toconvert)
+    public static DateTime ConvertIntArrayToDatetime(int[] toconvert)
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }

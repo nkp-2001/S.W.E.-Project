@@ -99,7 +99,7 @@ public class SaveObject
 
     public void ChangeAppointment(Appointment appo, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notiID, int repeatTimes)
     {
-        int index = tasklist.FindLastIndex(appoT => appoT.Titel == appo.Titel);
+        int index = appointmentlist.FindLastIndex(appoT => appoT.Title == appo.Title);
         appointmentlist[index] = new Appointment(titel, desp, startTime, endTime,repeat,notiID,repeatTimes);
 
     }

@@ -326,7 +326,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         SaveList();
     }
 
-    public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notficID, int repeatTimes,int[] preW)
+    public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int repeatTimes, int[] preW)
     {
         if (oldAppointment.StartTime != startTime | oldAppointment.EndTime != endTime)
         {
@@ -361,7 +361,7 @@ public class Taskmaster : MonoBehaviour, IObserver
             print("Round" + repeating);
             foreach (Appointment appo in dataSave.GetAppoitmentList())
             {
-                if (checkedtitel == appo.Titel)
+                if (checkedtitel == appo.Title)
                 {
                     print("double");
 
@@ -400,8 +400,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         Subject.current.OnTaskReturning += ManageTaskReturn;
 
         Subject.current.OnNewAppointment += CreateNewAppointment;
-        /*Subject.current.OnAppointmentChange += ChangeAppointment;
-        Subject.current.OnAppointmentReturning += ManageAppointmentReturn;*/
+        Subject.current.OnAppointmentChange += ChangeAppointment;
     }
 
     public void UnsubscribeToAllEvents()
@@ -410,6 +409,9 @@ public class Taskmaster : MonoBehaviour, IObserver
         Subject.current.OnNewTask -= CreateNewTask;
         Subject.current.OnTaskChange -= ChangeTask;
         Subject.current.OnTaskReturning -= ManageTaskReturn;
+
+        Subject.current.OnNewAppointment -= CreateNewAppointment;
+        Subject.current.OnAppointmentChange -= ChangeAppointment;
     }
     
     private void OnDestroy()

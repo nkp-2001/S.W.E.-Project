@@ -80,8 +80,7 @@ public class DayPlannerRenderer : MonoBehaviour
         {
             float normalizedYstart = ConvertTimeToNormalizedY(entry.StartTimeDT());
             float normalizedYend = ConvertTimeToNormalizedY(entry.EndTimeDT());
-
-            entryVisualPrototype.Instantiate(entry.Titel, entry.StartTimeDT(), entry.EndTimeDT(), normalizedYstart, normalizedYend, dayPlannerEntriesContainer);
+            entryVisualPrototype.Instantiate(entry, normalizedYstart, normalizedYend, dayPlannerEntriesContainer);
         }
     }
 

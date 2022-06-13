@@ -1,44 +1,75 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
-public class AppointmentValueManager : ValueManager
+public class AppointmentValueManager : MonoBehaviour
 {
+    [SerializeField] private TMP_InputField title;
+    [SerializeField] private TMP_InputField description;
 
+    [SerializeField] private DatePicker startTimePicker;
     [SerializeField] private DatePicker endTimePicker;
+
+    public static Appointment underlyingAppointment = null;
+
+    [SerializeField] private TextMeshProUGUI HeaderText;
+    [SerializeField] private TextMeshProUGUI ButtonText;
+    [SerializeField] private TMP_Dropdown repeatDropDown;
+
+    private SceneLoader sceneLoader;
+
+    void Start()
+    {
+        sceneLoader = FindObjectOfType<SceneLoader>();
+
+        if (underlyingAppointment != null)
+        {
+            StartEditMode();
+        }
+    }
 
     public void CreateAppointmentAndValidate()
     {
-        if ((titel.text == ""))
+        if ((title.text == ""))
         {
             return;
         }
 
-        DateTime dtraw = datePicker.GetSelectedDate();
-        int[] startTime = new int[] { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
+        DateTime dateTime = startTimePicker.GetSelectedDate();
+        int[] startTime = new int[] { dateTime.Minute, dateTime.Hour, dateTime.Day, dateTime.Month, dateTime.Year };
 
-        dtraw = endTimePicker.GetSelectedDate();
-        int[] endTime = new int[] { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
+        dateTime = endTimePicker.GetSelectedDate();
+        int[] endTime = new int[] { dateTime.Minute, dateTime.Hour, dateTime.Day, dateTime.Month, dateTime.Year };
 
 
         int repeatIndex = repeatDropDown.value;
 
-        Subject.current.TriggerOnNewAppointment(titel.text, discrip.text, startTime, endTime, repeatIndex, 0, new int[] { 0 });
-        /*else
+        if (underlyingAppointment == null)
         {
-            if (!tastReturninEdit)
-            {
-                Subject.current.TriggerOnAppointmentChange(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
-            }
-            else
-            {
-                Subject.current.TriggerOnAppointmentReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
-                tastReturninEdit = false;
-            }
-
+            Subject.current.TriggerOnNewAppointment(title.text, description.text, startTime, endTime, repeatIndex, 0, new int[] { 0 });
+        }
+        else
+        {
+            Subject.current.TriggerOnAppointmentChange(underlyingAppointment, title.text, description.text, startTime, endTime, repeatIndex, 0, new int[] { 0 });
             StopFromEditMode();
-        }*/
+        }
         sceneLoader.LoadScene(0);
+    }
+
+    public void StartEditMode()
+    {
+        title.text = underlyingAppointment.Title;
+        description.text = underlyingAppointment.Description;
+        repeatDropDown.value = underlyingAppointment.Repeat;
+
+        startTimePicker.SetSelectedDate(underlyingAppointment.StartTime);
+        endTimePicker.SetSelectedDate(underlyingAppointment.EndTime);
+
+        HeaderText.text = "Edit Appointment";
+        ButtonText.text = "Save Changes";
+    }
+    private void StopFromEditMode()
+    {
+        underlyingAppointment = null;
     }
 }

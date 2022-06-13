@@ -1359,7 +1359,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &478712217
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2926,13 +2926,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ad73fe880fad2439a3c4d370612c0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dltoggle: {fileID: 0}
-  datePicker: {fileID: 1789349200}
-  prio: {fileID: 478712218}
-  HeadTitle: {fileID: 1785060374}
+  title: {fileID: 96093781}
+  description: {fileID: 581042417}
+  startTimePicker: {fileID: 1789349200}
+  endTimePicker: {fileID: 1881694954}
+  HeaderText: {fileID: 1785060374}
   ButtonText: {fileID: 1681087225}
   repeatDropDown: {fileID: 595413552}
-  endTimePicker: {fileID: 1881694954}
 --- !u!1 &1052488974
 GameObject:
   m_ObjectHideFlags: 0
@@ -3061,7 +3061,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3120,7 +3120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1265132056
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5125,7 +5125,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: -0.9346924, y: 0}
   m_SizeDelta: {x: 93.217, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
