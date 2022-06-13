@@ -5,7 +5,7 @@ using Unity.Notifications.Android;
 using System;
 using UnityEngine.SceneManagement;
 
-public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Inversion: */ IDataMasterNOSClient 
+public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Inversion : */ IDataMasterNOSClient 
 {
     Taskmaster taskmaster;
     private void Awake() 
@@ -87,7 +87,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
 
     }
 
-    public List<int> SendNewDeadlineNotifications_Other(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz
+    public List<int> SendNewDeadlineNotifications_Other(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz // | 
     {
         int dayleft = (expireTime - System.DateTime.Now).Days;
         List<int> Notifi_ID = new List<int>();
@@ -285,7 +285,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         int id = task.DeadlineChannel_ID;
         if (id != 0)
         {
-            AndroidNotificationCenter.DeleteNotificationChannel("" + id);
+            AndroidNotificationCenter.DeleteNotificationChannel("TaskDeadline" + id);
         }
         print("Event noticed" + taskmaster.GetTaskListLenght());
         if (taskmaster.GetTaskListLenght() == 0) //vllt Listelänge anderes Vermittlen , ohne aufruf aus Speicher? 
@@ -293,10 +293,21 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
             print("Zero bei Liste Länge");
             NotficationStatusReaction(true);
         }
-       
-       
+    
     }
-   
+    public void CancelNotificationsX(Appointment appo)
+    {
+        int id = appo.Notifcation_id;
+        if (id != 0)
+        {
+            AndroidNotificationCenter.DeleteNotificationChannel("Appointment" + id);
+        }
+      
+        
+
+
+    }
+
 
     public int SendAppointmentNotifcations(DateTime StartTime,DateTime EndTime,int repeat,string titel,int repeattimes, int[] preWarn)
     {
@@ -388,8 +399,16 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         print("________________Channle createtd with : " +appo_id);
         return appo_id;
     }
+    /// /////////////////
+    public void WibeNotication()
+    {
+        foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
+        {
+            AndroidNotificationCenter.DeleteNotificationChannel(x.Id);
+        }
 
 
+    }
     public void SubscribeToEvents_Start()
     {
         print("I have assigend my Stuff");

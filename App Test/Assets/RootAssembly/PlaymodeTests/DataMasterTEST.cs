@@ -17,6 +17,7 @@ public class DataMasterTEST
     GameObject saveObjSubject;
     Taskmaster dataMaster;
     Subject subj;
+    NotificationSystem noti;
 
     [SetUp]
     public void BeforeEveryTest()
@@ -30,7 +31,8 @@ public class DataMasterTEST
         dataMaster.Filename = "testsave";
 
         gameObj2 = Resources.Load("Prefabs/NotificationSystem") as GameObject;
-        dataMaster.SetNotificatioSystem(gameObj2.GetComponent<NotificationSystem>());
+        noti = gameObj2.GetComponent<NotificationSystem>();
+        dataMaster.SetNotificatioSystem(noti);
         Debug.Log(dataMaster);
 
     }
@@ -72,14 +74,14 @@ public class DataMasterTEST
     {
         
         yield return new WaitForEndOfFrame();
-        dataMaster.WipeSave();
+        SaveReset();
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1); // string t, string d, int[] dt, float p,int repeatindex
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1); 
         dataMaster.Reload(); // um sicherzugehen dass was abgespeichert ist , das ist was dann geladen wird 
         List<Task> tl = dataMaster.GetTasks();
         List<Task> ExpectList = new List<Task>();
         ExpectList.Add(new Task("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1, 1));
-        ExpectList.Add(new Task("name(1)", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1, 1));
+        ExpectList.Add(new Task("name(1)", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1, 2));
         
        foreach (Task t in tl)
        {
@@ -90,17 +92,18 @@ public class DataMasterTEST
     [UnityTest]
     public IEnumerator TestEdit() 
     {
-        dataMaster.WipeSave();
+        SaveReset();
         yield return new WaitForEndOfFrame();
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1);
         dataMaster.ChangeTask(dataMaster.GetTasks()[0], "nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 7);
-        Assert.True(dataMaster.GetTasks()[0].Equals(new Task("nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 7, 1)));
+        Debug.Log("ChannelID:" + dataMaster.GetTasks()[0].DeadlineChannel_ID);
+        Assert.True(dataMaster.GetTasks()[0].Equals(new Task("nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 7,2)));
         
     }
     [UnityTest]
     public IEnumerator TestAppoitmentChecks()
     {
-        dataMaster.WipeSave();
+        SaveReset();
         yield return new WaitForEndOfFrame();
         dataMaster.CreateNewAppointment("appo1", "beschreibung", new int[] { 0, 12, 2, 7, 2022 }, new int[] { 0, 13, 2, 7, 2022 }, 7, 2, new int[] { 0 });
         dataMaster.CreateNewAppointment("appo2", "beschreibung", new int[] { 0, 12, 2, 7, 2022 }, new int[] { 0, 13, 2, 7, 2022 }, 7, 1, new int[] { 0 });
@@ -132,7 +135,7 @@ public class DataMasterTEST
     [UnityTest]
     public IEnumerator TestDeadlineCheck()
     {
-        dataMaster.WipeSave();
+        SaveReset();
         yield return new WaitForEndOfFrame();
         // rückkehr
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 20, 10, 6, 2022 }, 2, 2); 
@@ -148,6 +151,12 @@ public class DataMasterTEST
         dataMaster.Reload();
         Assert.True(dataMaster.GetTasks().Count < 2);
 
+    }
+
+    public void SaveReset()
+    {
+        dataMaster.WipeSave();
+        noti.WibeNotication();
     }
 
 

@@ -53,20 +53,25 @@ public class PopUpMessage : MonoBehaviour,IObserver
     public void ShowBoxTaskDone(Task doneTask)
     {
         StopAllCoroutines();
-        if (doneTask.Deadline.Length != 0)
+        
+        if (doneTask.Deadline != null)
         {
-            DateTime expDate = ConvertIntArray_toDatetime(doneTask.Deadline);
-            DateTime localDate = System.DateTime.Now;
-            print(localDate);
-            int remain = (expDate - localDate).Days;
-            print(remain);
+            if (doneTask.Deadline.Length != 0)
+            {
+                DateTime expDate = ConvertIntArray_toDatetime(doneTask.Deadline);
+                DateTime localDate = System.DateTime.Now;
+                print(localDate);
+                int remain = (expDate - localDate).Days;
+                print(remain);
 
-            StartCoroutine(ShowText("You have completed the task" + " " + remain + " " + "days before deadline"));
+                StartCoroutine(ShowText("You have completed the task" + " " + remain + " " + "days before deadline"));
+                return;
+            }
+           
+            
         }
-        else
-        {
-            StartCoroutine(ShowText("You have completed the task"));
-        }
+        StartCoroutine(ShowText("You have completed the task"));
+       
        
     }
     public System.DateTime ConvertIntArray_toDatetime(int[] toconvert)
@@ -111,7 +116,7 @@ public class PopUpMessage : MonoBehaviour,IObserver
 
             headerText.color = new Color32(255, 0, 0, i);
             messagerText.color = new Color32(255, 255, 255, i);
-            yield return new WaitForSeconds(0.0075f);
+            yield return new WaitForSeconds(0.0015f);
 
 
         }
