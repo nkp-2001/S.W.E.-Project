@@ -101,7 +101,7 @@ public class Appointment
     }
     public bool Equals(Appointment appos)
     {
-        if( appos.Titel == titel & appos.Desp == desp & appos.StartTime.Equals(startTime) & appos.EndTime.Equals(EndTime) & appos.repeat == repeat & appos.repeattimes == repeattimes)
+        if( appos.Title == title & appos.Description == description & appos.StartTime.Equals(startTime) & appos.EndTime.Equals(EndTime) & appos.repeat == repeat & appos.repeattimes == repeattimes)
         {
             return true;
         }

@@ -45,7 +45,7 @@ public class AppointmentTest
 
         Appointment appointment_test = new Appointment(t, d, stT, enT, reIn, notficID);
 
-        string _titel = appointment_test.Titel;
+        string _titel = appointment_test.Title;
      
         Assert.That(_titel, Is.EqualTo("Doing")); 
     }
@@ -60,7 +60,7 @@ public class AppointmentTest
 
         Appointment appointment_test = new Appointment(t, d, stT, enT, reIn, notficID);
 
-        string _desp = appointment_test.Desp;
+        string _desp = appointment_test.Description;
 
         Assert.That(_desp, Is.EqualTo("Homework"));
     }

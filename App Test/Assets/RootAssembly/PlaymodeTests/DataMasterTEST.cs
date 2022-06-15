@@ -121,7 +121,7 @@ public class DataMasterTEST
         foreach (Appointment ap in AppointThisday)
         {
 
-            Debug.Log(ap.Titel);
+            Debug.Log(ap.Title);
         }
         ExpectList.Add(new Appointment("appo1", "beschreibung", new int[] { 0, 12, 2, 7, 2022 }, new int[] { 0, 13, 2, 7, 2022 }, 7, 2));
         ExpectList.Add(new Appointment("appo3", "beschreibung", new int[] { 0, 16, 16, 7, 2022 }, new int[] { 0, 17, 16, 7, 2022 }, 0, 0));
@@ -129,7 +129,7 @@ public class DataMasterTEST
 
         for (int i = 0; i < ExpectList.Count; i++) // da , Assert.True(Enumerable.SequenceEqual(AppointThisday,ExpectList)); aus irgenteinGrund nicht funksiniert 
         {
-            Assert.True(ExpectList[i].Titel == AppointThisday[i].Titel);
+            Assert.True(ExpectList[i].Title == AppointThisday[i].Title);
         }
 
         

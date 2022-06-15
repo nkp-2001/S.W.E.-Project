@@ -11,7 +11,7 @@ public class CreateSomeAppointment : MonoBehaviour
         Taskmaster tm = FindObjectOfType<Taskmaster>();
         foreach (Appointment appo in AppointmentList)
         {
-            tm.CreateNewAppointment(appo.Titel, appo.Desp, appo.StartTime, appo.EndTime, appo.Repeat, appo.Repeattimes,new int[1]);
+            tm.CreateNewAppointment(appo.Title, appo.Description, appo.StartTime, appo.EndTime, appo.Repeat, appo.Repeattimes,new int[1]);
         }
     }
 
