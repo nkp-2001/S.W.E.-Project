@@ -9,20 +9,20 @@ using System;
 using TMPro;
 using UnityEngine.UI;
 
-public class DatePickerBuilder
-{
-    private static GameObject prefab = Resources.Load("Prefabs/DatePicker") as GameObject;
-
-    public static GameObject GetInstance()
-    {
-        return MonoBehaviour.Instantiate(prefab);
-    }
-}
-
 public class DatePickerTests
 {
     GameObject gameObject;
     DatePicker datePicker;
+
+    private class DatePickerBuilder
+    {
+        private static GameObject prefab = Resources.Load("Prefabs/DatePicker") as GameObject;
+
+        public static GameObject GetInstance()
+        {
+            return MonoBehaviour.Instantiate(prefab);
+        }
+    }
 
     [SetUp]
     public void BeforeEveryTest()
