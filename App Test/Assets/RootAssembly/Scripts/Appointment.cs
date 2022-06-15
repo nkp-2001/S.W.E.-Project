@@ -81,6 +81,7 @@ public class Appointment
 
         }
     }
+
     public static DateTime ConvertIntArrayToDatetime(int[] toconvert)
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
