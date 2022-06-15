@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 
 
- ///////////// Task ////////////
+///////////// Task ////////////
 [Serializable]
  public class Task
  {
@@ -84,10 +85,12 @@ using System;
     }
     public bool Equals(Task obj)
     {
-        if (obj.Titel == Titel ) // & obj.Description == description  & obj.Prio == prio & obj.DeadlineChannel_ID == DeadlineChannel_ID & obj.deadline.Equals(deadline))
+        if (obj.Titel == Titel  & obj.Description == description  & obj.Prio == prio  & Enumerable.SequenceEqual(obj.deadline, deadline) & obj.DeadlineChannel_ID == deadlineChannel_ID)
         {
             return true;
+            
         }
+        Debug.Log("ChannelID:" + obj.DeadlineChannel_ID + " ," + deadlineChannel_ID);
         return false;
 
     }

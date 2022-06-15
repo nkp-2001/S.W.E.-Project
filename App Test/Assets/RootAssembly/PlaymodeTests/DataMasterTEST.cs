@@ -37,6 +37,18 @@ public class DataMasterTEST
 
     }
     [UnityTest]
+    public IEnumerator TestEdit()
+    {
+
+        yield return new WaitForEndOfFrame();
+        SaveReset();
+        dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1);
+        dataMaster.ChangeTask(dataMaster.GetTasks()[0], "nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 2);
+        Debug.Log("ChannelID:" + dataMaster.GetTasks()[0].DeadlineChannel_ID);
+        Assert.True(dataMaster.GetTasks()[0].Equals(new Task("nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 2,2)));
+
+    }
+    [UnityTest]
     public IEnumerator DataMasterTestconvertToDateTime()
     {
         yield return new WaitForEndOfFrame();
@@ -87,19 +99,9 @@ public class DataMasterTEST
        {
             Debug.Log(t.Titel);
        }
-        Assert.True(Enumerable.SequenceEqual(tl,ExpectList)); 
+       Assert.True(Enumerable.SequenceEqual(tl,ExpectList)); 
     }
-    [UnityTest]
-    public IEnumerator TestEdit() 
-    {
-        SaveReset();
-        yield return new WaitForEndOfFrame();
-        dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1);
-        dataMaster.ChangeTask(dataMaster.GetTasks()[0], "nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 7);
-        Debug.Log("ChannelID:" + dataMaster.GetTasks()[0].DeadlineChannel_ID);
-        Assert.True(dataMaster.GetTasks()[0].Equals(new Task("nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 7,2)));
-        
-    }
+    
     [UnityTest]
     public IEnumerator TestAppoitmentChecks()
     {
