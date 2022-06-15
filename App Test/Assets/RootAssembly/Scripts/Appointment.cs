@@ -86,4 +86,26 @@ public class Appointment
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
 
+
+    public override bool Equals(object obj)
+    {
+        if (obj.GetType() != typeof(Task))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    public bool Equals(Appointment appos)
+    {
+        if( appos.Titel == titel & appos.Desp == desp & appos.StartTime.Equals(startTime) & appos.EndTime.Equals(EndTime) & appos.repeat == repeat & appos.repeattimes == repeattimes)
+        {
+            return true;
+        }
+        Debug.Log("Equals brwak");
+        return false;
+    }
+
 }

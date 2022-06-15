@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System;
+using System.Linq;
 
 
- ///////////// Task ////////////
+///////////// Task ////////////
 [Serializable]
  public class Task
  {
@@ -67,6 +68,31 @@ using System;
         public bool Failedprevios { get => failedprevios; set => failedprevios = value; }
         public int Failedtimes { get => failedtimes; set => failedtimes = value; }
         public int Sucessedtimes { get => sucessedtimes; set => sucessedtimes = value; }
-      
+        public int NextDeadlineIndex1 { get => nextDeadlineIndex; set => nextDeadlineIndex = value; }
+
+    public override bool Equals(object obj)
+    {
+        // eigentlich überflüssig da es wegen der überladenung nicht eintretten kann 
+        if (obj.GetType() != typeof(Task))
+        {
+            return false;
+        }
+        else 
+        {
+            return true;
+        }
+        
+    }
+    public bool Equals(Task obj)
+    {
+        if (obj.Titel == Titel  & obj.Description == description  & obj.Prio == prio  & Enumerable.SequenceEqual(obj.deadline, deadline) & obj.DeadlineChannel_ID == deadlineChannel_ID)
+        {
+            return true;
+            
+        }
+        Debug.Log("ChannelID:" + obj.DeadlineChannel_ID + " ," + deadlineChannel_ID);
+        return false;
+
+    }
 }
 

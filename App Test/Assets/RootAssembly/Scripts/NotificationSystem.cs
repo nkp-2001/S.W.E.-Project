@@ -5,7 +5,7 @@ using Unity.Notifications.Android;
 using System;
 using UnityEngine.SceneManagement;
 
-public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Inversion: */ IDataMasterNOSClient 
+public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Inversion : */ IDataMasterNOSClient 
 {
     Taskmaster taskmaster;
     private void Awake() 
@@ -87,7 +87,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
 
     }
 
-    public List<int> SendNewDeadlineNotifications_Other(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz
+    public List<int> SendNewDeadlineNotifications_Other(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz // | 
     {
         int dayleft = (expireTime - System.DateTime.Now).Days;
         List<int> Notifi_ID = new List<int>();
@@ -226,7 +226,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         notificationDeadline.ShowTimestamp = true;
         AndroidNotificationCenter.SendNotification(notificationDeadline, "" + id);
         ///////////////
-        print("Notication ertsellt" + id + expireTime.ToString());
+        print("Notication ertsellt" + id + "||||"+ expireTime.ToString());
         return id;
     }
 
@@ -285,7 +285,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         int id = task.DeadlineChannel_ID;
         if (id != 0)
         {
-            AndroidNotificationCenter.DeleteNotificationChannel("" + id);
+            AndroidNotificationCenter.DeleteNotificationChannel("TaskDeadline" + id);
         }
         print("Event noticed" + taskmaster.GetTaskListLenght());
         if (taskmaster.GetTaskListLenght() == 0) //vllt Listelänge anderes Vermittlen , ohne aufruf aus Speicher? 
@@ -293,14 +293,28 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
             print("Zero bei Liste Länge");
             NotficationStatusReaction(true);
         }
-       
-       
+    
     }
-   
+    public void CancelNotificationsX(Appointment appo)
+    {
+        int id = appo.Notifcation_id;
+        if (id != 0)
+        {
+            AndroidNotificationCenter.DeleteNotificationChannel("Appointment" + id);
+        }
+      
+        
+
+
+    }
+
 
     public int SendAppointmentNotifcations(DateTime StartTime,DateTime EndTime,int repeat,string titel,int repeattimes, int[] preWarn)
     {
         List<AndroidNotification> allNotication = new List<AndroidNotification>();
+        DateTime cacheDT = StartTime; // Die FireTime in den NoticationObject zu editen löst einen Fehler aus Out of Memory oder AgrumentExpection die sich wiederspricht
+        string cacheText = "";
+
 
         int appo_id = GetFreeNotiChannelId();
         var channelAppointmentNew = new AndroidNotificationChannel()
@@ -314,58 +328,79 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         channelAppointmentNew.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channelAppointmentNew);
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ///
 
-        foreach(int i in preWarn)
+        bool breakUp = false;
+        foreach (int i in preWarn)
         {
+           
             AndroidNotification preNoti = new AndroidNotification();
             switch (i)
             {
                 case 1:
-                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will Start in 1 Hour ", StartTime.AddHours(-1));
+                    cacheText = " will Start in 1 Hour ";
+                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + cacheText, cacheDT.AddHours(-1));
                     break;
                 case 2:
-                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will Start in 1 Day ", StartTime.AddDays(-1));
+                    cacheText = " will Start in 1 Day ";
+                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + cacheText, cacheDT.AddDays(-1));
                     break;
                 case 3:
-                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will Start in 1 Mounth ", StartTime.AddMonths(-1));
+                    cacheText = " will Start in 1 Mounth ";
+                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + cacheText, cacheDT.AddMonths(-1));
                     break;
                 case 4:
-                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " will Start in 1 Years ", StartTime.AddYears(-1));
+                    cacheText = " will Start in 1 Years ";
+                    preNoti = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + cacheText, cacheDT.AddYears(-1));
                     break;
                 default:
+                    breakUp = true;
                     break;
             }
-            preNoti.ShowTimestamp = true;
-            if (repeat != 0 & repeattimes == 0)
+            if (!breakUp)
             {
-                preNoti.RepeatInterval = new TimeSpan(repeat, 0, 0, 0);
-                allNotication.Add(preNoti);
-            }
-            else if (repeat != 0 & repeattimes > 0)
-            {
-                allNotication.Add(preNoti);
-                for (int it = repeattimes; repeattimes > 0; it--) // in AndroidNotification ist keinen Parameter den man setzten kann das eine Meldung begrenzte mal Widerholt werden  kann deswegenn das:
+                preNoti.ShowTimestamp = true;
+                if (repeat != 0 & repeattimes == 0)
                 {
-                    preNoti.FireTime = preNoti.FireTime + new TimeSpan(repeat, 0, 0, 0);
+                    preNoti.RepeatInterval = new TimeSpan(repeat, 0, 0, 0);
                     allNotication.Add(preNoti);
-
+                }
+                else if (repeat != 0 & repeattimes > 0)
+                {
+                    allNotication.Add(preNoti);
+                    for (int a = repeattimes; a > 0; a--) // das es keine begrente Wiederholung in AndroidNotifartion Api gibt
+                    {
+                        allNotication.Add(new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + cacheText, cacheDT.AddDays(repeat)));
+                    }
+                }
+                else
+                {
+                    allNotication.Add(preNoti);
                 }
             }
-            else
-            {
-                allNotication.Add(preNoti);
-            }
-          
-            
         }
-
+        /////////////////Start and End /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         AndroidNotification atStart = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " has started", StartTime);
         AndroidNotification atEnd = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " is over now", EndTime);
+        if (repeat != 0 & repeattimes > 0)
+        {
+            for (int a = repeattimes; a > 0; a--) // das es keine begrente Wiederholung in AndroidNotifartion Api gibt
+            {   
+                
+                allNotication.Add(new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " has started", StartTime.AddDays(repeat)));
+                allNotication.Add(new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " is over now", EndTime.AddDays(repeat)));
+                
+            }
+        }
+        else if(repeat != 0 & repeattimes == 0)
+        {
+            atStart.RepeatInterval = new TimeSpan(repeat, 0, 0, 0);
+            atEnd.RepeatInterval = new TimeSpan(repeat, 0, 0, 0);
+        }
         atEnd.ShowTimestamp = true;
-        atStart.ShowTimestamp = true; 
+        atStart.ShowTimestamp = true;
         allNotication.Add(atStart);
-        allNotication.Add(atEnd);   
+        allNotication.Add(atEnd);
+
 
         foreach (AndroidNotification Noti in allNotication)
         {
@@ -377,8 +412,17 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         print("________________Channle createtd with : " +appo_id);
         return appo_id;
     }
+    /// /////////////////
+    public void WibeNotication()
+    {
+        foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
+        {
+            Debug.Log("Wibed:" + x.Id);
+            AndroidNotificationCenter.DeleteNotificationChannel(x.Id);
+        }
 
 
+    }
     public void SubscribeToEvents_Start()
     {
         print("I have assigend my Stuff");

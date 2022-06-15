@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class TaskPrototype : MonoBehaviour, IObserver
+public class TaskPrototype : MonoBehaviour //,IObserver
 {   //!nicht die Child Strukur anfassen
     private Taskmaster taskMaster;
     [SerializeField] private Task task;
@@ -17,8 +17,8 @@ public class TaskPrototype : MonoBehaviour, IObserver
     {
         taskMaster = FindObjectOfType<Taskmaster>();
         rect = GetComponent<RectTransform>();
-        
-        SubscribeToEvents_Start();
+      //  SubscribeToEvents_Start();
+
     }
     public void Setup(Task t, Transform taskContainer)
     {
@@ -129,15 +129,26 @@ public class TaskPrototype : MonoBehaviour, IObserver
     private void ShowDescription()
     {
         dircTobj.SetActive(true);
-        Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), true);  
+        // Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), true); // verworfen
+
+        for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
+        {
+            transform.parent.GetChild(index).GetComponent<TaskPrototype>().MoveRect(true);
+        }
     }
 
     public void HideDescription()
     {
         if (dircTobj.activeSelf == true)
         {
-            dircTobj.SetActive(false);        
-            Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), false);
+            dircTobj.SetActive(false);
+            //  Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), false); // verworfen
+
+            for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
+            {
+                transform.parent.GetChild(index).GetComponent<TaskPrototype>().MoveRect(false);
+            }
+
         }
     }
     public void MoveRect(int id,bool plusUp)
@@ -145,16 +156,20 @@ public class TaskPrototype : MonoBehaviour, IObserver
         print("Event output: " +id + "" + plusUp);
         if (id > transform.GetSiblingIndex())
         {
-            if (plusUp)
-            {
-                rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y + 900);
-            }
-            else
-            {
-                rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y - 900);
-            }
+            MoveRect(plusUp);
         }
         
+    }
+    public void MoveRect(bool plusUp)
+    {        
+        if (plusUp)
+        {
+            rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y + 900);
+        }
+        else
+        {
+            rect.sizeDelta = new Vector2(rect.sizeDelta.x, rect.sizeDelta.y - 900);
+        }
     }
 
     public void GoIntoTaskEdit()
@@ -200,8 +215,9 @@ public class TaskPrototype : MonoBehaviour, IObserver
 
       
     }
+   /*
 
-    /// ///Event
+    
     public void SubscribeToEvents_Start()
     {
         Subject.current.OnScrollPopUp += MoveRect;
@@ -215,7 +231,7 @@ public class TaskPrototype : MonoBehaviour, IObserver
     private void OnDisable()
     {
         UnsubscribeToAllEvents();
-
-       
+     
     }
+   */
 }
