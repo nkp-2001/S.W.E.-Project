@@ -16,7 +16,7 @@ public class Appointment // : Taskmaster.Task
     [SerializeField] int notifcation_id;
 
 
-    [SerializeField] int repeattimes = 0; // gucken ob es verwendet wird, wenn ja  AppointmentonThisDay(DateTime selectDay) anpassen
+    [SerializeField] int repeattimes = 0; 
    
     public Appointment(string t,string d,int[] stT,int[] enT,int reIn, int notficID)
     {
@@ -43,9 +43,20 @@ public class Appointment // : Taskmaster.Task
     public string Titel { get => titel; set => titel = value; }
     public int[] StartTime { get => startTime; set => startTime = value; }
     public int[] EndTime { get => endTime; set => endTime = value; }
+
+    public System.DateTime StartTimeDT()
+    {
+        return ConvertIntArray_toDatetime(StartTime);
+    }
+    public System.DateTime EndTimeDT()
+    {
+        return ConvertIntArray_toDatetime(EndTime);
+    }
+
     public int Repeat { get => repeat; set => repeat = value; }
     public string Desp { get => desp; set => desp = value; }
     public int Notifcation_id { get => notifcation_id; set => notifcation_id = value; }
+    public int Repeattimes { get => repeattimes; set => repeattimes = value; }
 
     public bool AppointmentonThisDay(DateTime selectDay)
     {
@@ -63,7 +74,7 @@ public class Appointment // : Taskmaster.Task
         else
         {
             int daydiff = (selectDay - CurrenStart).Days;
-            if (daydiff / repeat > repeattimes)
+            if (daydiff / repeat > repeattimes & repeattimes != 0)
             {
                 return false;
             }
@@ -74,6 +85,32 @@ public class Appointment // : Taskmaster.Task
             return false;
 
         }    
+    }
+    public System.DateTime ConvertIntArray_toDatetime(int[] toconvert)
+    {
+        return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
+    }
+
+
+    public override bool Equals(object obj)
+    {
+        if (obj.GetType() != typeof(Task))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+    public bool Equals(Appointment appos)
+    {
+        if( appos.Titel == titel & appos.Desp == desp & appos.StartTime.Equals(startTime) & appos.EndTime.Equals(EndTime) & appos.repeat == repeat & appos.repeattimes == repeattimes)
+        {
+            return true;
+        }
+        Debug.Log("Equals brwak");
+        return false;
     }
 
 }

@@ -11,8 +11,11 @@ public class Taskmaster : MonoBehaviour, IObserver
 {
     IDataMasterNOSClient clientNotificationSystem; // entfernen bei Vererbung
     [SerializeField] SaveObject dataSave = new SaveObject();
-    string directory = "/SavedData/";
+    string directoryname = "/SavedData/";
     string filename = "SavedList.txt";
+
+    public string Directoryname { get => directoryname; set => directoryname = value; }
+    public string Filename { get => filename; set => filename = value; }
 
     private void Awake()
     {
@@ -30,7 +33,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     }
     private void Start()
-    { 
+    {
         CheckDeadlinesTask();
         SubscribeToEvents_Start();
     }
@@ -163,7 +166,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     private void SaveList()
     {
-        string dir = Application.persistentDataPath + directory;
+        string dir = Application.persistentDataPath + directoryname;
 
         if (!Directory.Exists(dir))
         {
@@ -178,7 +181,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     }
     private void LoadList()
     {
-        string loadpath = Application.persistentDataPath + directory + filename;
+        string loadpath = Application.persistentDataPath + directoryname + filename;
         print(loadpath);
 
         if (File.Exists(loadpath))
@@ -278,7 +281,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         return checkedtitel;
        
     }
-    private int[] CaculuateNextDT(int nextDeadlineIndex, int[] currentDeadline)
+    public int[] CaculuateNextDT(int nextDeadlineIndex, int[] currentDeadline) // nur public damit sie testbar ist
     {
         DateTime dateTime = new DateTime(currentDeadline[4], currentDeadline[3], currentDeadline[2], currentDeadline[1], currentDeadline[0], 0);
         switch (nextDeadlineIndex)
@@ -346,7 +349,7 @@ public class Taskmaster : MonoBehaviour, IObserver
         SaveList();
     }
 
-    public string AvoidDoubleNameAppo(string titel) // ! bzgl potizialler Vererbung  bedenken 
+    public string AvoidDoubleNameAppo(string titel)  
     {
         string checkedtitel = titel;
         bool doublefound = true;
@@ -373,18 +376,28 @@ public class Taskmaster : MonoBehaviour, IObserver
         return checkedtitel;
     }
 
-    public List<Appointment> GiveAppoints_ofThisDay()
+    public List<Appointment> GiveAppoints_ofThisDay(DateTime askedday)
     {
         List<Appointment> DayList = new List<Appointment>();
         foreach (Appointment appo in dataSave.GetAppoitmentList())
         {
-            if (appo.AppointmentonThisDay(DateTime.Now.Date))
+            if (appo.AppointmentonThisDay(askedday))
             {
                 DayList.Add(appo);
             }
         }
         return DayList;
     }
+    public void Reload() // nur für Teseten 
+    {
+        LoadList();
+    }
+    public void WipeSave()
+    {
+        dataSave = new SaveObject();
+        SaveList();
+    }
+ 
 
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -414,9 +427,12 @@ public class Taskmaster : MonoBehaviour, IObserver
         UnsubscribeToAllEvents();
     }
 
-    public void SetNotificatioSystem(IDataMasterNOSClient notS) // Muss von Außen getezt werden
+    public void SetNotificatioSystem(IDataMasterNOSClient notS) // Muss von Außen getsezt werden ´, SerzliedFlied geht nicht bei Interfaces
     {
         clientNotificationSystem = notS;
     }
-   
+
+
+
+
 }
