@@ -301,6 +301,8 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         if (id != 0)
         {
             AndroidNotificationCenter.DeleteNotificationChannel("Appointment" + id);
+           
+
         }
       
         
