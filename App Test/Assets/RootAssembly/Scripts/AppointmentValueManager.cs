@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class AppointmentValueManager : MonoBehaviour
@@ -15,6 +16,7 @@ public class AppointmentValueManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI HeaderText;
     [SerializeField] private TextMeshProUGUI ButtonText;
     [SerializeField] private TMP_Dropdown repeatDropDown;
+    [SerializeField] private Button delete;
 
     private SceneLoader sceneLoader;
 
@@ -22,10 +24,17 @@ public class AppointmentValueManager : MonoBehaviour
     {
         sceneLoader = FindObjectOfType<SceneLoader>();
 
+        delete.gameObject.SetActive(false);
+
         if (underlyingAppointment != null)
         {
             StartEditMode();
         }
+    }
+
+    private void OnDestroy()
+    {
+        StopFromEditMode();
     }
 
     public void CreateAppointmentAndValidate()
@@ -56,6 +65,11 @@ public class AppointmentValueManager : MonoBehaviour
         sceneLoader.LoadScene(0);
     }
 
+    public void DeleteAppointment()
+    {
+        Subject.current.TriggerOnDeleteAppointment(underlyingAppointment);
+    }
+
     public void StartEditMode()
     {
         title.text = underlyingAppointment.Title;
@@ -67,6 +81,8 @@ public class AppointmentValueManager : MonoBehaviour
 
         HeaderText.text = "Edit Appointment";
         ButtonText.text = "Save Changes";
+
+        delete.gameObject.SetActive(true);
     }
     private void StopFromEditMode()
     {

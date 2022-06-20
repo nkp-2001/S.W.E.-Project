@@ -403,7 +403,6 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     public void SubscribeToEvents_Start()
     {
-        print(Subject.current);
         Subject.current.OnTaskSetDone += RemoveTask;
         Subject.current.OnNewTask += CreateNewTask;
         Subject.current.OnTaskChange += ChangeTask;
@@ -411,6 +410,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
         Subject.current.OnNewAppointment += CreateNewAppointment;
         Subject.current.OnAppointmentChange += ChangeAppointment;
+        Subject.current.OnDeleteAppointment += DeleteAppoitment;
     }
 
     public void UnsubscribeToAllEvents()
@@ -422,6 +422,7 @@ public class Taskmaster : MonoBehaviour, IObserver
 
         Subject.current.OnNewAppointment -= CreateNewAppointment;
         Subject.current.OnAppointmentChange -= ChangeAppointment;
+        Subject.current.OnDeleteAppointment -= DeleteAppoitment;
     }
     
     private void OnDestroy()

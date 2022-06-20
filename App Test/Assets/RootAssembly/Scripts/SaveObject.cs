@@ -22,11 +22,7 @@ public class SaveObject
         tasklist.RemoveAt(i);
         return tasklist.Count;
     }
-    public int RemoveFromListAndGiveCount(Task tk) // veraltet 
-    {
-        tasklist.Remove(tk);
-        return tasklist.Count;
-    }
+
     public void RemoveFromList(Task tk)
     {
         tasklist.Remove(tk);
@@ -53,9 +49,16 @@ public class SaveObject
     {
         appointmentlist.Add(appo);
     }
-    public void RemoveAppointment(Appointment appo)
+
+    public void RemoveAppointment(Appointment appointment)
     {
-        appointmentlist.Remove(appo);
+        for(int i = 0; i < appointmentlist.Count; ++i)
+        {
+            if (appointmentlist[i].Equals(appointment))
+            {
+                appointmentlist.RemoveAt(i);
+            }
+        }
     }
 
     public List<Task> GetList()

@@ -101,12 +101,9 @@ public class Appointment
     }
     public bool Equals(Appointment appos)
     {
-        if( appos.Title == title & appos.Description == description & appos.StartTime.Equals(startTime) & appos.EndTime.Equals(EndTime) & appos.repeat == repeat & appos.repeattimes == repeattimes)
-        {
-            return true;
-        }
-        Debug.Log("Equals brwak");
-        return false;
+        return appos.Title == title && appos.Description == description
+            && appos.StartTime.Equals(startTime) && appos.EndTime.Equals(EndTime)
+            && appos.repeat == repeat & appos.repeattimes == repeattimes;
     }
 
 }

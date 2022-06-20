@@ -56,6 +56,8 @@ public class Subject : MonoBehaviour
     public event Action<Appointment, string, string, int[], int[], int, int, int[]> OnAppointmentChange;
     public void TriggerOnAppointmentChange(Appointment oldAppointment, string title, string description, int[] startTime, int[] endTime, int repeatindex, int repeatTimes, int[] preW) { OnAppointmentChange?.Invoke(oldAppointment, title, description, startTime, endTime, repeatindex, repeatTimes, preW); }
 
+    public event Action<Appointment> OnDeleteAppointment;
+    public void TriggerOnDeleteAppointment(Appointment oldAppointment) { OnDeleteAppointment?.Invoke(oldAppointment); }
 
     ///funcs
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
