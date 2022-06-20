@@ -16,7 +16,7 @@ public class ValueManager : MonoBehaviour
     [SerializeField] Slider prio;
     protected SceneLoader sceneLoader;
 
-    public static Task taskOnEdit = null; //muss noch mit potinziallen wegfallen von Szenenwechsel überdenkt werden / Andere Lösung allg. vllt 
+    public static Task taskOnEdit = null; 
     public static bool tastReturninEdit = false;
 
     [SerializeField] protected TextMeshProUGUI HeadTitle;
@@ -30,7 +30,7 @@ public class ValueManager : MonoBehaviour
 
         sceneLoader = FindObjectOfType<SceneLoader>();
 
-        if (taskOnEdit != null) // !! noch überdenken , bei Wegfallen von Szenewecx
+        if (taskOnEdit != null) 
         {
             StartEditMode();
         }
@@ -38,7 +38,7 @@ public class ValueManager : MonoBehaviour
 
     public void CreateTaskAndValidate()
     {
-        // Valid-check
+       
         if ((titel.text == ""))
         {
             return;
@@ -63,9 +63,7 @@ public class ValueManager : MonoBehaviour
         {
             dt = null;
         }
-        ///////////////////////////////
-        // int[] dt = { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
-        // tm.CreateNewTask(titel.text, discrip.text,dt, prio.value);
+      
         if (taskOnEdit == null)
         {
             Subject.current.Trigger_OnNewTask(titel.text, discrip.text, dt, prio.value, repeatIndex);
@@ -82,13 +80,12 @@ public class ValueManager : MonoBehaviour
                 tastReturninEdit = false;
             }
 
-            StopFromEditMode(); //
+            StopFromEditMode(); 
         }
         sceneLoader.LoadScene(0);
     }
 
-    /// <EditMode> ///
-    public void StartEditMode(Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
+    public void StartEditMode(Task oldtask) 
     {
 
 
@@ -118,7 +115,7 @@ public class ValueManager : MonoBehaviour
 
 
     }
-    public void StartEditMode()  //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
+    public void StartEditMode() 
     {
 
         titel.text = taskOnEdit.Titel;

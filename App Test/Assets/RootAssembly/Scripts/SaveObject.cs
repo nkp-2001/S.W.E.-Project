@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,9 +7,9 @@ public class SaveObject
 {
     [SerializeField] List<Task> tasklist = new List<Task>();
     [SerializeField] List<Task> archivedTasks = new List<Task>();
-    [SerializeField] List<Task> repeatingTaskOnWait = new List<Task>(); // 
+    [SerializeField] List<Task> repeatingTaskOnWait = new List<Task>(); 
 
-    [SerializeField] List<Appointment> appointmentlist = new List<Appointment>(); // gucken ob auf einen sepaertes gespeicherten Objeckt zu verschieben.
+    [SerializeField] List<Appointment> appointmentlist = new List<Appointment>(); 
 
     public void AddNewToList(Task addT)
     {
@@ -36,7 +35,7 @@ public class SaveObject
         }
 
     }
-    public void RemoveFromArchieList(Task tk)
+    public void RemoveFromArchiveList(Task tk)
     {
         archivedTasks.Remove(tk);
     }
@@ -73,11 +72,11 @@ public class SaveObject
     {
         return repeatingTaskOnWait;
     }
-    public void ClearArchviedList()
+    public void ClearArchiveList()
     {
         archivedTasks.Clear();
     }
-    public List<Appointment> GetAppoitmentList()
+    public List<Appointment> GetAppointmentList()
     {
         return appointmentlist;
     }
@@ -87,7 +86,7 @@ public class SaveObject
     }
     public void ChangeTask(Task altertT, string t, string d, int[] dt, float p, int id, int rindex)
     {
-        int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich , dewegen Avoiddoubblename !!
+        int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); 
         tasklist[index] = new Task(t, d, dt, p, id, rindex);
         tasklist[index].Redo = rindex != 0;
     }

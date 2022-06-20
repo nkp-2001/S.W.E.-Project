@@ -46,14 +46,14 @@ public class Appointment
 
     public DateTime StartTimeDT()
     {
-        return ConvertIntArrayToDatetime(StartTime);
+        return Datamaster.ConvertIntArrayToDatetime(startTime);
     }
     public DateTime EndTimeDT()
     {
-        return ConvertIntArrayToDatetime(EndTime);
+        return Datamaster.ConvertIntArrayToDatetime(endTime);
     }
 
-    public bool AppointmentonThisDay(DateTime selectDay)
+    public bool AppointmentOnThisDay(DateTime selectDay)
     {
         DateTime CurrentStart = new DateTime(startTime[4], startTime[3], startTime[2]);
 
@@ -106,4 +106,8 @@ public class Appointment
             && appos.repeat == repeat & appos.repeattimes == repeattimes;
     }
 
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

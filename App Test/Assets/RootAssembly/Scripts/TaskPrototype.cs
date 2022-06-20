@@ -5,9 +5,9 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class TaskPrototype : MonoBehaviour //,IObserver
-{   //!nicht die Child Strukur anfassen
-    private Taskmaster taskMaster;
+public class TaskPrototype : MonoBehaviour 
+{  
+    private Datamaster taskMaster;
     [SerializeField] private Task task;
     [SerializeField] AudioClip pingSound;
     RectTransform rect;
@@ -15,18 +15,15 @@ public class TaskPrototype : MonoBehaviour //,IObserver
     [SerializeField] GameObject dircTobj;
     private void Start()
     {
-        taskMaster = FindObjectOfType<Taskmaster>();
+        taskMaster = FindObjectOfType<Datamaster>();
         rect = GetComponent<RectTransform>();
-      //  SubscribeToEvents_Start();
+    
 
     }
     public void Setup(Task t, Transform taskContainer)
     {
         task = t;
-       // dircTobj = transform.GetChild(0).GetChild(2).gameObject;
-
         transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>()[0].text = t.Titel;
-
         if (t.Deadline != null && t.Deadline.Length != 0)
         {
             transform.GetChild(0).GetComponentsInChildren<TextMeshProUGUI>()[1].text =  //Format("{0:00} damit bei beispiel weise 6.2.2022 -> 06.02.2022 wird und so gleich lang ist wie z.b 12.11.2022
@@ -46,7 +43,6 @@ public class TaskPrototype : MonoBehaviour //,IObserver
         if (t.NextDeadlineIndex != 0 & ( t.Failedtimes + t.Sucessedtimes) > 0)
         {
             dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priotät: " + t.Prio + "      ||Sucess:" +t.Sucessedtimes +"|Failed:"+ t.Failedtimes + "|| \n Discirption: " + t.Description;
-            print("Im have come again");
             if (!t.Failedprevios)
             {
                 ChangeColorBanner(new Color32(0, 90, 0, 255), new Color32(0, 50, 0, 255));
@@ -96,21 +92,17 @@ public class TaskPrototype : MonoBehaviour //,IObserver
     public void SetTaskToDone()
     {
         AudioSource.PlayClipAtPoint(pingSound, Camera.main.transform.position);
-        task.Sucess = true; // *
+        task.Sucess = true; 
         task.Done = true;
         task.Sucessedtimes++;
-        task.Failedprevios = false; // -sehen ob es nur mit succes auch geht
-        for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Verhinderer , Obersever Anpassung ?
+        task.Failedprevios = false; 
+        for (int index = transform.GetSiblingIndex(); index >= 0; index--) //Bug Fixer
         {
             transform.parent.GetChild(index).GetComponent<TaskPrototype>().HideDescription();
         }
         Subject.current.Trigger_TaskSetDone(task);
 
-       // taskMaster.RemoveTask(task);
-        Destroy(gameObject);
-    }
-    public void SelfDestroyTest()
-    {
+      
         Destroy(gameObject);
     }
     public void ToggleDescription()
@@ -129,8 +121,7 @@ public class TaskPrototype : MonoBehaviour //,IObserver
     private void ShowDescription()
     {
         dircTobj.SetActive(true);
-        // Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), true); // verworfen
-
+      
         for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
         {
             transform.parent.GetChild(index).GetComponent<TaskPrototype>().MoveRect(true);
@@ -141,8 +132,7 @@ public class TaskPrototype : MonoBehaviour //,IObserver
     {
         if (dircTobj.activeSelf == true)
         {
-            dircTobj.SetActive(false);
-            //  Subject.current.Trigger_ScrollPopUp(transform.GetSiblingIndex(), false); // verworfen
+            dircTobj.SetActive(false);         
 
             for (int index = transform.GetSiblingIndex() - 1; index >= 0; index--)
             {
@@ -215,23 +205,4 @@ public class TaskPrototype : MonoBehaviour //,IObserver
 
       
     }
-   /*
-
-    
-    public void SubscribeToEvents_Start()
-    {
-        Subject.current.OnScrollPopUp += MoveRect;
-        
-        
-    }
-    public void UnsubscribeToAllEvents()
-    {
-        Subject.current.OnScrollPopUp -= MoveRect;
-    }
-    private void OnDisable()
-    {
-        UnsubscribeToAllEvents();
-     
-    }
-   */
 }

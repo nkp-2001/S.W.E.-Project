@@ -14,7 +14,7 @@ public class PopUpMessage : MonoBehaviour,IObserver
     [SerializeField] TextMeshProUGUI headerText;
    
 
-    // Start is called before the first frame update
+  
     void Start()
     {
         PopUpMessage[] objs = FindObjectsOfType<PopUpMessage>();
@@ -27,26 +27,17 @@ public class PopUpMessage : MonoBehaviour,IObserver
         SubscribeToEvents_Start();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void ShowBoxNewTask(string t, string d, int[] dt, float prio, int repeatindex)
-    {
-        //if (MessageBox != null)
-        
-          
+    {     
         StopAllCoroutines();
-        StartCoroutine(ShowText("Task was created"));
-        
+        StartCoroutine(ShowText("Task was created"));     
     }
 
     public void ShowBoxTaskChange(Task oldtask, string t, string d, int[] dt, float p, int repeatIndex)
     {
         StopAllCoroutines();
-        Debug.Log("222");
+        
         StartCoroutine(ShowText("Task was changed"));
     }
 
@@ -82,14 +73,14 @@ public class PopUpMessage : MonoBehaviour,IObserver
     public void ShowBoxTaskReturn(Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrioint, int repeatIndex)
     {
         StopAllCoroutines();
-        Debug.Log("444");
+      
         StartCoroutine(ShowText("You have a new task to do"));
     }
 
     public void ShowBoxTaskExpired()
     {
         StopAllCoroutines();
-        Debug.Log("555");
+       
         StartCoroutine(ShowText("A task has expired"));
     }
 
@@ -148,11 +139,6 @@ public class PopUpMessage : MonoBehaviour,IObserver
         Subject.current.OnExpiredDealine -= ShowBoxTaskExpired;
 
         Subject.current.OnDateInPast -= ShowDateInPastMessage;
-    }
-
-    private void OnEnable()
-    {
-        //SubscribeToEvents_Start();
     }
 
     private void OnDestroy()

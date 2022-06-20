@@ -5,9 +5,9 @@ using Unity.Notifications.Android;
 using System;
 using UnityEngine.SceneManagement;
 
-public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Inversion : */ IDataMasterNOSClient 
+public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClient 
 {
-    Taskmaster taskmaster;
+    Datamaster taskmaster;
     private void Awake() 
     {
         NotificationSystem[] objs = FindObjectsOfType<NotificationSystem>(); // Scenenwechesel löscht es nicht 
@@ -22,11 +22,11 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         
     }
        
-    void Start() //Register 
+    void Start() 
     {
         SubscribeToEvents_Start();
 
-        taskmaster = FindObjectOfType<Taskmaster>();
+        taskmaster = FindObjectOfType<Datamaster>();
         taskmaster.SetNotificatioSystem(this);
       
 
@@ -63,15 +63,13 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         }
     }
 
-    public void NotficationStatusReaction(string t, string d, int[] dt, float prio,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
+    public void NotficationStatusReaction(string t, string d, int[] dt, float prio,int rindex) 
     {
-        NotficationStatusReaction(false);
-        print("Reaction on new Task");
+        NotficationStatusReaction(false);     
     }
-    public void NotficationStatusReaction(Task task,string t, string d, int[] dt, float prio,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
+    public void NotficationStatusReaction(Task task,string t, string d, int[] dt, float prio,int rindex) 
     {
         NotficationStatusReaction(false);
-        print("Reaction on new Task");
     }
 
     public void SendNewGeneralNotifcation()
@@ -87,68 +85,6 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
 
     }
 
-    public List<int> SendNewDeadlineNotifications_Other(string titel, DateTime expireTime) //Anders Notfication ID Speicher , List<int> Ansatz // | 
-    {
-        int dayleft = (expireTime - System.DateTime.Now).Days;
-        List<int> Notifi_ID = new List<int>();
-        List<AndroidNotification> allNotifi = new List<AndroidNotification>();
-        print(dayleft);
-
-        if(dayleft >= 7)
-        {
-            int weeks = dayleft / 7;
-            if (weeks > 4)
-            {
-                weeks = 4;
-            }
-            for (int i = weeks; i >= 1; i--)
-            {
-               
-                var notificationDeadlines = new AndroidNotification(
-                "Deadline Alert:" + titel,
-                "You have " + i +" Week(s)  left to finish the task:" + titel,
-                System.DateTime.Now.AddDays((dayleft/7 - i)*7)  );
-                /////////////////////////////////////////
-                
-                notificationDeadlines.ShowTimestamp = true;
-                allNotifi.Add(notificationDeadlines);
-            }
-        }
-
-        int singledays = dayleft % 7;
-        if (singledays == 0)
-        {
-            singledays = 6;
-        }
-        for (int i = singledays; i >= 1; i--) 
-        {
-            var notificationDeadlines = new AndroidNotification(
-              "Deadline Alert:" + titel,
-              "You have " + i + " day(s)  left to finish the task:" + titel,
-              System.DateTime.Now.AddDays((dayleft - i)));
-            /////////////////////////////////////////
-            notificationDeadlines.ShowTimestamp = true;
-            allNotifi.Add(notificationDeadlines);
-        }
-
-        var notificationDeadline = new AndroidNotification(
-             "Deadline Alert:" + titel,
-             "The Deadline for "+titel+ "has expired. You didn`t complete it in time",
-             expireTime);
-        /////////////////////////////////////////
-        notificationDeadline.ShowTimestamp = true;
-        
-        allNotifi.Add(notificationDeadline);
-
-        print(allNotifi.Count);
-        foreach (var noti in allNotifi)
-        {
-           
-            print("FireDays" + noti.FireTime.Day);
-            Notifi_ID.Add(AndroidNotificationCenter.SendNotification(noti, "Channel-To-Do-List"));
-        }
-        return Notifi_ID;
-    }
 
     public int SendNewDeadlineNotifications(string titel, DateTime expireTime)
     {
@@ -164,8 +100,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         };
         channelDealineNew.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channelDealineNew);
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ///
+        /////////////////////////////////////////////////////////////////////////
         int dayleft = (expireTime - System.DateTime.Now).Days;
         List<int> Notifi_ID = new List<int>();
         List<AndroidNotification> allNotifi = new List<AndroidNotification>();
@@ -256,65 +191,41 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
         return id;
     }
 
-    public void CancelDeadlineNotifications(int id)
-    {
-        if ( (AndroidNotificationCenter.CheckScheduledNotificationStatus(id) == NotificationStatus.Delivered) | (AndroidNotificationCenter.CheckScheduledNotificationStatus(id) == NotificationStatus.Scheduled))
-        {
-            
-            AndroidNotificationCenter.CancelNotification(id);
-        }
-    }
-    public void CancelDNotificationsByID(int id)
+    public void CancelNotificationsByID(int id)
     {
         AndroidNotificationCenter.DeleteNotificationChannel("" + id);
     }
 
-    public void CancelDeadlineNotificationsX(Task oldtask, string t, string d, int[] dt, float p,int rindex) //!! vllt anders als mit diesen "Toten" Parameter 
+    public void CancelDeadlineNotifications(Task oldtask, string t, string d, int[] dt, float p,int rindex) 
     {
         
         if (oldtask.Deadline != dt && oldtask.Deadline != null)
         {
-            CancelDNotificationsByID(oldtask.DeadlineChannel_ID);
-            print("Reaction on Deadline remove");
+            CancelNotificationsByID(oldtask.DeadlineChannel_ID);          
         }
 
 
     }
-    public void CancelNotificationsX(Task task)
+    public void CancelNotifications(Task task)
     {
         int id = task.DeadlineChannel_ID;
         if (id != 0)
         {
             AndroidNotificationCenter.DeleteNotificationChannel("TaskDeadline" + id);
         }
-        print("Event noticed" + taskmaster.GetTaskListLenght());
-        if (taskmaster.GetTaskListLenght() == 0) //vllt Listelänge anderes Vermittlen , ohne aufruf aus Speicher? 
+        if (taskmaster.GetTaskListLenght() == 0) 
         {
-            print("Zero bei Liste Länge");
+         
             NotficationStatusReaction(true);
         }
     
-    }
-    public void CancelNotificationsX(Appointment appo)
-    {
-        int id = appo.Notifcation_id;
-        if (id != 0)
-        {
-            AndroidNotificationCenter.DeleteNotificationChannel("Appointment" + id);
-           
-
-        }
-      
-        
-
-
     }
 
 
     public int SendAppointmentNotifcations(DateTime StartTime,DateTime EndTime,int repeat,string titel,int repeattimes, int[] preWarn)
     {
         List<AndroidNotification> allNotication = new List<AndroidNotification>();
-        DateTime cacheDT = StartTime; // Die FireTime in den NoticationObject zu editen löst einen Fehler aus Out of Memory oder AgrumentExpection die sich wiederspricht
+        DateTime cacheDT = StartTime; // Die FireTime in den NoticationObject zu editen löst einen Fehler aus:  Out of Memory oder AgrumentExpection
         string cacheText = "";
 
 
@@ -369,7 +280,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
                 else if (repeat != 0 & repeattimes > 0)
                 {
                     allNotication.Add(preNoti);
-                    for (int a = repeattimes; a > 0; a--) // das es keine begrente Wiederholung in AndroidNotifartion Api gibt
+                    for (int a = repeattimes; a > 0; a--) // das es keine begrente Wiederholung in der AndroidNotifartion Api gibt
                     {
                         allNotication.Add(new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + cacheText, cacheDT.AddDays(repeat)));
                     }
@@ -380,7 +291,7 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
                 }
             }
         }
-        /////////////////Start and End /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         AndroidNotification atStart = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " has started", StartTime);
         AndroidNotification atEnd = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " is over now", EndTime);
         if (repeat != 0 & repeattimes > 0)
@@ -411,50 +322,38 @@ public class NotificationSystem : MonoBehaviour , IObserver, /* Dependecy Invers
                 AndroidNotificationCenter.SendNotification(Noti, channelAppointmentNew.Id);
             }      
         }   
-        print("________________Channle createtd with : " +appo_id);
         return appo_id;
     }
-    /// /////////////////
-    public void WibeNotication()
+
+    public void WipeNotification()
     {
         foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
         {
-            Debug.Log("Wibed:" + x.Id);
             AndroidNotificationCenter.DeleteNotificationChannel(x.Id);
         }
-
 
     }
     public void SubscribeToEvents_Start()
     {
-        print("I have assigend my Stuff");
-        Subject.current.OnTaskSetDone += CancelNotificationsX;
+        Subject.current.OnTaskSetDone += CancelNotifications;
         Subject.current.OnNewTask += NotficationStatusReaction;
         Subject.current.OnTaskReturning += NotficationStatusReaction;
-        Subject.current.OnTaskChange += CancelDeadlineNotificationsX;
-      //  Subject.current.SetonRequest_NotiIDDeadline(SendNewDeadlineNotifications);
-       // Subject.current.SetonRequest_NotiIDAppointment(SendAppointmentNotifcations);
-
-        
+        Subject.current.OnTaskChange += CancelDeadlineNotifications;     
     }
 
     public void UnsubscribeToAllEvents()
     {
-        Subject.current.OnTaskSetDone -= CancelNotificationsX;
+        Subject.current.OnTaskSetDone -= CancelNotifications;
         Subject.current.OnNewTask -= NotficationStatusReaction;
-        Subject.current.OnTaskChange -= CancelDeadlineNotificationsX;
+        Subject.current.OnTaskChange -= CancelDeadlineNotifications;
         Subject.current.OnTaskReturning -= NotficationStatusReaction;
     }
     private void OnDisable()
     {
         UnsubscribeToAllEvents();
-        print("2xxxx");
+     
 
     }
-    private void OnEnable()
-    {
-       
-        Debug.Log("OnEnable");
-    }
+
    
 }

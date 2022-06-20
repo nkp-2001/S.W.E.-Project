@@ -59,7 +59,7 @@ public class DatePicker : MonoBehaviour
         monthDropdown.SetCurrentOption(currentDateTime.Month.ToString());
         yearDropdown.SetCurrentOption(currentDateTime.Year.ToString());
 
-        //OnInteractibleChanged(true);
+       
     }
 
     private List<string> GetStringListOfDaysInMonth(int year, int month)
@@ -117,7 +117,7 @@ public class DatePicker : MonoBehaviour
         monthDropdown.SetCurrentOption(datetime.Month.ToString());
         yearDropdown.SetCurrentOption(datetime.Year.ToString());
 
-        //OnInteractibleChanged(true);
+     
     }
 
     public DateTime GetValue()

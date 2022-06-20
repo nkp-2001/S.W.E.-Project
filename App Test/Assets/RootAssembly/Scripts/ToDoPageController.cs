@@ -6,7 +6,7 @@ using TMPro;
 
 public class ToDoPageController : MonoBehaviour,IObserver
 {
-    private Taskmaster taskmaster;
+    private Datamaster taskmaster;
 
     [SerializeField] private Transform taskContainer;
     [SerializeField] private GameObject taskPrototype;
@@ -29,7 +29,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
     {
         if (!ShowOldTask)
         {
-            //clear and fill UI with existing tasks   
+            
             ClearScrollView();
 
             List<Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
@@ -104,7 +104,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
     private void OnEnable()
     {
         sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
-        taskmaster = FindObjectOfType<Taskmaster>();
+        taskmaster = FindObjectOfType<Datamaster>();
         FetchTasks(); 
     }
     IEnumerator FetchUpdate()

@@ -25,14 +25,14 @@ public class DayPlannerRenderer : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI selectedDayTextUI;
 
-    Taskmaster taskmaster;
+    Datamaster datamaster;
 
     bool showingToday = true;
 
 
     void Start()
     {
-        taskmaster = FindObjectOfType<Taskmaster>();
+        datamaster = FindObjectOfType<Datamaster>();
 
         rectTransform = GetComponent<RectTransform>();
 
@@ -75,7 +75,7 @@ public class DayPlannerRenderer : MonoBehaviour
             Destroy(child);
         }
 
-        entries = taskmaster.GiveAppoints_ofThisDay(selectedDay.Date);
+        entries = datamaster.GiveAppointsOfThisDay(selectedDay.Date);
         foreach (Appointment entry in entries)
         {
             float normalizedYstart = ConvertTimeToNormalizedY(entry.StartTimeDT());

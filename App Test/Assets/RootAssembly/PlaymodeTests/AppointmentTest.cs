@@ -30,7 +30,7 @@ public class AppointmentTest
 
         Appointment appointment_test = new Appointment(t, d, stT, enT, reIn, notficID);
 
-        bool OnThisDay = appointment_test.AppointmentonThisDay(selectDay);
+        bool OnThisDay = appointment_test.AppointmentOnThisDay(selectDay);
 
         Assert.IsTrue(OnThisDay);
     }

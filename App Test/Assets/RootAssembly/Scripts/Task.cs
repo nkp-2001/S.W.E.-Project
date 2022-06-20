@@ -2,14 +2,12 @@
 using System;
 using System.Linq;
 
-
-///////////// Task ////////////
 [Serializable]
  public class Task
  {
         [SerializeField] string titel;
         [SerializeField] string description;
-        [SerializeField] int[] deadline = null;  /// DateTime nicht (so leicht) serizaible | dewegen muss auf int[] ausgeweischt werden
+        [SerializeField] int[] deadline = null;  // DateTime nicht (so leicht) serizaible | dewegen muss auf int[] ausgeweischt werden
 
         [SerializeField] int deadlineChannel_ID = 0;
         [SerializeField] float prio;
@@ -72,7 +70,7 @@ using System.Linq;
 
     public override bool Equals(object obj)
     {
-        // eigentlich überflüssig da es wegen der überladenung nicht eintretten kann 
+        
         if (obj.GetType() != typeof(Task))
         {
             return false;
@@ -93,6 +91,11 @@ using System.Linq;
         Debug.Log("ChannelID:" + obj.DeadlineChannel_ID + " ," + deadlineChannel_ID);
         return false;
 
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }
 

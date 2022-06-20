@@ -14,10 +14,6 @@ public class TimeDropdownField : MonoBehaviour
     {
         dropdown = GetComponent<TMP_Dropdown>();
 
-        if(dropdown == null)
-        {
-            throw new MissingComponentException("TMP_dropdown component missing");
-        }
     }
 
     public void SetOptions(List<string> options)

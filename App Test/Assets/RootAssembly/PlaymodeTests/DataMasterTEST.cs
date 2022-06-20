@@ -15,7 +15,7 @@ public class DataMasterTEST
     GameObject gameObj2;
 
     GameObject saveObjSubject;
-    Taskmaster dataMaster;
+    Datamaster dataMaster;
     Subject subj;
     NotificationSystem noti;
 
@@ -26,7 +26,7 @@ public class DataMasterTEST
         Subject.current = saveObjSubject.GetComponent<Subject>();
 
         gameObject = Resources.Load("Prefabs/Datamaster") as GameObject;
-        dataMaster = gameObject.GetComponent<Taskmaster>();
+        dataMaster = gameObject.GetComponent<Datamaster>();
         dataMaster.Directoryname = "/testdir/";
         dataMaster.Filename = "testsave";
 
@@ -53,9 +53,9 @@ public class DataMasterTEST
     {
         yield return new WaitForEndOfFrame();
         int[] testValue = new int[]{54,14,1,7, 2022 };
-        System.DateTime testValueinDatetime = dataMaster.ConvertIntArray_toDatetime(testValue);
+        System.DateTime testValueinDatetime = Datamaster.ConvertIntArrayToDatetime(testValue);
 
-        CollectionAssert.AreEqual(testValue, dataMaster.ConvertDatetime_toIntArray(testValueinDatetime));
+        CollectionAssert.AreEqual(testValue, Datamaster.ConvertDatetimeToIntArray(testValueinDatetime));
         
     }
     [UnityTest]
@@ -63,10 +63,10 @@ public class DataMasterTEST
     {
         yield return new WaitForEndOfFrame();
         System.DateTime testValueDT = new System.DateTime(2022, 7, 1, 14, 54, 0);
-        int[] testValueDTinINTArr = dataMaster.ConvertDatetime_toIntArray(testValueDT);
+        int[] testValueDTinINTArr = Datamaster.ConvertDatetimeToIntArray(testValueDT);
 
         
-        Assert.AreEqual(testValueDT, dataMaster.ConvertIntArray_toDatetime(testValueDTinINTArr));
+        Assert.AreEqual(testValueDT, Datamaster.ConvertIntArrayToDatetime(testValueDTinINTArr));
 
 
     }
@@ -114,7 +114,7 @@ public class DataMasterTEST
 
         dataMaster.CreateNewAppointment("appo4", "beschreibung", new int[] { 0, 12, 11, 8, 2023 }, new int[] { 0, 13, 11, 8, 2023 }, 0, 0, new int[] { 0 });
 
-        List<Appointment> AppointThisday = dataMaster.GiveAppoints_ofThisDay(new DateTime(2022, 7, 16));
+        List<Appointment> AppointThisday = dataMaster.GiveAppointsOfThisDay(new DateTime(2022, 7, 16));
         Debug.Log(AppointThisday.Count);
         List<Appointment> ExpectList = new List<Appointment>();
 
@@ -158,7 +158,7 @@ public class DataMasterTEST
     public void SaveReset()
     {
         dataMaster.WipeSave();
-        noti.WibeNotication();
+        noti.WipeNotification();
     }
 
 
