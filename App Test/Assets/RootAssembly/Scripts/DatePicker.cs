@@ -58,8 +58,6 @@ public class DatePicker : MonoBehaviour
         dayDropdown.SetCurrentOption(currentDateTime.Day.ToString());
         monthDropdown.SetCurrentOption(currentDateTime.Month.ToString());
         yearDropdown.SetCurrentOption(currentDateTime.Year.ToString());
-
-       
     }
 
     private List<string> GetStringListOfDaysInMonth(int year, int month)
@@ -116,23 +114,5 @@ public class DatePicker : MonoBehaviour
         dayDropdown.SetCurrentOption(datetime.Day.ToString());
         monthDropdown.SetCurrentOption(datetime.Month.ToString());
         yearDropdown.SetCurrentOption(datetime.Year.ToString());
-
-     
-    }
-
-    public DateTime GetValue()
-    {
-        string dateTimeString = yearDropdown.GetCurrentOption() + "-" + monthDropdown.GetCurrentOption() + "-" + dayDropdown.GetCurrentOption()
-                                    + " " + hourDropdown.GetCurrentOption() + ":" + minuteDropdown.GetCurrentOption() + ":00.0";
-
-        DateTime dateTime;
-        bool success = DateTime.TryParse(dateTimeString, out dateTime);
-
-        if (!success)
-        {
-            return DateTime.Now;
-        }
-
-        return dateTime;
     }
 }

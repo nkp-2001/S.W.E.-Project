@@ -31,6 +31,7 @@ public class TabGroup : MonoBehaviour
         ResetTabs();
         button.background.sprite = tabActive;
         int index = button.transform.GetSiblingIndex();
+
         for(int i=0; i<objectsToSwap.Count; i++)
         {
             if (i == index)
@@ -41,7 +42,6 @@ public class TabGroup : MonoBehaviour
             {
                 objectsToSwap[i].SetActive(false);
             }
-
         }
     }
 
@@ -51,8 +51,6 @@ public class TabGroup : MonoBehaviour
         {
             if (selectedTab != null && button == selectedTab) { continue; }
             button.background.sprite = tabIdle;
-
         }
     }
-
 }

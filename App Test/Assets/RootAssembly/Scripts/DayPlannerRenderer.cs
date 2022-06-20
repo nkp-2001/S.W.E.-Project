@@ -29,7 +29,6 @@ public class DayPlannerRenderer : MonoBehaviour
 
     bool showingToday = true;
 
-
     void Start()
     {
         datamaster = FindObjectOfType<DataMaster>();
@@ -126,15 +125,7 @@ public class DayPlannerRenderer : MonoBehaviour
             for (int i = 0; i < dayPlannerEntriesContainer.childCount; ++i)
             {
                 DayPlannerEntry entry = dayPlannerEntriesContainer.GetChild(i).GetComponent<DayPlannerEntry>();
-
-                if (entry.StartTime < DateTime.Now && entry.EndTime > DateTime.Now)
-                {
-                    entry.SetHighlight(true);
-                }
-                else
-                {
-                    entry.SetHighlight(false);
-                }
+                entry.SetHighlight(entry.StartTime < DateTime.Now && entry.EndTime > DateTime.Now);
             }
         }      
     }
@@ -144,12 +135,12 @@ public class DayPlannerRenderer : MonoBehaviour
         if (nextDay)
         {
             selectedDay =  selectedDay.AddDays(1);
-          
         }
         else
         {
             selectedDay = selectedDay.AddDays(-1);
         }
+
         UpdateDisplay();
         selectedDayTextUI.text = selectedDay.ToString("d");
         

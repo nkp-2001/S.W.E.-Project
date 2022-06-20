@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
-public class DataMasterTEST
+public class DataMasterTests
 {
     GameObject gameObject;
     GameObject gameObj2;
@@ -44,7 +44,7 @@ public class DataMasterTEST
         SaveReset();
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1);
         dataMaster.ChangeTask(dataMaster.GetTasks()[0], "nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 2);
-        Debug.Log("ChannelID:" + dataMaster.GetTasks()[0].DeadlineChannel_ID);
+        Debug.Log("ChannelID:" + dataMaster.GetTasks()[0].DeadlineChannelId);
         Assert.True(dataMaster.GetTasks()[0].Equals(new Task("nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 1+1,2)));
 
     }
@@ -76,7 +76,7 @@ public class DataMasterTEST
         yield return new WaitForEndOfFrame();
         int[] testValue = new int[] { 54, 14, 1, 7, 2022 };
         int[] result;
-        result = dataMaster.CaculuateNextDT(2, testValue);
+        result = dataMaster.CalculateNextDT(2, testValue);
         CollectionAssert.AreEqual(new int[] { 54, 14, 1+7, 7, 2022 }, result);
 
 

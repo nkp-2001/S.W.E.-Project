@@ -5,83 +5,76 @@ using System.Linq;
 [Serializable]
  public class Task
  {
-        [SerializeField] string titel;
+        [SerializeField] string title;
         [SerializeField] string description;
-        [SerializeField] int[] deadline = null;  // DateTime nicht (so leicht) serizaible | dewegen muss auf int[] ausgeweischt werden
+        [SerializeField] int[] deadline = null;
 
-        [SerializeField] int deadlineChannel_ID = 0;
-        [SerializeField] float prio;
+        [SerializeField] int deadlineChannelId = 0;
+        [SerializeField] float priority;
 
         [SerializeField] bool redo = false;
-        [SerializeField] bool failedprevios = false;
-        [SerializeField] int failedtimes = 0;
-        [SerializeField] int sucessedtimes = 0;
+        [SerializeField] bool failedPrevious = false;
+        [SerializeField] int failedTimes = 0;
+        [SerializeField] int successfulTimes = 0;
 
-        [SerializeField] int nextDeadlineIndex = 0;
-       
+        [SerializeField] int nextDeadlineIndex = 0;    
 
-        [SerializeField] bool sucess = false;
+        [SerializeField] bool success = false;
         [SerializeField] bool done = false;
-       
 
         public Task(string t, string d, int[] dt, float p)
         {
-            titel = t;
+            title = t;
             description = d;
             deadline = dt;
-            prio = p;       
+            priority = p;       
         }
+
         public Task(string t, string d, int[] dt, float p,int dlID)
         {
-            titel = t;
+            title = t;
             description = d;
             deadline = dt;
-            prio = p;
-            deadlineChannel_ID = dlID;
+            priority = p;
+            deadlineChannelId = dlID;
         }
+
         public Task(string t, string d, int[] dt, float p, int dlID,int retDtDayes)
         {
-            titel = t;
+            title = t;
             description = d;
             deadline = dt;
-            prio = p;
-            deadlineChannel_ID = dlID;
+            priority = p;
+            deadlineChannelId = dlID;
             nextDeadlineIndex = retDtDayes;
             redo = retDtDayes != 0;
         }
         
-
-        
-
-
-        public string Titel { get => titel; set => titel = value; }
+        public string Title { get => title; set => title = value; }
         public string Description { get => description; set => description = value; }
-        public float Prio { get => prio; set => prio = value; }
+        public float Priority { get => priority; set => priority = value; }
         public int[] Deadline { get => deadline; set => deadline = value; }
-        public int DeadlineChannel_ID { get => deadlineChannel_ID; set => deadlineChannel_ID = value; }
+        public int DeadlineChannelId { get => deadlineChannelId; set => deadlineChannelId = value; }
         public bool Done { get => done; set => done = value; }
         public bool Redo { get => redo; set => redo = value; }
-        public bool Sucess { get => sucess; set => sucess = value; }
+        public bool Success { get => success; set => success = value; }
         public int NextDeadlineIndex { get => nextDeadlineIndex; set => nextDeadlineIndex = value; }
-        public bool Failedprevios { get => failedprevios; set => failedprevios = value; }
-        public int Failedtimes { get => failedtimes; set => failedtimes = value; }
-        public int Sucessedtimes { get => sucessedtimes; set => sucessedtimes = value; }
-        public int NextDeadlineIndex1 { get => nextDeadlineIndex; set => nextDeadlineIndex = value; }
+        public bool FailedPrevious { get => failedPrevious; set => failedPrevious = value; }
+        public int FailedTimes { get => failedTimes; set => failedTimes = value; }
+        public int SuccessfulTimes { get => successfulTimes; set => successfulTimes = value; }
 
     public override bool Equals(object obj)
     {
         return this == obj;
     }
+
     public bool Equals(Task obj)
     {
-        if (obj.Titel == Titel  & obj.Description == description  & obj.Prio == prio  & Enumerable.SequenceEqual(obj.deadline, deadline) & obj.DeadlineChannel_ID == deadlineChannel_ID)
-        {
-            return true;
-            
-        }
-        Debug.Log("ChannelID:" + obj.DeadlineChannel_ID + " ," + deadlineChannel_ID);
-        return false;
+        Debug.Log("ChannelID:" + obj.DeadlineChannelId + " ," + deadlineChannelId);
 
+        return obj.Title == Title && obj.Description == description 
+            && obj.Priority == priority & Enumerable.SequenceEqual(obj.deadline, deadline) 
+            && obj.DeadlineChannelId == deadlineChannelId;
     }
 
     public override int GetHashCode()
@@ -89,4 +82,3 @@ using System.Linq;
         return base.GetHashCode();
     }
 }
-

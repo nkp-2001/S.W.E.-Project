@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using System;
 
-public class AppointmentTest
+public class AppointmentTests
 {
      public int[] stT;
      public int[] enT;

@@ -55,7 +55,7 @@ public class AppointmentValueManager : MonoBehaviour
 
         if (underlyingAppointment == null)
         {
-            Subject.current.TriggerOnNewAppointment(title.text, description.text, start, end, repeatDropDown.GetIndex(), 0, new int[] { 0 });
+            Subject.current.TriggerOnNewAppointment(title.text, description.text, start, end, repeatDropDown.GetDays(), 0, new int[] { 0 });
         }
         else
         {

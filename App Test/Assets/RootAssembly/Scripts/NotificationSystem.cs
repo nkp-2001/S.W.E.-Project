@@ -201,14 +201,14 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         
         if (oldtask.Deadline != dt && oldtask.Deadline != null)
         {
-            CancelNotificationsByID(oldtask.DeadlineChannel_ID);          
+            CancelNotificationsByID(oldtask.DeadlineChannelId);          
         }
 
 
     }
     public void CancelNotifications(Task task)
     {
-        int id = task.DeadlineChannel_ID;
+        int id = task.DeadlineChannelId;
         if (id != 0)
         {
             AndroidNotificationCenter.DeleteNotificationChannel("TaskDeadline" + id);

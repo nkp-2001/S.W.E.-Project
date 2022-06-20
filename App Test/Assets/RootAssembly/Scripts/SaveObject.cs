@@ -33,15 +33,13 @@ public class SaveObject
         {
             repeatingTaskOnWait.Add(tk);
         }
-
     }
+
     public void RemoveFromArchiveList(Task tk)
     {
-        
         archivedTasks.Remove(tk);
-
-
     }
+
     public void RemoveFromWaitList(Task tk)
     {
         repeatingTaskOnWait.Remove(tk);
@@ -67,18 +65,22 @@ public class SaveObject
     {
         return tasklist;
     }
+
     public List<Task> GetArchivedList()
     {
         return archivedTasks;
     }
+
     public List<Task> GetWaitingList()
     {
         return repeatingTaskOnWait;
     }
+
     public void ClearArchiveList()
     {
         archivedTasks.Clear();
     }
+
     public List<Appointment> GetAppointmentList()
     {
         return appointmentlist;
@@ -87,19 +89,21 @@ public class SaveObject
     {
         tasklist.Clear();
     }
+
     public void ChangeTask(Task altertT, string t, string d, int[] dt, float p, int id, int rindex)
     {
-        int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); 
+        int index = tasklist.FindLastIndex(task => task.Title == altertT.Title); 
         tasklist[index] = new Task(t, d, dt, p, id, rindex);
         tasklist[index].Redo = rindex != 0;
     }
+
     public void ChangeTaskCauseRepeat(Task altertT, int[] newDealine,int newDeadlineID)
     {
-        int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel);
-        tasklist[index].DeadlineChannel_ID = newDeadlineID;
+        int index = tasklist.FindLastIndex(task => task.Title == altertT.Title);
+        tasklist[index].DeadlineChannelId = newDeadlineID;
         tasklist[index].Deadline = newDealine;
-        tasklist[index].Failedprevios = true;
-        tasklist[index].Failedtimes++;
+        tasklist[index].FailedPrevious = true;
+        tasklist[index].FailedTimes++;
     }
 
     public void ChangeAppointment(Appointment appo, string titel, string desp, int[] startTime, int[] endTime, int repeat, int notiID, int repeatTimes)

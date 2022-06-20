@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using System;
 
-public class DayPlanerEntryTest
+public class DayPlannerEntryTests
 {
     [Test]
     public void StartTime_Test()

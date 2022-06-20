@@ -7,30 +7,29 @@ using UnityEngine.UI;
 
 public class ValueManager : MonoBehaviour
 {
-    protected TMP_InputField titel;
-    protected TMP_InputField discrip;
-    [SerializeField] Toggle dltoggle;
-
-    [SerializeField] protected DatePicker datePicker;
-
-    [SerializeField] Slider prio;
-    protected SceneLoader sceneLoader;
-
-    public static Task taskOnEdit = null; 
-
+    public static Task taskOnEdit = null;
     public static bool taskReturnInEdit = false;
 
-    [SerializeField] protected TextMeshProUGUI HeadTitle;
-    [SerializeField] protected TextMeshProUGUI ButtonText;
-    [SerializeField] protected TMP_Dropdown repeatDropDown;
+    [SerializeField] private Toggle deadlineToggle;
+    [SerializeField] private DatePicker datePicker;
+    [SerializeField] private Slider priority;
+    [SerializeField] private TMP_Dropdown repeatDropDown;
 
-    [SerializeField] TextMeshProUGUI PrioText;
-    [SerializeField] Image PrioFill;
+    [SerializeField] private TextMeshProUGUI HeadTitle;
+    [SerializeField] private TextMeshProUGUI ButtonText;
+
+    [SerializeField] private TextMeshProUGUI PrioText;
+    [SerializeField] private Image PrioFill;
+
+    private TMP_InputField title;
+    private TMP_InputField description;
+
+    private SceneLoader sceneLoader;
 
     void Start()
     {
-        titel = transform.GetChild(0).GetComponent<TMP_InputField>();
-        discrip = transform.GetChild(1).GetComponent<TMP_InputField>();
+        title = transform.GetChild(0).GetComponent<TMP_InputField>();
+        description = transform.GetChild(1).GetComponent<TMP_InputField>();
 
         sceneLoader = FindObjectOfType<SceneLoader>();
 
@@ -39,7 +38,7 @@ public class ValueManager : MonoBehaviour
             StartEditMode();
         }
 
-        prio.onValueChanged.AddListener((value) =>
+        priority.onValueChanged.AddListener((value) =>
         {
             PrioText.text = value.ToString("0");
 
@@ -68,14 +67,14 @@ public class ValueManager : MonoBehaviour
 
     public void CreateTaskAndValidate()
     {
-        if ((titel.text == ""))
+        if ((title.text == ""))
         {
             return;
         }
 
         DateTime dtraw = datePicker.GetSelectedDate();
 
-        if (dtraw < DateTime.Now && dltoggle.isOn)
+        if (dtraw < DateTime.Now && deadlineToggle.isOn)
         {
             Subject.current.TriggerOnDateInPast();
             return;
@@ -83,7 +82,7 @@ public class ValueManager : MonoBehaviour
 
         int[] dt;
         int repeatIndex = 0;
-        if (dltoggle.isOn)
+        if (deadlineToggle.isOn)
         {
             dt = new int[] { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
             repeatIndex = repeatDropDown.value;
@@ -95,17 +94,17 @@ public class ValueManager : MonoBehaviour
 
         if (taskOnEdit == null)
         {
-            Subject.current.Trigger_OnNewTask(titel.text, discrip.text, dt, prio.value, repeatIndex);
+            Subject.current.Trigger_OnNewTask(title.text, description.text, dt, priority.value, repeatIndex);
         }
         else
         {
             if (!taskReturnInEdit)
             {
-                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
+                Subject.current.TriggerOnTaskChange(taskOnEdit, title.text, description.text, dt, priority.value, repeatIndex);
             }
             else
             {
-                Subject.current.Trigger_OnTaskReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
+                Subject.current.Trigger_OnTaskReturning(taskOnEdit, title.text, description.text, dt, priority.value, repeatIndex);
                 taskReturnInEdit = false;
             }
 
@@ -117,9 +116,9 @@ public class ValueManager : MonoBehaviour
     public void StartEditMode(Task oldtask) 
     {
         taskOnEdit = oldtask;
-        titel.text = oldtask.Titel;
-        discrip.text = oldtask.Description;
-        prio.value = oldtask.Prio;
+        title.text = oldtask.Title;
+        description.text = oldtask.Description;
+        priority.value = oldtask.Priority;
         if (oldtask.Deadline != null)
         {
             datePicker.OnInteractibleChanged(true);
@@ -144,12 +143,12 @@ public class ValueManager : MonoBehaviour
 
     public void StartEditMode() 
     {
-        titel.text = taskOnEdit.Titel;
-        discrip.text = taskOnEdit.Description;
-        prio.value = taskOnEdit.Prio;
+        title.text = taskOnEdit.Title;
+        description.text = taskOnEdit.Description;
+        priority.value = taskOnEdit.Priority;
         repeatDropDown.value = taskOnEdit.NextDeadlineIndex;
 
-        if (taskOnEdit.Deadline.Length == 0)
+        if (taskOnEdit.Deadline == null || taskOnEdit.Deadline.Length == 0)
         {
             datePicker.OnInteractibleChanged(false);
         }

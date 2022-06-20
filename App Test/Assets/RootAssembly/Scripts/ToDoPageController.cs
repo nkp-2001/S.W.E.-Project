@@ -10,15 +10,16 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
     [SerializeField] private Transform taskContainer;
     [SerializeField] private GameObject taskPrototype;
-    [SerializeField] bool ShowOldTask = false;
-    [SerializeField] TextMeshProUGUI ButtonText;
-    [SerializeField] private TMPro.TMP_Dropdown sortByDropdown;
+    [SerializeField] private bool ShowOldTask = false;
+    [SerializeField] private TextMeshProUGUI ButtonText;
+    [SerializeField] private TMP_Dropdown sortByDropdown;
 
     public void AddTask(Task t)
     {
         GameObject tp = Instantiate(taskPrototype);
         tp.GetComponent<TaskPrototype>().Setup(t, taskContainer); 
     }
+
     public void AddOldTask(Task t)
     {
         GameObject tp = Instantiate(taskPrototype);
@@ -29,7 +30,6 @@ public class ToDoPageController : MonoBehaviour,IObserver
     {
         if (!ShowOldTask)
         {
-            
             ClearScrollView();
 
             List<Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
@@ -45,8 +45,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
         else
         {
             FetchOldTask();
-        }
-        
+        } 
     }
 
     private void ClearScrollView()
@@ -71,10 +70,8 @@ public class ToDoPageController : MonoBehaviour,IObserver
             FetchTasks();
             ButtonText.text = "Show archived Task";
         }
-       
-
-
     }
+
     public void FetchOldTask()
     {
         ClearScrollView();
@@ -93,10 +90,8 @@ public class ToDoPageController : MonoBehaviour,IObserver
         FetchTasks();
     }
 
-
     void Start()
     {     
-       
         SubscribeToEvents_Start();
         FetchTasks();
         StartCoroutine(FetchUpdate());
@@ -104,10 +99,10 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
     private void OnEnable()
     {
-        //sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
         taskmaster = FindObjectOfType<DataMaster>();
         FetchTasks(); 
     }
+
     IEnumerator FetchUpdate()
     {
         while (true)
@@ -115,7 +110,6 @@ public class ToDoPageController : MonoBehaviour,IObserver
             yield return new WaitForSeconds(60);
             FetchTasks();
         }
-       
     }
 
     public void SubscribeToEvents_Start()
@@ -123,7 +117,6 @@ public class ToDoPageController : MonoBehaviour,IObserver
         Subject.current.OnExpiredDealine += FetchTasks;
         Subject.current.OnTaskReturning += FetchTasks;
     }
-
     public void UnsubscribeToAllEvents()
     {
         Subject.current.OnExpiredDealine -= FetchTasks;

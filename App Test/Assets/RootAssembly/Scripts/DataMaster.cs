@@ -30,8 +30,8 @@ public class DataMaster : MonoBehaviour, IObserver
         DontDestroyOnLoad(gameObject);
 
         LoadList();
-
     }
+
     private void Start()
     {
         CheckDeadlinesTask();
@@ -42,6 +42,7 @@ public class DataMaster : MonoBehaviour, IObserver
     {
         CheckDeadlinesTask();
     }
+
     public void CreateNewTask(string t, string d, int[] dt, float p,int repeatindex)
     {
         t = AvoidDoubleName(t); 
@@ -58,7 +59,7 @@ public class DataMaster : MonoBehaviour, IObserver
                 }
                 else
                 {
-                    print("[ManuelWarning] The NotficationSystem is not plugged");
+                    print("[Warning] The NotficationSystem is not plugged");
                     Task new_task = new Task(t, d, dt, p);
                     dataSave.AddNewToList(new_task);
                 }
@@ -73,9 +74,10 @@ public class DataMaster : MonoBehaviour, IObserver
 
     public void RemoveTask(int index) 
     {       
-        dataSave.RemoveFromList(dataSave.GetList()[index].DeadlineChannel_ID);
+        dataSave.RemoveFromList(dataSave.GetList()[index].DeadlineChannelId);
         SaveList();
     }
+
     public void RemoveTask(Task tk)
     {
         dataSave.RemoveFromList(tk);
@@ -84,7 +86,7 @@ public class DataMaster : MonoBehaviour, IObserver
 
     public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p,int rindex)
     {
-        if (t != oldtask.Titel)
+        if (t != oldtask.Title)
         {
             t = AvoidDoubleName(t);
 
@@ -102,54 +104,58 @@ public class DataMaster : MonoBehaviour, IObserver
             }
             else
             {
-                print("[ManuelWarning] The NotficationSystem is not plugged here.");
-                dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID, rindex);
+                print("[Warning] The NotficationSystem is not plugged here.");
+                dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannelId, rindex);
             }         
         }
         else
         {
-            dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID,rindex);
+            dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannelId,rindex);
         }
         SaveList();
     }
+
     public List<Task> GetTasks()
     {
         return dataSave.GetList();
     }
+
     public int GetTaskListLenght()
     {
         return GetTasks().Count;
     }
+
     public List<Task> GetSortedTasks(int sortBy)
     {
         List<Task> unsort = dataSave.GetList();
 
         if (sortBy == 0)
         {
-            return unsort.OrderBy(t => t.DeadlineChannel_ID)
-                .ThenBy(t => t.Prio)
+            return unsort.OrderBy(t => t.DeadlineChannelId)
+                .ThenBy(t => t.Priority)
                 .ThenByDescending(t => {
-                    if (t.DeadlineChannel_ID == 0) return 0;
+                    if (t.DeadlineChannelId == 0) return 0;
                     return new DateTimeOffset(ConvertIntArrayToDatetime(t.Deadline)).ToUnixTimeSeconds();
                 })
                 .ToList();
         }
         else if (sortBy == 1)
         {
-            return unsort.OrderBy(t => t.DeadlineChannel_ID)
+            return unsort.OrderBy(t => t.DeadlineChannelId)
                 .ThenByDescending(t => {
-                    if (t.DeadlineChannel_ID == 0) return 0;
+                    if (t.DeadlineChannelId == 0) return 0;
                     return new DateTimeOffset(ConvertIntArrayToDatetime(t.Deadline)).ToUnixTimeSeconds();
                 })
-                .ThenBy(t => t.Prio)
+                .ThenBy(t => t.Priority)
                 .ToList();
         }
         else
         {
-            return unsort.OrderByDescending(t => t.Titel)
+            return unsort.OrderByDescending(t => t.Title)
                 .ToList();
         }
     }
+
     public List<Task> GetArchivedTasks()
     {
         return dataSave.GetArchivedList();
@@ -162,14 +168,13 @@ public class DataMaster : MonoBehaviour, IObserver
         if (!Directory.Exists(dir))
         {
             Directory.CreateDirectory(dir);
-
         }
-
 
         string saveJason = JsonUtility.ToJson(dataSave);
 
         File.WriteAllText(dir + filename, saveJason);
     }
+
     private void LoadList()
     {
         string loadpath = Application.persistentDataPath + directoryname + filename;
@@ -194,15 +199,14 @@ public class DataMaster : MonoBehaviour, IObserver
         {
             if (t.Deadline != null && t.Deadline.Length != 0)
             {
-                if (System.DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
+                if (DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
                 {
                     if (t.NextDeadlineIndex != 0)
                     {
-                         int[] NextDeadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);
-                         int NextDeadlineNotifId = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, ConvertIntArrayToDatetime(NextDeadline)); // ex: Subject.current.Trigger_Request_NotiID
+                         int[] NextDeadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);
+                         int NextDeadlineNotifId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDatetime(NextDeadline)); // ex: Subject.current.Trigger_Request_NotiID
                          dataSave.ChangeTaskCauseRepeat(t, NextDeadline,NextDeadlineNotifId) ;
                          SaveList();
-
                     }
                     else
                     {
@@ -212,26 +216,25 @@ public class DataMaster : MonoBehaviour, IObserver
                 }
             }
         }
+
         foreach (Task t in (dataSave.GetWaitingList()).ToArray())
         {
             if (System.DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
             {
                 dataSave.RemoveFromWaitList(t); 
-                t.Deadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);               
-                t.DeadlineChannel_ID = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, ConvertIntArrayToDatetime(t.Deadline));
+                t.Deadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);               
+                t.DeadlineChannelId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDatetime(t.Deadline));
                 dataSave.AddNewToList(t);
                 Subject.current.Trigger_ExpiredDeadline();
             }
         }
-       
-
-
-
     }
-    public static System.DateTime ConvertIntArrayToDatetime(int[] toconvert)
+
+    public static DateTime ConvertIntArrayToDatetime(int[] toconvert)
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
+
     public static int[] ConvertDatetimeToIntArray(DateTime toconvert)
     {
         return new int[] { toconvert.Minute, toconvert.Hour, toconvert.Day, toconvert.Month, toconvert.Year };
@@ -249,15 +252,12 @@ public class DataMaster : MonoBehaviour, IObserver
         bool doublefound = true;
         int repeating = 0;
         while (doublefound)
-        {
-            
+        {         
             doublefound = false;
             foreach (Task task in dataSave.GetList().Concat(dataSave.GetWaitingList()))
             {
-                if (checkedtitel == task.Titel)
+                if (checkedtitel == task.Title)
                 {
-                    print("double");
-
                     repeating++;
                     checkedtitel = titel + "(" + repeating + ")";
                     doublefound = true;
@@ -267,9 +267,9 @@ public class DataMaster : MonoBehaviour, IObserver
 
         }
         return checkedtitel;
-       
     }
-    public int[] CaculuateNextDT(int nextDeadlineIndex, int[] currentDeadline) // nur public damit sie testbar ist
+
+    public int[] CalculateNextDT(int nextDeadlineIndex, int[] currentDeadline) // nur public damit sie testbar ist
     {
         DateTime dateTime = ConvertIntArrayToDatetime(currentDeadline);
         switch (nextDeadlineIndex)
@@ -289,18 +289,21 @@ public class DataMaster : MonoBehaviour, IObserver
         }
         return new int[] { dateTime.Minute, dateTime.Hour, dateTime.Day, dateTime.Month, dateTime.Year };
     }
+
     public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat, int repeatTimes,int[] preW)
     {
         titel = AvoidDoubleNameAppointment(titel);
         int notficID = 0;
+
         if (clientNotificationSystem != null)
         {
             notficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArrayToDatetime(startTime), ConvertIntArrayToDatetime(endTime), repeat, titel,repeatTimes,preW);
         }
         else
         {
-            print("[ManuelWarning] The NotficationSystem is not plugged");
+            print("[Warning] The NotficationSystem is not plugged");
         }
+
         dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, notficID, repeatTimes));
         SaveList();
     }
@@ -318,7 +321,6 @@ public class DataMaster : MonoBehaviour, IObserver
             titel = AvoidDoubleNameAppointment(titel);
         }
 
-
         if (oldAppointment.StartTime != startTime | oldAppointment.EndTime != endTime)
         {
             if (clientNotificationSystem != null)
@@ -328,7 +330,7 @@ public class DataMaster : MonoBehaviour, IObserver
             }
             else
             {
-                print("[ManuelWarning] The NotficationSystem is not plugged");
+                print("[Warning] The NotficationSystem is not plugged");
                 dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, 0, repeatTimes);
             }
             
@@ -347,7 +349,6 @@ public class DataMaster : MonoBehaviour, IObserver
         int repeating = 0;
         while (doublefound)
         {
-
             doublefound = false;
             print("Round" + repeating);
             foreach (Appointment appo in dataSave.GetAppointmentList())
@@ -388,7 +389,6 @@ public class DataMaster : MonoBehaviour, IObserver
         dataSave = new SaveObject();
         SaveList();
     }
- 
 
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -425,8 +425,4 @@ public class DataMaster : MonoBehaviour, IObserver
     { 
         clientNotificationSystem = notS;
     }
-
-
-
-
 }
