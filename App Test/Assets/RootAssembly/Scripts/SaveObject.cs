@@ -37,7 +37,10 @@ public class SaveObject
     }
     public void RemoveFromArchiveList(Task tk)
     {
+        
         archivedTasks.Remove(tk);
+
+
     }
     public void RemoveFromWaitList(Task tk)
     {

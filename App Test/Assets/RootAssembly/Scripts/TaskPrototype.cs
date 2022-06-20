@@ -143,7 +143,7 @@ public class TaskPrototype : MonoBehaviour
     }
     public void MoveRect(int id,bool plusUp)
     {
-        print("Event output: " +id + "" + plusUp);
+        
         if (id > transform.GetSiblingIndex())
         {
             MoveRect(plusUp);
@@ -181,12 +181,10 @@ public class TaskPrototype : MonoBehaviour
         }
         else
         {
-            print("showingOldTask");
+           
             task.Sucess = false;
             task.Done = false;
 
-  
-           
             if (task.Deadline != null)
             {
                 if (task.Deadline.Length != 0)
@@ -199,13 +197,13 @@ public class TaskPrototype : MonoBehaviour
                     {
                         GoIntoTaskReturningEdit();
                     }
-                    Destroy(gameObject);
+                  
                     return;
                 }      
                
             }
             Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio, task.NextDeadlineIndex);
-            Destroy(gameObject);
+          
 
 
         }

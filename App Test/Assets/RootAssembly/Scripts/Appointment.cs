@@ -90,14 +90,7 @@ public class Appointment
 
     public override bool Equals(object obj)
     {
-        if (obj.GetType() != typeof(Task))
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
+        return this == obj;
     }
     public bool Equals(Appointment appos)
     {
