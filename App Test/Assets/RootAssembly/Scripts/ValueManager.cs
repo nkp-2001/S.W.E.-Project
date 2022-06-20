@@ -27,7 +27,7 @@ public class ValueManager : MonoBehaviour
     {
         titel = transform.GetChild(0).GetComponent<TMP_InputField>();
         discrip = transform.GetChild(1).GetComponent<TMP_InputField>();
-        
+
         sceneLoader = FindObjectOfType<SceneLoader>();
 
         if (taskOnEdit != null) // !! noch überdenken , bei Wegfallen von Szenewecx
@@ -36,26 +36,33 @@ public class ValueManager : MonoBehaviour
         }
     }
 
-   public void CreateTaskAndValidate()
-   {
+    public void CreateTaskAndValidate()
+    {
         // Valid-check
-       if ((titel.text == ""))
-       {
+        if ((titel.text == ""))
+        {
             return;
-       }
-      
-       DateTime dtraw = datePicker.GetSelectedDate();
-       int[] dt;
-       int repeatIndex = 0;
-       if (dltoggle.isOn)
-       {
-            dt = new int[]{dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year};
+        }
+
+        DateTime dtraw = datePicker.GetSelectedDate();
+
+        if (dtraw < DateTime.Now)
+        {
+            Subject.current.TriggerOnDateInPast();
+            return;
+        }
+
+        int[] dt;
+        int repeatIndex = 0;
+        if (dltoggle.isOn)
+        {
+            dt = new int[] { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
             repeatIndex = repeatDropDown.value;
         }
-       else
-       {
+        else
+        {
             dt = null;
-       }
+        }
         ///////////////////////////////
         // int[] dt = { dtraw.Minute, dtraw.Hour, dtraw.Day, dtraw.Month, dtraw.Year };
         // tm.CreateNewTask(titel.text, discrip.text,dt, prio.value);
@@ -67,23 +74,23 @@ public class ValueManager : MonoBehaviour
         {
             if (!tastReturninEdit)
             {
-                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value,repeatIndex);
+                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
             }
             else
             {
-                Subject.current.Trigger_OnTaskReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value,repeatIndex);
+                Subject.current.Trigger_OnTaskReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
                 tastReturninEdit = false;
             }
 
             StopFromEditMode(); //
         }
-     sceneLoader.LoadScene(0);
-   }
+        sceneLoader.LoadScene(0);
+    }
 
     /// <EditMode> ///
     public void StartEditMode(Task oldtask) //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
-   {
-      
+    {
+
 
         taskOnEdit = oldtask;
         titel.text = oldtask.Titel;
@@ -109,17 +116,17 @@ public class ValueManager : MonoBehaviour
             ButtonText.text = "Reinstiate Task";
         }
 
-      
-   }
+
+    }
     public void StartEditMode()  //vllt zum Event unmwandeln ? Konflikt mit datePicker.GetSelectedDate(); | nicht immer (/lieber nicht) es mit funcs machen
     {
-     
+
         titel.text = taskOnEdit.Titel;
         discrip.text = taskOnEdit.Description;
         prio.value = taskOnEdit.Prio;
         repeatDropDown.value = taskOnEdit.NextDeadlineIndex;
-      
-        if (taskOnEdit.Deadline.Length ==0)
+
+        if (taskOnEdit.Deadline.Length == 0)
         {
             datePicker.OnInteractibleChanged(false);
         }

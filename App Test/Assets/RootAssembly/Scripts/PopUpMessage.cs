@@ -93,6 +93,12 @@ public class PopUpMessage : MonoBehaviour,IObserver
         StartCoroutine(ShowText("A task has expired"));
     }
 
+    public void ShowDateInPastMessage()
+    {
+        StopAllCoroutines();
+        StartCoroutine(ShowText("Please enter a future date"));
+    }
+
     IEnumerator ShowText(string text)
     {
      
@@ -129,6 +135,8 @@ public class PopUpMessage : MonoBehaviour,IObserver
         Subject.current.OnTaskSetDone += ShowBoxTaskDone;
         Subject.current.OnTaskReturning += ShowBoxTaskReturn;
         Subject.current.OnExpiredDealine += ShowBoxTaskExpired;
+
+        Subject.current.OnDateInPast += ShowDateInPastMessage;
     }
 
     public void UnsubscribeToAllEvents()
@@ -138,6 +146,8 @@ public class PopUpMessage : MonoBehaviour,IObserver
         Subject.current.OnTaskSetDone -= ShowBoxTaskDone;
         Subject.current.OnTaskReturning -= ShowBoxTaskReturn;
         Subject.current.OnExpiredDealine -= ShowBoxTaskExpired;
+
+        Subject.current.OnDateInPast -= ShowDateInPastMessage;
     }
 
     private void OnEnable()

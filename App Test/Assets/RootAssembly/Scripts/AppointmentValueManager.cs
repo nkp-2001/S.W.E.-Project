@@ -44,22 +44,27 @@ public class AppointmentValueManager : MonoBehaviour
             return;
         }
 
-        DateTime dateTime = startTimePicker.GetSelectedDate();
-        int[] startTime = new int[] { dateTime.Minute, dateTime.Hour, dateTime.Day, dateTime.Month, dateTime.Year };
+        DateTime startTime = startTimePicker.GetSelectedDate();
+        DateTime endTime = endTimePicker.GetSelectedDate();
 
-        dateTime = endTimePicker.GetSelectedDate();
-        int[] endTime = new int[] { dateTime.Minute, dateTime.Hour, dateTime.Day, dateTime.Month, dateTime.Year };
+        if (endTime < DateTime.Now)
+        {
+            Subject.current.TriggerOnDateInPast();
+            return;
+        }
 
+        int[] start = new int[] { startTime.Minute, startTime.Hour, startTime.Day, startTime.Month, startTime.Year };
+        int[] end = new int[] { endTime.Minute, endTime.Hour, endTime.Day, endTime.Month, endTime.Year };
 
         int repeatIndex = repeatDropDown.value;
 
         if (underlyingAppointment == null)
         {
-            Subject.current.TriggerOnNewAppointment(title.text, description.text, startTime, endTime, repeatIndex, 0, new int[] { 0 });
+            Subject.current.TriggerOnNewAppointment(title.text, description.text, start, end, repeatIndex, 0, new int[] { 0 });
         }
         else
         {
-            Subject.current.TriggerOnAppointmentChange(underlyingAppointment, title.text, description.text, startTime, endTime, repeatIndex, 0, new int[] { 0 });
+            Subject.current.TriggerOnAppointmentChange(underlyingAppointment, title.text, description.text, start, end, repeatIndex, 0, new int[] { 0 });
             StopFromEditMode();
         }
         sceneLoader.LoadScene(0);

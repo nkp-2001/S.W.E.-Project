@@ -59,6 +59,9 @@ public class Subject : MonoBehaviour
     public event Action<Appointment> OnDeleteAppointment;
     public void TriggerOnDeleteAppointment(Appointment oldAppointment) { OnDeleteAppointment?.Invoke(oldAppointment); }
 
+    public event Action OnDateInPast;
+    public void TriggerOnDateInPast() { OnDateInPast?.Invoke(); }
+
     ///funcs
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private Func<string, DateTime, int> onRequest_NotiIDDeadline;
