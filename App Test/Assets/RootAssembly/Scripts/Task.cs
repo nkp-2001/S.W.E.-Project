@@ -70,20 +70,11 @@ using System.Linq;
 
     public override bool Equals(object obj)
     {
-        
-        if (obj.GetType() != typeof(Task))
-        {
-            return false;
-        }
-        else 
-        {
-            return true;
-        }
-        
+        return this == obj;
     }
     public bool Equals(Task obj)
     {
-        if (obj.Titel == Titel  & obj.Description == description  & obj.Prio == prio  & Enumerable.SequenceEqual(obj.deadline, deadline) & obj.DeadlineChannel_ID == deadlineChannel_ID)
+        if (obj.Titel == Titel  & obj.Description == description  & obj.Prio == prio  & Enumerable.SequenceEqual(obj.deadline, deadline))
         {
             return true;
             

@@ -94,12 +94,11 @@ public class DataMasterTEST
         List<Task> ExpectList = new List<Task>();
         ExpectList.Add(new Task("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1, 1));
         ExpectList.Add(new Task("name(1)", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1, 2));
-        
-       foreach (Task t in tl)
-       {
-            Debug.Log(t.Titel);
-       }
-       Assert.True(Enumerable.SequenceEqual(tl,ExpectList)); 
+
+        for (int i= 0; i < tl.Count; i++)
+        {
+            Assert.True(ExpectList[i].Equals(tl[i]));
+        }
     }
     
     [UnityTest]
