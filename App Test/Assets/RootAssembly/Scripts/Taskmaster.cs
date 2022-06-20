@@ -328,23 +328,29 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int repeatTimes, int[] preW)
     {
+        if (titel != oldAppointment.Title)
+        {
+            titel = AvoidDoubleNameAppo(titel);
+        }
+
+
         if (oldAppointment.StartTime != startTime | oldAppointment.EndTime != endTime)
         {
             if (clientNotificationSystem != null)
             {
                 int newnotficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel, repeatTimes, preW);
-                dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, newnotficID, repeatTimes);
+                dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, newnotficID, repeatTimes);
             }
             else
             {
                 print("[ManuelWarning] The NotficationSystem is not plugged");
-                dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, 0, repeatTimes);
+                dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, 0, repeatTimes);
             }
             
         }
         else
         {
-            dataSave.ChangeAppointment(oldAppointment, AvoidDoubleNameAppo(titel), desp, startTime, endTime, repeat, oldAppointment.Notifcation_id, repeatTimes);
+            dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, oldAppointment.Notifcation_id, repeatTimes);
         }
         SaveList();
     }
