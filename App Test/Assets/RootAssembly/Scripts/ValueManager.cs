@@ -23,10 +23,14 @@ public class ValueManager : MonoBehaviour
     [SerializeField] protected TextMeshProUGUI ButtonText;
     [SerializeField] protected TMP_Dropdown repeatDropDown;
 
+    Taskmaster dataMaser;
+
     void Start()
     {
         titel = transform.GetChild(0).GetComponent<TMP_InputField>();
         discrip = transform.GetChild(1).GetComponent<TMP_InputField>();
+        
+        dataMaser = FindObjectOfType<Taskmaster>();
         
         sceneLoader = FindObjectOfType<SceneLoader>();
 
@@ -61,17 +65,17 @@ public class ValueManager : MonoBehaviour
         // tm.CreateNewTask(titel.text, discrip.text,dt, prio.value);
         if (taskOnEdit == null)
         {
-            Subject.current.Trigger_OnNewTask(titel.text, discrip.text, dt, prio.value, repeatIndex);
+            Subject.current.Trigger_OnNewTask(dataMaser.AvoidDoubleName(titel.text), discrip.text, dt, prio.value, repeatIndex);
         }
         else
         {
             if (!tastReturninEdit)
             {
-                Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value,repeatIndex);
+                Subject.current.TriggerOnTaskChange(taskOnEdit, dataMaser.AvoidDoubleName(titel.text), discrip.text, dt, prio.value,repeatIndex);
             }
             else
             {
-                Subject.current.Trigger_OnTaskReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value,repeatIndex);
+                Subject.current.Trigger_OnTaskReturning(taskOnEdit, dataMaser.AvoidDoubleName(titel.text), discrip.text, dt, prio.value,repeatIndex);
                 tastReturninEdit = false;
             }
 

@@ -88,10 +88,23 @@ public class SaveObject
         tasklist[index] = new Task(t, d, dt, p, id, rindex);
         tasklist[index].Redo = rindex != 0;
     }
+    public void ChangeTask(Task altertT, string t, string d, int[] dt, float p, int rindex)
+    {
+        int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel); //Kann nur klappen wenn allles Unterschidlich , dewegen Avoiddoubblename !!
+        tasklist[index] = new Task(t, d, dt, p, rindex);
+        tasklist[index].Redo = rindex != 0;
+    }
     public void ChangeTaskCauseRepeat(Task altertT, int[] newDealine,int newDeadlineID)
     {
         int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel);
         tasklist[index].DeadlineChannel_ID = newDeadlineID;
+        tasklist[index].Deadline = newDealine;
+        tasklist[index].Failedprevios = true;
+        tasklist[index].Failedtimes++;
+    }
+    public void ChangeTaskCauseRepeat(Task altertT, int[] newDealine)
+    {
+        int index = tasklist.FindLastIndex(task => task.Titel == altertT.Titel);
         tasklist[index].Deadline = newDealine;
         tasklist[index].Failedprevios = true;
         tasklist[index].Failedtimes++;

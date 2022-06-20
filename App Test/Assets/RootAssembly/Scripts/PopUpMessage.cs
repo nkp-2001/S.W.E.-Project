@@ -86,11 +86,11 @@ public class PopUpMessage : MonoBehaviour,IObserver
         StartCoroutine(ShowText("You have a new task to do"));
     }
 
-    public void ShowBoxTaskExpired()
+    public void ShowBoxTaskExpired(Task task, bool nN)
     {
         StopAllCoroutines();
         Debug.Log("555");
-        StartCoroutine(ShowText("A task has expired"));
+        StartCoroutine(ShowText(task.Titel + "has expired"));
     }
 
     IEnumerator ShowText(string text)

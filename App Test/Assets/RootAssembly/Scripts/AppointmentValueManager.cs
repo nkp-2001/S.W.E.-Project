@@ -17,6 +17,7 @@ public class AppointmentValueManager : MonoBehaviour
     [SerializeField] private TMP_Dropdown repeatDropDown;
 
     private SceneLoader sceneLoader;
+    Taskmaster datamaster;
 
     void Start()
     {
@@ -26,6 +27,7 @@ public class AppointmentValueManager : MonoBehaviour
         {
             StartEditMode();
         }
+        datamaster = FindObjectOfType<Taskmaster>();
     }
 
     public void CreateAppointmentAndValidate()
@@ -67,11 +69,11 @@ public class AppointmentValueManager : MonoBehaviour
 
         if (underlyingAppointment == null)
         {
-            Subject.current.TriggerOnNewAppointment(title.text, description.text, startTime, endTime, repeat, 0, new int[] { 0 });
+            Subject.current.TriggerOnNewAppointment(datamaster.AvoidDoubleName(title.text), description.text, startTime, endTime, repeat, 0, new int[] { 0 });
         }
         else
         {
-            Subject.current.TriggerOnAppointmentChange(underlyingAppointment, title.text, description.text, startTime, endTime, repeat, 0, new int[] { 0 });
+            Subject.current.TriggerOnAppointmentChange(underlyingAppointment, datamaster.AvoidDoubleName(title.text), description.text, startTime, endTime, repeat, 0, new int[] { 0 });
             StopFromEditMode();
         }
         sceneLoader.LoadScene(0);

@@ -53,9 +53,9 @@ public class DataMasterTEST
     {
         yield return new WaitForEndOfFrame();
         int[] testValue = new int[]{54,14,1,7, 2022 };
-        System.DateTime testValueinDatetime = dataMaster.ConvertIntArray_toDatetime(testValue);
+        System.DateTime testValueinDatetime = Taskmaster.ConvertIntArray_toDatetime(testValue);
 
-        CollectionAssert.AreEqual(testValue, dataMaster.ConvertDatetime_toIntArray(testValueinDatetime));
+        CollectionAssert.AreEqual(testValue, Taskmaster.ConvertDatetime_toIntArray(testValueinDatetime));
         
     }
     [UnityTest]
@@ -63,10 +63,10 @@ public class DataMasterTEST
     {
         yield return new WaitForEndOfFrame();
         System.DateTime testValueDT = new System.DateTime(2022, 7, 1, 14, 54, 0);
-        int[] testValueDTinINTArr = dataMaster.ConvertDatetime_toIntArray(testValueDT);
+        int[] testValueDTinINTArr = Taskmaster.ConvertDatetime_toIntArray(testValueDT);
 
         
-        Assert.AreEqual(testValueDT, dataMaster.ConvertIntArray_toDatetime(testValueDTinINTArr));
+        Assert.AreEqual(testValueDT, Taskmaster.ConvertIntArray_toDatetime(testValueDTinINTArr));
 
 
     }

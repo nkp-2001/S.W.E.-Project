@@ -52,19 +52,15 @@ public class Taskmaster : MonoBehaviour, IObserver
                 print("year" + dt[4] + ",month" + dt[3] + ",day" + dt[2] + ",hour" + dt[1] + ",min" + dt[0]);
                 // int id = notificationSystem.SendNewDeadlineNotificationsX(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));           
                 //int id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-                if (clientNotificationSystem != null) //(id != 0 )
-                {
-                    print("System plugged");
-                    int id = clientNotificationSystem.SendNewDeadlineNotifications(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-                    Task new_task = new Task(t, d, dt, p, id, repeatindex);
-                    dataSave.AddNewToList(new_task);
-                }
-                else
-                {
-                    print("[ManuelWarning] The NotficationSystem is not plugged");
-                    Task new_task = new Task(t, d, dt, p);
-                    dataSave.AddNewToList(new_task);
-                }
+                Task new_task = new Task(t, d, dt, p);
+                dataSave.AddNewToList(new_task);
+                
+           }
+           else
+           {
+                Task new_task = new Task(t, d, dt, p);
+                dataSave.AddNewToList(new_task);
+
            }
         }
         else
@@ -88,37 +84,8 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     public void ChangeTask(Task oldtask, string t, string d, int[] dt, float p,int rindex)
     {
-        if (t != oldtask.Titel)
-        {
-            t = AvoidDoubleName(t);// Namecheck  , keine Doppelten
-
-        }
-        if (dt == null)
-        {
-            dataSave.ChangeTask(oldtask, t, d, dt, p, 0,0); //0 = keine Meldungen , Cancel der Alten über das Event (im Notfi)
-        }
-        else if (oldtask.Deadline != dt)
-        {
-            // notificationSystem.CancelDeadlineNotificationsX(oldtask.DeadlineChannel_ID);
-            // int new_id = Subject.current.Trigger_Request_NotiID(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-           
-
-            if (clientNotificationSystem != null) //(id != 0 )
-            {
-                int new_id = clientNotificationSystem.SendNewDeadlineNotifications(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
-                dataSave.ChangeTask(oldtask, t, d, dt, p, new_id,rindex);
-            }
-            else
-            {
-                print("[ManuelWarning] The NotficationSystem is not plugged here.");
-                dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID, rindex);
-            }
-           
-        }
-        else
-        {
-            dataSave.ChangeTask(oldtask, t, d, dt, p, oldtask.DeadlineChannel_ID,rindex);
-        }
+        
+        dataSave.ChangeTask(oldtask, t, d, dt, p,rindex);       
         SaveList();
     }
     public List<Task> GetTasks()
@@ -208,16 +175,18 @@ public class Taskmaster : MonoBehaviour, IObserver
                     if (t.NextDeadlineIndex != 0)
                     {
                          int[] NextDeadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);
-                         int NextDeadlineNotifId = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, ConvertIntArray_toDatetime(NextDeadline)); // ex: Subject.current.Trigger_Request_NotiID
-                         dataSave.ChangeTaskCauseRepeat(t, NextDeadline,NextDeadlineNotifId) ;
+                       
+                         dataSave.ChangeTaskCauseRepeat(t, NextDeadline) ;
                          SaveList();
+                        Subject.current.Trigger_ExpiredDeadline(t, true);
 
                     }
                     else
                     {
+                        Subject.current.Trigger_ExpiredDeadline(t, false);
                         RemoveTask(t);
                     }
-                    Subject.current.Trigger_ExpiredDeadline();
+                    
                 }
             }
         }
@@ -228,9 +197,9 @@ public class Taskmaster : MonoBehaviour, IObserver
                 dataSave.RemoveFromWaitList(t); // Änd.
                 t.Deadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);
                // t.DeadlineChannel_ID = Subject.current.Trigger_Request_NotiID(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
-                t.DeadlineChannel_ID = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
+               // t.DeadlineChannel_ID = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
                 dataSave.AddNewToList(t);
-                Subject.current.Trigger_ExpiredDeadline();
+                Subject.current.Trigger_ExpiredDeadline(t, true);
             }
         }
        
@@ -239,11 +208,11 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     }
 
-    public System.DateTime ConvertIntArray_toDatetime(int[] toconvert)
+    public static System.DateTime ConvertIntArray_toDatetime(int[] toconvert) // noch 
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
-    public int[] ConvertDatetime_toIntArray(DateTime toconvert)
+    public static int[] ConvertDatetime_toIntArray(DateTime toconvert) //
     {
         return new int[] { toconvert.Minute, toconvert.Hour, toconvert.Day, toconvert.Month, toconvert.Year };
     }
@@ -251,7 +220,7 @@ public class Taskmaster : MonoBehaviour, IObserver
     public void ManageTaskReturn(Task oldtask, string t, string d, int[] dt, float prio,int repeatindex)
     {
         dataSave.RemoveFromArchieList(oldtask);
-        CreateNewTask(t, d, dt, prio,repeatindex);     
+        CreateNewTask(AvoidDoubleName(t), d, dt, prio,repeatindex);     
     }
 
     public string AvoidDoubleName(string titel)
@@ -306,17 +275,8 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     public void CreateNewAppointment(string titel, string desp, int[] startTime, int[] endTime, int repeat, int repeatTimes,int[] preW)
     {
-        titel = AvoidDoubleNameAppo(titel);
-        int notficID = 0;
-        if (clientNotificationSystem != null)
-        {
-            notficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel,repeatTimes,preW);
-        }
-        else
-        {
-            print("[ManuelWarning] The NotficationSystem is not plugged");
-        }
-        dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, notficID, repeatTimes));
+
+        dataSave.AddNewAppointment(new Appointment(titel, desp, startTime, endTime, repeat, 0, repeatTimes));
         SaveList();
     }
 
@@ -328,30 +288,8 @@ public class Taskmaster : MonoBehaviour, IObserver
 
     public void ChangeAppointment(Appointment oldAppointment, string titel, string desp, int[] startTime, int[] endTime, int repeat, int repeatTimes, int[] preW)
     {
-        if (titel != oldAppointment.Title)
-        {
-            titel = AvoidDoubleNameAppo(titel);
-        }
-
-
-        if (oldAppointment.StartTime != startTime | oldAppointment.EndTime != endTime)
-        {
-            if (clientNotificationSystem != null)
-            {
-                int newnotficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArray_toDatetime(startTime), ConvertIntArray_toDatetime(endTime), repeat, titel, repeatTimes, preW);
-                dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, newnotficID, repeatTimes);
-            }
-            else
-            {
-                print("[ManuelWarning] The NotficationSystem is not plugged");
-                dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, 0, repeatTimes);
-            }
-            
-        }
-        else
-        {
-            dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, oldAppointment.Notifcation_id, repeatTimes);
-        }
+           
+        dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, oldAppointment.Notifcation_id, repeatTimes);   
         SaveList();
     }
 

@@ -31,7 +31,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
         {
             //clear and fill UI with existing tasks   
             ClearScrollView();
-
+            print(taskmaster);
             List<Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
             if (tasks is not null)
             {
@@ -91,6 +91,10 @@ public class ToDoPageController : MonoBehaviour,IObserver
     {
         FetchTasks();
     }
+    public void FetchTasks(Task task, bool prob)
+    {
+        FetchTasks();
+    }
 
 
     void Start()
@@ -104,9 +108,14 @@ public class ToDoPageController : MonoBehaviour,IObserver
     private void OnEnable()
     {
         sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
-        taskmaster = FindObjectOfType<Taskmaster>();
+        print(taskmaster);
         FetchTasks(); 
     }
+    private void Awake()
+    {
+        taskmaster = FindObjectOfType<Taskmaster>();
+    }
+
     IEnumerator FetchUpdate()
     {
         while (true)

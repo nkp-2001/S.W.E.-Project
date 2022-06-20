@@ -31,8 +31,8 @@ public class Subject : MonoBehaviour
     public event Action<int, bool> OnScrollPopUp;
     public void Trigger_ScrollPopUp(int id, bool onoff) { if (OnScrollPopUp != null) { OnScrollPopUp(id, onoff); } }
 
-    public event Action OnExpiredDealine;
-    public void Trigger_ExpiredDeadline() { if (OnExpiredDealine != null) { OnExpiredDealine(); } }
+    public event Action<Task, bool> OnExpiredDealine;
+    public void Trigger_ExpiredDeadline(Task task,bool newNotifi) { if (OnExpiredDealine != null) { OnExpiredDealine(task, newNotifi); } }
 
     public event Action<Task> OnTaskSetDone;
     public void Trigger_TaskSetDone(Task doneTask) { print("Task Set "); if (OnTaskSetDone != null) { print("Task Set Done"); OnTaskSetDone(doneTask); } }

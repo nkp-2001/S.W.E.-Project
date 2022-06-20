@@ -13,10 +13,12 @@ public class TaskPrototype : MonoBehaviour //,IObserver
     RectTransform rect;
     bool showingOldTask = false;
     [SerializeField] GameObject dircTobj;
+    Taskmaster datamaster;
     private void Start()
     {
         taskMaster = FindObjectOfType<Taskmaster>();
         rect = GetComponent<RectTransform>();
+        datamaster = FindObjectOfType<Taskmaster>();
       //  SubscribeToEvents_Start();
 
     }
@@ -33,9 +35,11 @@ public class TaskPrototype : MonoBehaviour //,IObserver
                  "DT:" + string.Format("{0:00}", t.Deadline[2]) + "." + string.Format("{0:00}", t.Deadline[3]) + "."
                  + t.Deadline[4] + "|" + string.Format("{0:00}", t.Deadline[1]) + ":" + string.Format("{0:00}", t.Deadline[0]);
         }
-       
+     
 
-       
+
+
+
         dircTobj.SetActive(false);
 
         transform.SetParent(taskContainer);
@@ -196,20 +200,24 @@ public class TaskPrototype : MonoBehaviour //,IObserver
             task.Done = false;
 
             int[] dt = task.Deadline;
-           
-            if (dt.Length == 0)
+            if(dt != null)
             {
-                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio,task.NextDeadlineIndex);
-            }
-            else if ((new System.DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0) > System.DateTime.Now))
-            {
-                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio, task.NextDeadlineIndex);
-            }
-            else
-            {
-                GoIntoTaskReturningEdit();
-            }
-           
+                if (dt.Length != 0)
+                {
+                    if ((new System.DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0) > System.DateTime.Now))
+                    {
+                        Subject.current.Trigger_OnTaskReturning(task, datamaster.AvoidDoubleName(task.Titel), task.Description, task.Deadline, task.Prio, task.NextDeadlineIndex);
+                    }
+                    else
+                    {
+                        GoIntoTaskReturningEdit();
+                    }
+                    return;
+                }
+            }    
+            Subject.current.Trigger_OnTaskReturning(task, datamaster.AvoidDoubleName(task.Titel), task.Description, task.Deadline, task.Prio, task.NextDeadlineIndex);
+            
+            
             Destroy(gameObject);
         }
 
