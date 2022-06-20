@@ -74,7 +74,7 @@ using System.Linq;
     }
     public bool Equals(Task obj)
     {
-        if (obj.Titel == Titel  & obj.Description == description  & obj.Prio == prio  & Enumerable.SequenceEqual(obj.deadline, deadline))
+        if (obj.Titel == Titel  & obj.Description == description  & obj.Prio == prio  & Enumerable.SequenceEqual(obj.deadline, deadline) & obj.DeadlineChannel_ID == deadlineChannel_ID)
         {
             return true;
             

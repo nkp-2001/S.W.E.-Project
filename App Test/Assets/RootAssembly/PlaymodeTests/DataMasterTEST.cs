@@ -45,7 +45,7 @@ public class DataMasterTEST
         dataMaster.CreateNewTask("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1);
         dataMaster.ChangeTask(dataMaster.GetTasks()[0], "nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 2);
         Debug.Log("ChannelID:" + dataMaster.GetTasks()[0].DeadlineChannel_ID);
-        Assert.True(dataMaster.GetTasks()[0].Equals(new Task("nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 2,2)));
+        Assert.True(dataMaster.GetTasks()[0].Equals(new Task("nameE", "beschreibungE", new int[] { 54, 14, 1, 7, 2023 }, 3, 1+1,2)));
 
     }
     [UnityTest]
@@ -93,7 +93,7 @@ public class DataMasterTEST
         List<Task> tl = dataMaster.GetTasks();
         List<Task> ExpectList = new List<Task>();
         ExpectList.Add(new Task("name", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1, 1));
-        ExpectList.Add(new Task("name(1)", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 1, 2));
+        ExpectList.Add(new Task("name(1)", "beschreibung", new int[] { 54, 14, 1, 7, 2022 }, 2, 2, 2));
 
         for (int i= 0; i < tl.Count; i++)
         {
