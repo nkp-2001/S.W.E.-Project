@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClient 
 {
-    Datamaster taskmaster;
+    DataMaster taskmaster;
     private void Awake() 
     {
         NotificationSystem[] objs = FindObjectsOfType<NotificationSystem>(); // Scenenwechesel löscht es nicht 
@@ -26,7 +26,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
     {
         SubscribeToEvents_Start();
 
-        taskmaster = FindObjectOfType<Datamaster>();
+        taskmaster = FindObjectOfType<DataMaster>();
         taskmaster.SetNotificatioSystem(this);
       
 

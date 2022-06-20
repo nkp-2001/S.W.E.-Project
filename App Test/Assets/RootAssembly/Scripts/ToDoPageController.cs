@@ -6,13 +6,13 @@ using TMPro;
 
 public class ToDoPageController : MonoBehaviour,IObserver
 {
-    private Datamaster taskmaster;
+    private DataMaster taskmaster;
 
     [SerializeField] private Transform taskContainer;
     [SerializeField] private GameObject taskPrototype;
     [SerializeField] bool ShowOldTask = false;
     [SerializeField] TextMeshProUGUI ButtonText;
-    TMPro.TMP_Dropdown sortByDropdown;
+    [SerializeField] private TMPro.TMP_Dropdown sortByDropdown;
 
     public void AddTask(Task t)
     {
@@ -32,7 +32,10 @@ public class ToDoPageController : MonoBehaviour,IObserver
             
             ClearScrollView();
 
+            Debug.Log("taskmaster null: " + (taskmaster == null));
+            Debug.Log("dropdown null: " + (sortByDropdown == null));
             List<Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
+
             if (tasks is not null)
             {
                 foreach (Task task in tasks)
@@ -103,8 +106,8 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
     private void OnEnable()
     {
-        sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
-        taskmaster = FindObjectOfType<Datamaster>();
+        //sortByDropdown = transform.GetComponentInChildren<TMPro.TMP_Dropdown>();
+        taskmaster = FindObjectOfType<DataMaster>();
         FetchTasks(); 
     }
     IEnumerator FetchUpdate()

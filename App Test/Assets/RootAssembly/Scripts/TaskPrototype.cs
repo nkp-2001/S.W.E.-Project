@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class TaskPrototype : MonoBehaviour 
 {  
-    private Datamaster taskMaster;
+    private DataMaster taskMaster;
     [SerializeField] private Task task;
     [SerializeField] AudioClip pingSound;
     RectTransform rect;
@@ -15,7 +15,7 @@ public class TaskPrototype : MonoBehaviour
     [SerializeField] GameObject dircTobj;
     private void Start()
     {
-        taskMaster = FindObjectOfType<Datamaster>();
+        taskMaster = FindObjectOfType<DataMaster>();
         rect = GetComponent<RectTransform>();
     
 
@@ -185,22 +185,29 @@ public class TaskPrototype : MonoBehaviour
             task.Sucess = false;
             task.Done = false;
 
-            int[] dt = task.Deadline;
+  
            
-            if (dt.Length == 0)
+            if (task.Deadline != null)
             {
-                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio,task.NextDeadlineIndex);
+                if (task.Deadline.Length != 0)
+                {
+                    if ((DataMaster.ConvertIntArrayToDatetime(task.Deadline) > System.DateTime.Now))
+                    {
+                        Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio, task.NextDeadlineIndex);
+                    }
+                    else
+                    {
+                        GoIntoTaskReturningEdit();
+                    }
+                    Destroy(gameObject);
+                    return;
+                }      
+               
             }
-            else if ((new System.DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0) > System.DateTime.Now))
-            {
-                Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio, task.NextDeadlineIndex);
-            }
-            else
-            {
-                GoIntoTaskReturningEdit();
-            }
-           
+            Subject.current.Trigger_OnTaskReturning(task, task.Titel, task.Description, task.Deadline, task.Prio, task.NextDeadlineIndex);
             Destroy(gameObject);
+
+
         }
 
       

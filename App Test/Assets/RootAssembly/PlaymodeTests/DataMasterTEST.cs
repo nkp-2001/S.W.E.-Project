@@ -15,7 +15,7 @@ public class DataMasterTEST
     GameObject gameObj2;
 
     GameObject saveObjSubject;
-    Datamaster dataMaster;
+    DataMaster dataMaster;
     Subject subj;
     NotificationSystem noti;
 
@@ -26,7 +26,7 @@ public class DataMasterTEST
         Subject.current = saveObjSubject.GetComponent<Subject>();
 
         gameObject = Resources.Load("Prefabs/Datamaster") as GameObject;
-        dataMaster = gameObject.GetComponent<Datamaster>();
+        dataMaster = gameObject.GetComponent<DataMaster>();
         dataMaster.Directoryname = "/testdir/";
         dataMaster.Filename = "testsave";
 
@@ -53,9 +53,9 @@ public class DataMasterTEST
     {
         yield return new WaitForEndOfFrame();
         int[] testValue = new int[]{54,14,1,7, 2022 };
-        System.DateTime testValueinDatetime = Datamaster.ConvertIntArrayToDatetime(testValue);
+        System.DateTime testValueinDatetime = DataMaster.ConvertIntArrayToDatetime(testValue);
 
-        CollectionAssert.AreEqual(testValue, Datamaster.ConvertDatetimeToIntArray(testValueinDatetime));
+        CollectionAssert.AreEqual(testValue, DataMaster.ConvertDatetimeToIntArray(testValueinDatetime));
         
     }
     [UnityTest]
@@ -63,10 +63,10 @@ public class DataMasterTEST
     {
         yield return new WaitForEndOfFrame();
         System.DateTime testValueDT = new System.DateTime(2022, 7, 1, 14, 54, 0);
-        int[] testValueDTinINTArr = Datamaster.ConvertDatetimeToIntArray(testValueDT);
+        int[] testValueDTinINTArr = DataMaster.ConvertDatetimeToIntArray(testValueDT);
 
         
-        Assert.AreEqual(testValueDT, Datamaster.ConvertIntArrayToDatetime(testValueDTinINTArr));
+        Assert.AreEqual(testValueDT, DataMaster.ConvertIntArrayToDatetime(testValueDTinINTArr));
 
 
     }

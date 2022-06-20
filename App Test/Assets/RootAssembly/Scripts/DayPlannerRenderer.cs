@@ -25,14 +25,14 @@ public class DayPlannerRenderer : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI selectedDayTextUI;
 
-    Datamaster datamaster;
+    DataMaster datamaster;
 
     bool showingToday = true;
 
 
     void Start()
     {
-        datamaster = FindObjectOfType<Datamaster>();
+        datamaster = FindObjectOfType<DataMaster>();
 
         rectTransform = GetComponent<RectTransform>();
 

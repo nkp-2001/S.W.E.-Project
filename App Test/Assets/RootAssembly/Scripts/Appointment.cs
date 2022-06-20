@@ -46,11 +46,11 @@ public class Appointment
 
     public DateTime StartTimeDT()
     {
-        return Datamaster.ConvertIntArrayToDatetime(startTime);
+        return DataMaster.ConvertIntArrayToDatetime(startTime);
     }
     public DateTime EndTimeDT()
     {
-        return Datamaster.ConvertIntArrayToDatetime(endTime);
+        return DataMaster.ConvertIntArrayToDatetime(endTime);
     }
 
     public bool AppointmentOnThisDay(DateTime selectDay)
