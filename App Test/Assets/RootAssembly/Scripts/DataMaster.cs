@@ -52,7 +52,7 @@ public class Datamaster : MonoBehaviour, IObserver
                
                 if (clientNotificationSystem != null) 
                 {
-                    int id = clientNotificationSystem.SendNewDeadlineNotifications(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+                    int id = clientNotificationSystem.SendNewDeadlineNotifications(t, ConvertIntArrayToDatetime(dt));
                     Task new_task = new Task(t, d, dt, p, id, repeatindex);
                     dataSave.AddNewToList(new_task);
                 }
@@ -62,13 +62,12 @@ public class Datamaster : MonoBehaviour, IObserver
                     Task new_task = new Task(t, d, dt, p);
                     dataSave.AddNewToList(new_task);
                 }
+                SaveList();
+                return;
            }
-        }
-        else
-        {
-            Task new_task = new Task(t, d, dt, p);
-            dataSave.AddNewToList(new_task);
-        }
+        }      
+        Task new_t = new Task(t, d, dt, p);
+        dataSave.AddNewToList(new_t);     
         SaveList();
     }
 
@@ -98,7 +97,7 @@ public class Datamaster : MonoBehaviour, IObserver
         {
             if (clientNotificationSystem != null) 
             {
-                int new_id = clientNotificationSystem.SendNewDeadlineNotifications(t, new DateTime(dt[4], dt[3], dt[2], dt[1], dt[0], 0));
+                int new_id = clientNotificationSystem.SendNewDeadlineNotifications(t, ConvertIntArrayToDatetime(dt));
                 dataSave.ChangeTask(oldtask, t, d, dt, p, new_id,rindex);
             }
             else
@@ -131,7 +130,7 @@ public class Datamaster : MonoBehaviour, IObserver
                 .ThenBy(t => t.Prio)
                 .ThenByDescending(t => {
                     if (t.DeadlineChannel_ID == 0) return 0;
-                    return new DateTimeOffset(new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0)).ToUnixTimeSeconds();
+                    return new DateTimeOffset(ConvertIntArrayToDatetime(t.Deadline)).ToUnixTimeSeconds();
                 })
                 .ToList();
         }
@@ -140,7 +139,7 @@ public class Datamaster : MonoBehaviour, IObserver
             return unsort.OrderBy(t => t.DeadlineChannel_ID)
                 .ThenByDescending(t => {
                     if (t.DeadlineChannel_ID == 0) return 0;
-                    return new DateTimeOffset(new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0)).ToUnixTimeSeconds();
+                    return new DateTimeOffset(ConvertIntArrayToDatetime(t.Deadline)).ToUnixTimeSeconds();
                 })
                 .ThenBy(t => t.Prio)
                 .ToList();
@@ -195,7 +194,7 @@ public class Datamaster : MonoBehaviour, IObserver
         {
             if (t.Deadline != null && t.Deadline.Length != 0)
             {
-                if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
+                if (System.DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
                 {
                     if (t.NextDeadlineIndex != 0)
                     {
@@ -215,11 +214,11 @@ public class Datamaster : MonoBehaviour, IObserver
         }
         foreach (Task t in (dataSave.GetWaitingList()).ToArray())
         {
-            if (System.DateTime.Now >= new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0))
+            if (System.DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
             {
                 dataSave.RemoveFromWaitList(t); 
                 t.Deadline = CaculuateNextDT(t.NextDeadlineIndex, t.Deadline);               
-                t.DeadlineChannel_ID = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, new DateTime(t.Deadline[4], t.Deadline[3], t.Deadline[2], t.Deadline[1], t.Deadline[0], 0));
+                t.DeadlineChannel_ID = clientNotificationSystem.SendNewDeadlineNotifications(t.Titel, ConvertIntArrayToDatetime(t.Deadline));
                 dataSave.AddNewToList(t);
                 Subject.current.Trigger_ExpiredDeadline();
             }
@@ -272,7 +271,7 @@ public class Datamaster : MonoBehaviour, IObserver
     }
     public int[] CaculuateNextDT(int nextDeadlineIndex, int[] currentDeadline) // nur public damit sie testbar ist
     {
-        DateTime dateTime = new DateTime(currentDeadline[4], currentDeadline[3], currentDeadline[2], currentDeadline[1], currentDeadline[0], 0);
+        DateTime dateTime = ConvertIntArrayToDatetime(currentDeadline);
         switch (nextDeadlineIndex)
         {
             case 1:
