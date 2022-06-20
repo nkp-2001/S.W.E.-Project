@@ -8,7 +8,7 @@ using TMPro;
 public class TimeDropdownField : MonoBehaviour
 {
     private TMP_Dropdown dropdown;
-    private Dictionary<string, int> indexOfOption = new Dictionary<string, int>();
+    private Dictionary<string, int> indexOfOption = new();
 
     public void Initialize()
     {
@@ -35,7 +35,6 @@ public class TimeDropdownField : MonoBehaviour
     {
         dropdown.SetValueWithoutNotify(indexOfOption[option]);
     }
-    
 
     public void SetInteractible(bool interactible)
     {

@@ -148,13 +148,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 31308570}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1703336501}
-  m_RootOrder: 4
+  m_Father: {fileID: 232055478}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -501,6 +501,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 91628942}
   m_CullTransparentMesh: 1
+--- !u!1 &232055477
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 232055478}
+  m_Layer: 0
+  m_Name: DaySelector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &232055478
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 232055477}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 31308571}
+  - {fileID: 2141592780}
+  - {fileID: 333237651}
+  m_Father: {fileID: 1703336501}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &283072758
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,7 +726,7 @@ GameObject:
   - component: {fileID: 333237653}
   - component: {fileID: 333237652}
   m_Layer: 0
-  m_Name: prev
+  m_Name: Previous
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -705,14 +739,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 333237650}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 904494489}
-  m_Father: {fileID: 1703336501}
-  m_RootOrder: 6
+  m_Father: {fileID: 232055478}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -846,7 +880,7 @@ RectTransform:
   m_Children:
   - {fileID: 1674336174}
   m_Father: {fileID: 1703336501}
-  m_RootOrder: 7
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -1719,7 +1753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4150155497142993193, guid: 61de572fd0ad4459d8741369805b1a67, type: 3}
       propertyPath: m_Name
-      value: Box
+      value: PopUpBox
       objectReference: {fileID: 0}
     - target: {fileID: 4150155497142993193, guid: 61de572fd0ad4459d8741369805b1a67, type: 3}
       propertyPath: m_Layer
@@ -2797,7 +2831,7 @@ GameObject:
   - component: {fileID: 810267586}
   - component: {fileID: 810267585}
   m_Layer: 0
-  m_Name: TagesP
+  m_Name: DayPlanner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2888,7 +2922,7 @@ GameObject:
   - component: {fileID: 883800785}
   - component: {fileID: 883800784}
   m_Layer: 0
-  m_Name: Image
+  m_Name: Header
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2905,7 +2939,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1494629401}
   m_Father: {fileID: 1703336501}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3582,7 +3617,7 @@ RectTransform:
   - {fileID: 1087552249}
   - {fileID: 1018511309}
   m_Father: {fileID: 1703336501}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -3811,7 +3846,7 @@ RectTransform:
   m_Children:
   - {fileID: 1227162987}
   m_Father: {fileID: 1703336501}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -4017,17 +4052,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1494629400}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1703336501}
-  m_RootOrder: 1
+  m_Father: {fileID: 883800783}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -672, y: 1499}
+  m_AnchoredPosition: {x: 105.196045, y: 1245.9352}
   m_SizeDelta: {x: 706.8983, y: 181.4181}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1494629402
@@ -4628,7 +4663,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1703336501}
   m_Layer: 0
-  m_Name: TagesPage
+  m_Name: DayPlannerPage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4647,12 +4682,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 883800783}
-  - {fileID: 1494629401}
   - {fileID: 1351270927}
   - {fileID: 1278883522}
-  - {fileID: 31308571}
-  - {fileID: 2141592780}
-  - {fileID: 333237651}
+  - {fileID: 232055478}
   - {fileID: 372747726}
   m_Father: {fileID: 575267186}
   m_RootOrder: 1
@@ -5491,7 +5523,7 @@ GameObject:
   - component: {fileID: 2037628295}
   - component: {fileID: 2037628294}
   m_Layer: 0
-  m_Name: Todo
+  m_Name: TodoList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5689,14 +5721,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2141592779}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1783278703}
-  m_Father: {fileID: 1703336501}
-  m_RootOrder: 5
+  m_Father: {fileID: 232055478}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

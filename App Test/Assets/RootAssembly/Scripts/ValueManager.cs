@@ -18,7 +18,7 @@ public class ValueManager : MonoBehaviour
 
     public static Task taskOnEdit = null; 
 
-    public static bool tastReturninEdit = false;
+    public static bool taskReturnInEdit = false;
 
     [SerializeField] protected TextMeshProUGUI HeadTitle;
     [SerializeField] protected TextMeshProUGUI ButtonText;
@@ -99,19 +99,19 @@ public class ValueManager : MonoBehaviour
         }
         else
         {
-            if (!tastReturninEdit)
+            if (!taskReturnInEdit)
             {
                 Subject.current.TriggerOnTaskChange(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
             }
             else
             {
                 Subject.current.Trigger_OnTaskReturning(taskOnEdit, titel.text, discrip.text, dt, prio.value, repeatIndex);
-                tastReturninEdit = false;
+                taskReturnInEdit = false;
             }
 
             StopFromEditMode(); 
         }
-        sceneLoader.LoadScene(0);
+        SceneLoader.Load("NewToDoList");
     }
 
     public void StartEditMode(Task oldtask) 
@@ -129,7 +129,7 @@ public class ValueManager : MonoBehaviour
             datePicker.SetSelectedDate(oldtask.Deadline);
         }
 
-        if (!tastReturninEdit)
+        if (!taskReturnInEdit)
         {
             HeadTitle.text = "Edit Task";
             ButtonText.text = "Save Changes";
@@ -159,7 +159,7 @@ public class ValueManager : MonoBehaviour
             datePicker.SetSelectedDate(taskOnEdit.Deadline);
         }
 
-        if (!tastReturninEdit)
+        if (!taskReturnInEdit)
         {
             HeadTitle.text = "Edit Task";
             ButtonText.text = "Save Changes";
@@ -173,7 +173,7 @@ public class ValueManager : MonoBehaviour
     private void StopFromEditMode()
     {
         ValueManager.taskOnEdit = null;
-        tastReturninEdit = false;
+        taskReturnInEdit = false;
         HeadTitle.text = "Create new Task";
         ButtonText.text = "Add Task";
     }

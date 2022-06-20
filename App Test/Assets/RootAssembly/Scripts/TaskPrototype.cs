@@ -170,7 +170,7 @@ public class TaskPrototype : MonoBehaviour
     public void GoIntoTaskReturningEdit()
     {
         ValueManager.taskOnEdit = task;
-        ValueManager.tastReturninEdit = true;
+        ValueManager.taskReturnInEdit = true;
         SceneManager.LoadScene(1);
     }
     public void ButtonReaction()

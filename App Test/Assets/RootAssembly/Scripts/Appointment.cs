@@ -48,6 +48,7 @@ public class Appointment
     {
         return DataMaster.ConvertIntArrayToDatetime(startTime);
     }
+
     public DateTime EndTimeDT()
     {
         return DataMaster.ConvertIntArrayToDatetime(endTime);
@@ -92,6 +93,7 @@ public class Appointment
     {
         return this == obj;
     }
+
     public bool Equals(Appointment appos)
     {
         return appos.Title == title && appos.Description == description

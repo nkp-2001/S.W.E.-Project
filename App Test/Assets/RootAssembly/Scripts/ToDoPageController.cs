@@ -32,8 +32,6 @@ public class ToDoPageController : MonoBehaviour,IObserver
             
             ClearScrollView();
 
-            Debug.Log("taskmaster null: " + (taskmaster == null));
-            Debug.Log("dropdown null: " + (sortByDropdown == null));
             List<Task> tasks = taskmaster.GetSortedTasks(sortByDropdown.value);
 
             if (tasks is not null)
