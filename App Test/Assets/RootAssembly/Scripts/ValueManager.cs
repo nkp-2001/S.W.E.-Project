@@ -46,7 +46,7 @@ public class ValueManager : MonoBehaviour
 
         DateTime dtraw = datePicker.GetSelectedDate();
 
-        if (dtraw < DateTime.Now)
+        if (dtraw < DateTime.Now && dltoggle.isOn)
         {
             Subject.current.TriggerOnDateInPast();
             return;
