@@ -17,11 +17,15 @@ public class ValueManager : MonoBehaviour
     protected SceneLoader sceneLoader;
 
     public static Task taskOnEdit = null; 
+
     public static bool tastReturninEdit = false;
 
     [SerializeField] protected TextMeshProUGUI HeadTitle;
     [SerializeField] protected TextMeshProUGUI ButtonText;
     [SerializeField] protected TMP_Dropdown repeatDropDown;
+
+    [SerializeField] TextMeshProUGUI PrioText;
+    [SerializeField] GameObject PrioFill;
 
     void Start()
     {
@@ -34,11 +38,36 @@ public class ValueManager : MonoBehaviour
         {
             StartEditMode();
         }
+
+        prio.onValueChanged.AddListener((value) =>
+        {
+            PrioText.text = value.ToString("0");
+
+            if (value == 1)
+            {
+                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 102);
+            }
+            else if (value == 2)
+            {
+                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 154);
+            }
+            else if (value == 3)
+            {
+                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 192);
+            }
+            else if (value == 4)
+            {
+                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 221);
+            }
+            else if (value == 5)
+            {
+                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 255);
+            }
+        });
     }
 
     public void CreateTaskAndValidate()
     {
-       
         if ((titel.text == ""))
         {
             return;
@@ -63,7 +92,7 @@ public class ValueManager : MonoBehaviour
         {
             dt = null;
         }
-      
+
         if (taskOnEdit == null)
         {
             Subject.current.Trigger_OnNewTask(titel.text, discrip.text, dt, prio.value, repeatIndex);
@@ -87,8 +116,6 @@ public class ValueManager : MonoBehaviour
 
     public void StartEditMode(Task oldtask) 
     {
-
-
         taskOnEdit = oldtask;
         titel.text = oldtask.Titel;
         discrip.text = oldtask.Description;
@@ -113,11 +140,10 @@ public class ValueManager : MonoBehaviour
             ButtonText.text = "Reinstiate Task";
         }
 
-
     }
+
     public void StartEditMode() 
     {
-
         titel.text = taskOnEdit.Titel;
         discrip.text = taskOnEdit.Description;
         prio.value = taskOnEdit.Prio;
@@ -152,3 +178,8 @@ public class ValueManager : MonoBehaviour
         ButtonText.text = "Add Task";
     }
 }
+
+
+
+
+
