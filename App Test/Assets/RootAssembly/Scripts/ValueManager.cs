@@ -25,7 +25,7 @@ public class ValueManager : MonoBehaviour
     [SerializeField] protected TMP_Dropdown repeatDropDown;
 
     [SerializeField] TextMeshProUGUI PrioText;
-    [SerializeField] GameObject PrioFill;
+    [SerializeField] Image PrioFill;
 
     void Start()
     {
@@ -45,23 +45,23 @@ public class ValueManager : MonoBehaviour
 
             if (value == 1)
             {
-                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 102);
+                PrioFill.color = new Color32(94, 8, 0, 102);
             }
             else if (value == 2)
             {
-                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 154);
+                PrioFill.color = new Color32(94, 8, 0, 154);
             }
             else if (value == 3)
             {
-                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 192);
+                PrioFill.color = new Color32(94, 8, 0, 192);
             }
             else if (value == 4)
             {
-                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 221);
+                PrioFill.color = new Color32(94, 8, 0, 221);
             }
             else if (value == 5)
             {
-                PrioFill.GetComponent<Image>().color = new Color32(94, 8, 0, 255);
+                PrioFill.color = new Color32(94, 8, 0, 255);
             }
         });
     }
