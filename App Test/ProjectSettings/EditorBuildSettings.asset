@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/NewToDoList.unity
+    path: Assets/Scenes/MainPage.unity
     guid: 423c21db923512840a5ee466773a1613
   - enabled: 1
-    path: Assets/Scenes/createTask 1.unity
+    path: Assets/Scenes/CreateTaskPage.unity
     guid: d5534cb604339b14ea67381e0d6b673e
   - enabled: 1
-    path: Assets/Scenes/createAppointment.unity
+    path: Assets/Scenes/CreateAppointmentPage.unity
     guid: d8c8290c37a57514182dcab65c52bdda
   m_configObjects: {}

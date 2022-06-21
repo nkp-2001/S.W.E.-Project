@@ -76,6 +76,6 @@ public class DayPlannerEntry : MonoBehaviour
     public void OnClick()
     {
         AppointmentValueManager.underlyingAppointment = underlyingAppointment;
-        SceneLoader.Load("createAppointment");
+        SceneLoader.Load(SceneLoader.Scene.CreateAppointmentPage);
     }
 }

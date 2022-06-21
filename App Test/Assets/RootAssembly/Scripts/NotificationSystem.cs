@@ -77,7 +77,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         var notification = new AndroidNotification(
             "To-Do-List Alert", 
             "There are Task on your to-Do List",  
-            System.DateTime.Now.AddDays(1),
+            DateTime.Now.AddDays(1),
             new System.TimeSpan(1, 0, 0, 0)); // 1 Tag Repeat
 
         notification.ShowTimestamp = true;
@@ -101,10 +101,9 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         channelDealineNew.EnableVibration = true;
         AndroidNotificationCenter.RegisterNotificationChannel(channelDealineNew);
         /////////////////////////////////////////////////////////////////////////
-        int dayleft = (expireTime - System.DateTime.Now).Days;
+        int dayleft = (expireTime - DateTime.Now).Days;
         List<int> Notifi_ID = new List<int>();
         List<AndroidNotification> allNotifi = new List<AndroidNotification>();
-        print(dayleft);
 
         if (dayleft >= 7)
         {
@@ -115,9 +114,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
             }
             for (int i = weeks; i >= 1; i--)
             {
-                DateTime DT = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, System.DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
-
-
+                DateTime DT = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
 
                 var notificationDeadlines = new AndroidNotification(
                 "Deadline Alert:" + titel,
@@ -140,9 +137,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
 
         for (int i = singleDays; i >= 1; i--)
         {
-            print(i);
-
-            DateTime DT = new DateTime(System.DateTime.Now.Year, System.DateTime.Now.Month, System.DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
+            DateTime DT = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
 
             var notificationDeadlines = new AndroidNotification(
               "Deadline Alert:" + titel,
@@ -171,7 +166,6 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         List<int> t = new List<int>();
         foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
         {
-            print(x.Id);
             try
             {
 

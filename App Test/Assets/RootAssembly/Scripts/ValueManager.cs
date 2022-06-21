@@ -24,14 +24,10 @@ public class ValueManager : MonoBehaviour
     private TMP_InputField title;
     private TMP_InputField description;
 
-    private SceneLoader sceneLoader;
-
     void Start()
     {
         title = transform.GetChild(0).GetComponent<TMP_InputField>();
         description = transform.GetChild(1).GetComponent<TMP_InputField>();
-
-        sceneLoader = FindObjectOfType<SceneLoader>();
 
         if (taskOnEdit != null) 
         {
@@ -110,7 +106,7 @@ public class ValueManager : MonoBehaviour
 
             StopFromEditMode(); 
         }
-        SceneLoader.Load("NewToDoList");
+        SceneLoader.Load(SceneLoader.Scene.MainPage);
     }
 
     public void StartEditMode(Task oldtask) 
@@ -138,7 +134,6 @@ public class ValueManager : MonoBehaviour
             HeadTitle.text = "Please give New Deadline";
             ButtonText.text = "Reinstiate Task";
         }
-
     }
 
     public void StartEditMode() 
@@ -177,8 +172,3 @@ public class ValueManager : MonoBehaviour
         ButtonText.text = "Add Task";
     }
 }
-
-
-
-
-

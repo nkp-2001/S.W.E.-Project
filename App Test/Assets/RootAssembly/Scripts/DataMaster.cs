@@ -190,7 +190,7 @@ public class DataMaster : MonoBehaviour, IObserver
         }
         else
         {
-            print("Keine Datei vorhanden");
+            print("No file found");
         }
     }
     public void CheckDeadlinesTask()
@@ -219,7 +219,7 @@ public class DataMaster : MonoBehaviour, IObserver
 
         foreach (Task t in (dataSave.GetWaitingList()).ToArray())
         {
-            if (System.DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
+            if (DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
             {
                 dataSave.RemoveFromWaitList(t); 
                 t.Deadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);               
@@ -350,13 +350,11 @@ public class DataMaster : MonoBehaviour, IObserver
         while (doublefound)
         {
             doublefound = false;
-            print("Round" + repeating);
+
             foreach (Appointment appo in dataSave.GetAppointmentList())
             {
                 if (checkedtitel == appo.Title)
                 {
-                    print("double");
-
                     repeating++;
                     checkedtitel = titel + "(" + repeating + ")";
                     doublefound = true;

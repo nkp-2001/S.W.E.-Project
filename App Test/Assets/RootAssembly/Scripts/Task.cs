@@ -70,8 +70,6 @@ using System.Linq;
 
     public bool Equals(Task obj)
     {
-        Debug.Log("ChannelID:" + obj.DeadlineChannelId + " ," + deadlineChannelId);
-
         return obj.Title == Title && obj.Description == description 
             && obj.Priority == priority & Enumerable.SequenceEqual(obj.deadline, deadline) 
             && obj.DeadlineChannelId == deadlineChannelId;

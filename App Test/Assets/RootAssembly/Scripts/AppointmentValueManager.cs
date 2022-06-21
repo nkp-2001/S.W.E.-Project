@@ -63,7 +63,7 @@ public class AppointmentValueManager : MonoBehaviour
             StopFromEditMode();
         }
 
-        SceneLoader.Load("NewToDoList");
+        SceneLoader.Load(SceneLoader.Scene.MainPage);
     }
 
     public void DeleteAppointment()
