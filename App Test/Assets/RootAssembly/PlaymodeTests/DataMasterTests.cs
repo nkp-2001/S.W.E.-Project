@@ -16,14 +16,12 @@ public class DataMasterTests
 
     GameObject saveObjSubject;
     DataMaster dataMaster;
-    Subject subj;
     NotificationSystem noti;
 
     [SetUp]
     public void BeforeEveryTest()
     {
         saveObjSubject = Resources.Load("Prefabs/Subject[EventOperator]") as GameObject;
-        Subject.current = saveObjSubject.GetComponent<Subject>();
 
         gameObject = Resources.Load("Prefabs/Datamaster") as GameObject;
         dataMaster = gameObject.GetComponent<DataMaster>();

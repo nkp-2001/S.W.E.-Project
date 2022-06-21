@@ -329,25 +329,21 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
     }
     public void SubscribeToEvents_Start()
     {
-        Subject.current.OnTaskSetDone += CancelNotifications;
-        Subject.current.OnNewTask += NotficationStatusReaction;
-        Subject.current.OnTaskReturning += NotficationStatusReaction;
-        Subject.current.OnTaskChange += CancelDeadlineNotifications;     
+        Subject.OnTaskSetDone += CancelNotifications;
+        Subject.OnNewTask += NotficationStatusReaction;
+        Subject.OnTaskReturning += NotficationStatusReaction;
+        Subject.OnTaskChange += CancelDeadlineNotifications;     
     }
 
     public void UnsubscribeToAllEvents()
     {
-        Subject.current.OnTaskSetDone -= CancelNotifications;
-        Subject.current.OnNewTask -= NotficationStatusReaction;
-        Subject.current.OnTaskChange -= CancelDeadlineNotifications;
-        Subject.current.OnTaskReturning -= NotficationStatusReaction;
+        Subject.OnTaskSetDone -= CancelNotifications;
+        Subject.OnNewTask -= NotficationStatusReaction;
+        Subject.OnTaskChange -= CancelDeadlineNotifications;
+        Subject.OnTaskReturning -= NotficationStatusReaction;
     }
     private void OnDisable()
     {
         UnsubscribeToAllEvents();
-     
-
     }
-
-   
 }

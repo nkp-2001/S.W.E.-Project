@@ -13,7 +13,6 @@ public class TimeDropdownField : MonoBehaviour
     public void Initialize()
     {
         dropdown = GetComponent<TMP_Dropdown>();
-
     }
 
     public void SetOptions(List<string> options)

@@ -107,24 +107,24 @@ public class PopUpMessage : MonoBehaviour,IObserver
 
     public void SubscribeToEvents_Start()
     {
-        Subject.current.OnNewTask += ShowBoxNewTask;
-        Subject.current.OnTaskChange += ShowBoxTaskChange;
-        Subject.current.OnTaskSetDone += ShowBoxTaskDone;
-        Subject.current.OnTaskReturning += ShowBoxTaskReturn;
-        Subject.current.OnExpiredDealine += ShowBoxTaskExpired;
+        Subject.OnNewTask += ShowBoxNewTask;
+        Subject.OnTaskChange += ShowBoxTaskChange;
+        Subject.OnTaskSetDone += ShowBoxTaskDone;
+        Subject.OnTaskReturning += ShowBoxTaskReturn;
+        Subject.OnExpiredDealine += ShowBoxTaskExpired;
 
-        Subject.current.OnDateInPast += ShowDateInPastMessage;
+        Subject.OnDateInPast += ShowDateInPastMessage;
     }
 
     public void UnsubscribeToAllEvents()
     {
-        Subject.current.OnNewTask -= ShowBoxNewTask;
-        Subject.current.OnTaskChange -= ShowBoxTaskChange;
-        Subject.current.OnTaskSetDone -= ShowBoxTaskDone;
-        Subject.current.OnTaskReturning -= ShowBoxTaskReturn;
-        Subject.current.OnExpiredDealine -= ShowBoxTaskExpired;
+        Subject.OnNewTask -= ShowBoxNewTask;
+        Subject.OnTaskChange -= ShowBoxTaskChange;
+        Subject.OnTaskSetDone -= ShowBoxTaskDone;
+        Subject.OnTaskReturning -= ShowBoxTaskReturn;
+        Subject.OnExpiredDealine -= ShowBoxTaskExpired;
 
-        Subject.current.OnDateInPast -= ShowDateInPastMessage;
+        Subject.OnDateInPast -= ShowDateInPastMessage;
     }
 
     private void OnDestroy()

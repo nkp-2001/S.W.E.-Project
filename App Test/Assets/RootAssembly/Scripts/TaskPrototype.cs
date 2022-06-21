@@ -102,7 +102,7 @@ public class TaskPrototype : MonoBehaviour
             transform.parent.GetChild(index).GetComponent<TaskPrototype>().HideDescription();
         }
 
-        Subject.current.Trigger_TaskSetDone(task);
+        Subject.Trigger_TaskSetDone(task);
       
         Destroy(gameObject);
     }
@@ -191,7 +191,7 @@ public class TaskPrototype : MonoBehaviour
                 {
                     if ((DataMaster.ConvertIntArrayToDatetime(task.Deadline) > DateTime.Now))
                     {
-                        Subject.current.Trigger_OnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
+                        Subject.Trigger_OnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
                     }
                     else
                     {
@@ -202,7 +202,7 @@ public class TaskPrototype : MonoBehaviour
                 }        
             }
 
-            Subject.current.Trigger_OnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
+            Subject.Trigger_OnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
         }
     }
 }

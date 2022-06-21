@@ -46,7 +46,7 @@ public class AppointmentValueManager : MonoBehaviour
 
         if (endTime < DateTime.Now)
         {
-            Subject.current.TriggerOnDateInPast();
+            Subject.TriggerOnDateInPast();
             return;
         }
 
@@ -55,11 +55,11 @@ public class AppointmentValueManager : MonoBehaviour
 
         if (underlyingAppointment == null)
         {
-            Subject.current.TriggerOnNewAppointment(title.text, description.text, start, end, repeatDropDown.GetDays(), 0, new int[] { 0 });
+            Subject.TriggerOnNewAppointment(title.text, description.text, start, end, repeatDropDown.GetDays(), 0, new int[] { 0 });
         }
         else
         {
-            Subject.current.TriggerOnAppointmentChange(underlyingAppointment, title.text, description.text, start, end, repeatDropDown.GetDays(), 0, new int[] { 0 });
+            Subject.TriggerOnAppointmentChange(underlyingAppointment, title.text, description.text, start, end, repeatDropDown.GetDays(), 0, new int[] { 0 });
             StopFromEditMode();
         }
 
@@ -68,7 +68,7 @@ public class AppointmentValueManager : MonoBehaviour
 
     public void DeleteAppointment()
     {
-        Subject.current.TriggerOnDeleteAppointment(underlyingAppointment);
+        Subject.TriggerOnDeleteAppointment(underlyingAppointment);
     }
 
     public void StartEditMode()

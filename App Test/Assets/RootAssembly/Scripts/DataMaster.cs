@@ -204,7 +204,7 @@ public class DataMaster : MonoBehaviour, IObserver
                     if (t.NextDeadlineIndex != 0)
                     {
                          int[] NextDeadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);
-                         int NextDeadlineNotifId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDatetime(NextDeadline)); // ex: Subject.current.Trigger_Request_NotiID
+                         int NextDeadlineNotifId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDatetime(NextDeadline)); // ex: Subject.Trigger_Request_NotiID
                          dataSave.ChangeTaskCauseRepeat(t, NextDeadline,NextDeadlineNotifId) ;
                          SaveList();
                     }
@@ -212,7 +212,7 @@ public class DataMaster : MonoBehaviour, IObserver
                     {
                         RemoveTask(t);
                     }
-                    Subject.current.Trigger_ExpiredDeadline();
+                    Subject.Trigger_ExpiredDeadline();
                 }
             }
         }
@@ -225,7 +225,7 @@ public class DataMaster : MonoBehaviour, IObserver
                 t.Deadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);               
                 t.DeadlineChannelId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDatetime(t.Deadline));
                 dataSave.AddNewToList(t);
-                Subject.current.Trigger_ExpiredDeadline();
+                Subject.Trigger_ExpiredDeadline();
             }
         }
     }
@@ -392,26 +392,26 @@ public class DataMaster : MonoBehaviour, IObserver
 
     public void SubscribeToEvents_Start()
     {
-        Subject.current.OnTaskSetDone += RemoveTask;
-        Subject.current.OnNewTask += CreateNewTask;
-        Subject.current.OnTaskChange += ChangeTask;
-        Subject.current.OnTaskReturning += ManageTaskReturn;
+        Subject.OnTaskSetDone += RemoveTask;
+        Subject.OnNewTask += CreateNewTask;
+        Subject.OnTaskChange += ChangeTask;
+        Subject.OnTaskReturning += ManageTaskReturn;
 
-        Subject.current.OnNewAppointment += CreateNewAppointment;
-        Subject.current.OnAppointmentChange += ChangeAppointment;
-        Subject.current.OnDeleteAppointment += DeleteAppoitment;
+        Subject.OnNewAppointment += CreateNewAppointment;
+        Subject.OnAppointmentChange += ChangeAppointment;
+        Subject.OnDeleteAppointment += DeleteAppoitment;
     }
 
     public void UnsubscribeToAllEvents()
     {
-        Subject.current.OnTaskSetDone -= RemoveTask;
-        Subject.current.OnNewTask -= CreateNewTask;
-        Subject.current.OnTaskChange -= ChangeTask;
-        Subject.current.OnTaskReturning -= ManageTaskReturn;
+        Subject.OnTaskSetDone -= RemoveTask;
+        Subject.OnNewTask -= CreateNewTask;
+        Subject.OnTaskChange -= ChangeTask;
+        Subject.OnTaskReturning -= ManageTaskReturn;
 
-        Subject.current.OnNewAppointment -= CreateNewAppointment;
-        Subject.current.OnAppointmentChange -= ChangeAppointment;
-        Subject.current.OnDeleteAppointment -= DeleteAppoitment;
+        Subject.OnNewAppointment -= CreateNewAppointment;
+        Subject.OnAppointmentChange -= ChangeAppointment;
+        Subject.OnDeleteAppointment -= DeleteAppoitment;
     }
     
     private void OnDestroy()

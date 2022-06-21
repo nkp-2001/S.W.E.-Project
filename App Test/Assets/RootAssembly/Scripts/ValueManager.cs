@@ -72,7 +72,7 @@ public class ValueManager : MonoBehaviour
 
         if (dtraw < DateTime.Now && deadlineToggle.isOn)
         {
-            Subject.current.TriggerOnDateInPast();
+            Subject.TriggerOnDateInPast();
             return;
         }
 
@@ -90,17 +90,17 @@ public class ValueManager : MonoBehaviour
 
         if (taskOnEdit == null)
         {
-            Subject.current.Trigger_OnNewTask(title.text, description.text, dt, priority.value, repeatIndex);
+            Subject.Trigger_OnNewTask(title.text, description.text, dt, priority.value, repeatIndex);
         }
         else
         {
             if (!taskReturnInEdit)
             {
-                Subject.current.TriggerOnTaskChange(taskOnEdit, title.text, description.text, dt, priority.value, repeatIndex);
+                Subject.TriggerOnTaskChange(taskOnEdit, title.text, description.text, dt, priority.value, repeatIndex);
             }
             else
             {
-                Subject.current.Trigger_OnTaskReturning(taskOnEdit, title.text, description.text, dt, priority.value, repeatIndex);
+                Subject.Trigger_OnTaskReturning(taskOnEdit, title.text, description.text, dt, priority.value, repeatIndex);
                 taskReturnInEdit = false;
             }
 
