@@ -43,7 +43,7 @@ public class TaskPrototype : MonoBehaviour
         // Bei Repeat 
         if (t.NextDeadlineIndex != 0 & ( t.FailedTimes + t.SuccessfulTimes) > 0)
         {
-            dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priotät: " + t.Priority + "      ||Sucess:" +t.SuccessfulTimes +"|Failed:"+ t.FailedTimes + "|| \n Discirption: " + t.Description;
+            dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priority: " + t.Priority + "      ||Success:" +t.SuccessfulTimes +"|Failed:"+ t.FailedTimes + "|| \n Description: " + t.Description;
             if (!t.FailedPrevious)
             {
                 ChangeColorBanner(new Color32(0, 90, 0, 255), new Color32(0, 50, 0, 255));
@@ -55,7 +55,7 @@ public class TaskPrototype : MonoBehaviour
         }
         else
         {
-            dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priotät: " + t.Priority + "\n Discirption: " + t.Description;
+            dircTobj.GetComponentInChildren<TextMeshProUGUI>().text = "Priority: " + t.Priority + "\n Description: " + t.Description;
         }
     }
 

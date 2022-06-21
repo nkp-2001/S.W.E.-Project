@@ -4682,7 +4682,7 @@ GameObject:
   - component: {fileID: 1647704963}
   - component: {fileID: 1647704962}
   m_Layer: 0
-  m_Name: Tasksmaster
+  m_Name: DataMaster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

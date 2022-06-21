@@ -109,33 +109,6 @@ public class ValueManager : MonoBehaviour
         SceneLoader.Load(SceneLoader.Scene.MainPage);
     }
 
-    public void StartEditMode(Task oldtask) 
-    {
-        taskOnEdit = oldtask;
-        title.text = oldtask.Title;
-        description.text = oldtask.Description;
-        priority.value = oldtask.Priority;
-        if (oldtask.Deadline != null)
-        {
-            datePicker.OnInteractibleChanged(true);
-        }
-        else
-        {
-            datePicker.SetSelectedDate(oldtask.Deadline);
-        }
-
-        if (!taskReturnInEdit)
-        {
-            HeadTitle.text = "Edit Task";
-            ButtonText.text = "Save Changes";
-        }
-        else
-        {
-            HeadTitle.text = "Please give New Deadline";
-            ButtonText.text = "Reinstiate Task";
-        }
-    }
-
     public void StartEditMode() 
     {
         title.text = taskOnEdit.Title;
@@ -164,9 +137,10 @@ public class ValueManager : MonoBehaviour
             ButtonText.text = "Reinstiate Task";
         }
     }
+
     private void StopFromEditMode()
     {
-        ValueManager.taskOnEdit = null;
+        taskOnEdit = null;
         taskReturnInEdit = false;
         HeadTitle.text = "Create new Task";
         ButtonText.text = "Add Task";
