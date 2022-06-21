@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IObserver 
 {
-    public void SubscribeToEvents_Start();
+    public void SubscribeToEvents();
     public void UnsubscribeToAllEvents(); // Wenn sie gelöscht werden müssen sie sich wieder "abmelden" 
 }
 

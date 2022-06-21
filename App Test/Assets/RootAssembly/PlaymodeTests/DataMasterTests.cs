@@ -21,8 +21,6 @@ public class DataMasterTests
     [SetUp]
     public void BeforeEveryTest()
     {
-        saveObjSubject = Resources.Load("Prefabs/Subject[EventOperator]") as GameObject;
-
         gameObject = Resources.Load("Prefabs/Datamaster") as GameObject;
         dataMaster = gameObject.GetComponent<DataMaster>();
         dataMaster.Directoryname = "/testdir/";

@@ -92,7 +92,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
     void Start()
     {     
-        SubscribeToEvents_Start();
+        SubscribeToEvents();
         FetchTasks();
         StartCoroutine(FetchUpdate());
     }
@@ -112,7 +112,7 @@ public class ToDoPageController : MonoBehaviour,IObserver
         }
     }
 
-    public void SubscribeToEvents_Start()
+    public void SubscribeToEvents()
     {
         Subject.OnExpiredDealine += FetchTasks;
         Subject.OnTaskReturning += FetchTasks;

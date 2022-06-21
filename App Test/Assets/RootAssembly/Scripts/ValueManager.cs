@@ -100,7 +100,7 @@ public class ValueManager : MonoBehaviour
             }
             else
             {
-                Subject.Trigger_OnTaskReturning(taskOnEdit, title.text, description.text, dt, priority.value, repeatIndex);
+                Subject.TriggerOnTaskReturning(taskOnEdit, title.text, description.text, dt, priority.value, repeatIndex);
                 taskReturnInEdit = false;
             }
 

@@ -165,14 +165,14 @@ public class TaskPrototype : MonoBehaviour
     public void GoIntoTaskEdit()
     {
         ValueManager.taskOnEdit = task;
-        SceneManager.LoadScene(1);
+        SceneLoader.Load(SceneLoader.Scene.CreateTaskPage);
     }
 
     public void GoIntoTaskReturningEdit()
     {
         ValueManager.taskOnEdit = task;
         ValueManager.taskReturnInEdit = true;
-        SceneManager.LoadScene(1);
+        SceneLoader.Load(SceneLoader.Scene.CreateTaskPage);
     }
     public void ButtonReaction()
     {
@@ -191,7 +191,7 @@ public class TaskPrototype : MonoBehaviour
                 {
                     if ((DataMaster.ConvertIntArrayToDatetime(task.Deadline) > DateTime.Now))
                     {
-                        Subject.Trigger_OnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
+                        Subject.TriggerOnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
                     }
                     else
                     {
@@ -202,7 +202,7 @@ public class TaskPrototype : MonoBehaviour
                 }        
             }
 
-            Subject.Trigger_OnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
+            Subject.TriggerOnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
         }
     }
 }

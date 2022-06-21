@@ -24,7 +24,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
        
     void Start() 
     {
-        SubscribeToEvents_Start();
+        SubscribeToEvents();
 
         taskmaster = FindObjectOfType<DataMaster>();
         taskmaster.SetNotificatioSystem(this);
@@ -327,7 +327,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         }
 
     }
-    public void SubscribeToEvents_Start()
+    public void SubscribeToEvents()
     {
         Subject.OnTaskSetDone += CancelNotifications;
         Subject.OnNewTask += NotficationStatusReaction;

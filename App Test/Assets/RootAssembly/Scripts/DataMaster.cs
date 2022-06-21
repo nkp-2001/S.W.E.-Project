@@ -35,7 +35,7 @@ public class DataMaster : MonoBehaviour, IObserver
     private void Start()
     {
         CheckDeadlinesTask();
-        SubscribeToEvents_Start();
+        SubscribeToEvents();
     }
 
     private void OnApplicationFocus(bool focus) 
@@ -390,7 +390,7 @@ public class DataMaster : MonoBehaviour, IObserver
 
     /// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void SubscribeToEvents_Start()
+    public void SubscribeToEvents()
     {
         Subject.OnTaskSetDone += RemoveTask;
         Subject.OnNewTask += CreateNewTask;

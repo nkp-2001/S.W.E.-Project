@@ -24,7 +24,7 @@ public class PopUpMessage : MonoBehaviour,IObserver
         }
 
         DontDestroyOnLoad(this.gameObject);
-        SubscribeToEvents_Start();
+        SubscribeToEvents();
     }
 
     public void ShowBoxNewTask(string t, string d, int[] dt, float prio, int repeatindex)
@@ -105,7 +105,7 @@ public class PopUpMessage : MonoBehaviour,IObserver
         }
     }
 
-    public void SubscribeToEvents_Start()
+    public void SubscribeToEvents()
     {
         Subject.OnNewTask += ShowBoxNewTask;
         Subject.OnTaskChange += ShowBoxTaskChange;

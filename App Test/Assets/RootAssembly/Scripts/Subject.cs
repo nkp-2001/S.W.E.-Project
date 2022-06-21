@@ -20,8 +20,8 @@ public static class Subject
     public static event Action<Task, string, string, int[], float, int> OnTaskChange;
     public static void TriggerOnTaskChange(Task oldtask, string t, string d, int[] dt, float p, int repeatIndex) { if (OnTaskChange != null) { OnTaskChange(oldtask, t, d, dt, p, repeatIndex); } }
 
-    public static event Action<Task, string, string, int[], float, int> OnTaskReturning; // 
-    public static void Trigger_OnTaskReturning(Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrioint, int repeatIndex)
+    public static event Action<Task, string, string, int[], float, int> OnTaskReturning;
+    public static void TriggerOnTaskReturning(Task oldtask, string potNewname, string potNewDiscp, int[] potNewDt, float potNewPrioint, int repeatIndex)
     { if (OnTaskReturning != null) { OnTaskReturning(oldtask, potNewname, potNewDiscp, potNewDt, potNewPrioint, repeatIndex); } }
 
     public static event Action<string, string, int[], int[], int, int, int[]> OnNewAppointment;
