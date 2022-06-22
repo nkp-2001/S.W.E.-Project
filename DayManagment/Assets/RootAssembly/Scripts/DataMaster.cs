@@ -34,6 +34,8 @@ public class DataMaster : MonoBehaviour, IObserver
 
     private void Start()
     {
+       
+
         CheckDeadlinesTask();
         SubscribeToEvents();
         StartCoroutine(TimeUpdate());
