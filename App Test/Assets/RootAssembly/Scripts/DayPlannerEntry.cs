@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class DayPlannerEntry : MonoBehaviour
 {
     [SerializeField] private string title;
-    [SerializeField] private string Description;
 
     [SerializeField] private TextMeshProUGUI titleTMP;
 

@@ -82,7 +82,6 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
 
         notification.ShowTimestamp = true;
         AndroidNotificationCenter.SendNotificationWithExplicitID(notification, "Channel-To-Do-List", 1000);
-
     }
 
 
@@ -102,8 +101,6 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         AndroidNotificationCenter.RegisterNotificationChannel(channelDealineNew);
         /////////////////////////////////////////////////////////////////////////
         int dayleft = (expireTime - DateTime.Now).Days;
-        List<int> Notifi_ID = new List<int>();
-        List<AndroidNotification> allNotifi = new List<AndroidNotification>();
 
         if (dayleft >= 7)
         {
@@ -114,7 +111,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
             }
             for (int i = weeks; i >= 1; i--)
             {
-                DateTime DT = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
+                DateTime DT = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
 
                 var notificationDeadlines = new AndroidNotification(
                 "Deadline Alert:" + titel,
@@ -137,7 +134,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
 
         for (int i = singleDays; i >= 1; i--)
         {
-            DateTime DT = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
+            DateTime DT = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, expireTime.Hour, expireTime.Minute, 0);
 
             var notificationDeadlines = new AndroidNotification(
               "Deadline Alert:" + titel,
@@ -163,7 +160,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
     private int GetFreeNotiChannelId()
     {
         int id = 1;
-        List<int> t = new List<int>();
+        List<int> t = new();
         foreach (AndroidNotificationChannel x in AndroidNotificationCenter.GetNotificationChannels())
         {
             try
@@ -207,7 +204,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         {
             AndroidNotificationCenter.DeleteNotificationChannel("TaskDeadline" + id);
         }
-        if (taskmaster.GetTaskListLenght() == 0) 
+        if (taskmaster.GetTaskListLength() == 0) 
         {
          
             NotficationStatusReaction(true);
@@ -218,7 +215,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
 
     public int SendAppointmentNotifcations(DateTime StartTime,DateTime EndTime,int repeat,string titel,int repeattimes, int[] preWarn)
     {
-        List<AndroidNotification> allNotication = new List<AndroidNotification>();
+        List<AndroidNotification> allNotication = new();
         DateTime cacheDT = StartTime; // Die FireTime in den NoticationObject zu editen löst einen Fehler aus:  Out of Memory oder AgrumentExpection
         string cacheText = "";
 
@@ -240,7 +237,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         foreach (int i in preWarn)
         {
            
-            AndroidNotification preNoti = new AndroidNotification();
+            AndroidNotification preNoti = new();
             switch (i)
             {
                 case 1:
@@ -286,8 +283,9 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
             }
         }
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        AndroidNotification atStart = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " has started", StartTime);
-        AndroidNotification atEnd = new AndroidNotification("Appointment Notice:" + titel, " appointment:" + titel + " is over now", EndTime);
+        AndroidNotification atStart = new("Appointment Notice:" + titel, " appointment:" + titel + " has started", StartTime);
+        AndroidNotification atEnd = new("Appointment Notice:" + titel, " appointment:" + titel + " is over now", EndTime);
+
         if (repeat != 0 & repeattimes > 0)
         {
             for (int a = repeattimes; a > 0; a--) // das es keine begrente Wiederholung in AndroidNotifartion Api gibt

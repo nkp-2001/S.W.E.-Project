@@ -20,11 +20,6 @@ public class TabGroup : MonoBehaviour
         tabButtons.Add(button);
     }
 
-    public void OnTabExit(TabButton button)
-    {
-        ResetTabs();
-    }
-
     public void OnTabSelected(TabButton button)
     {
         selectedTab = button;

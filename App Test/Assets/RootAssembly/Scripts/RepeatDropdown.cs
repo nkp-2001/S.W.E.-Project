@@ -7,9 +7,9 @@ public class RepeatDropdown : MonoBehaviour
 {
     private List<string> optionLabels = new() {"never", "daily", "weekly", "bi-weekly", "monthly", "yearly" };
     private int[] repeatIndexToDays = { 0, 1, 7, 7 * 2, 7 * 4, 365 };
-    Dictionary<int, int> daysToRepeatIndex = new();
+    private Dictionary<int, int> daysToRepeatIndex = new();
 
-    TMP_Dropdown dropdown;
+    private TMP_Dropdown dropdown;
 
     private void Start()
     {

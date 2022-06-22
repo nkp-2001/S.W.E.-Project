@@ -12,13 +12,11 @@ public class TaskPrototype : MonoBehaviour
     [SerializeField] private AudioClip pingSound;
     [SerializeField] private GameObject dircTobj;
 
-    private DataMaster taskMaster;
     private RectTransform rect;
     private bool showingOldTask = false;
 
     private void Start()
     {
-        taskMaster = FindObjectOfType<DataMaster>();
         rect = GetComponent<RectTransform>();
     }
 
@@ -189,7 +187,7 @@ public class TaskPrototype : MonoBehaviour
             {
                 if (task.Deadline.Length != 0)
                 {
-                    if ((DataMaster.ConvertIntArrayToDatetime(task.Deadline) > DateTime.Now))
+                    if ((DataMaster.ConvertIntArrayToDateTime(task.Deadline) > DateTime.Now))
                     {
                         Subject.TriggerOnTaskReturning(task, task.Title, task.Description, task.Deadline, task.Priority, task.NextDeadlineIndex);
                     }

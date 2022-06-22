@@ -90,7 +90,7 @@ public class AppointmentTests
 
         Appointment appointment_test = new Appointment(t, d, stT, enT, reIn, notficID);
 
-        int _notiID = appointment_test.Notifcation_id;
+        int _notiID = appointment_test.NotificationId;
 
         Assert.That(_notiID, Is.EqualTo(1));
     }

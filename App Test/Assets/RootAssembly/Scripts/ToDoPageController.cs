@@ -114,12 +114,12 @@ public class ToDoPageController : MonoBehaviour,IObserver
 
     public void SubscribeToEvents()
     {
-        Subject.OnExpiredDealine += FetchTasks;
+        Subject.OnExpiredDeadline += FetchTasks;
         Subject.OnTaskReturning += FetchTasks;
     }
     public void UnsubscribeToAllEvents()
     {
-        Subject.OnExpiredDealine -= FetchTasks;
+        Subject.OnExpiredDeadline -= FetchTasks;
         Subject.OnTaskReturning -= FetchTasks;
     }
     private void OnDisable()

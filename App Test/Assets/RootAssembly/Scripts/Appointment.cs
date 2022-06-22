@@ -7,33 +7,34 @@ using UnityEngine;
 [Serializable]
 public class Appointment
 {
-    [SerializeField] string title;
-    [SerializeField] string description;
-    [SerializeField] int[] startTime;
-    [SerializeField] int[] endTime;
-    [SerializeField] int repeat;
-    [SerializeField] int repeattimes = 0;
+    [SerializeField] private string title;
+    [SerializeField] private string description;
+    [SerializeField] private int[] startTime;
+    [SerializeField] private int[] endTime;
+    [SerializeField] private int repeat;
+    [SerializeField] private int repeatTimes = 0;
 
-    [SerializeField] int notifcation_id;
+    [SerializeField] private int notifcationId;
 
-    public Appointment(string t, string d, int[] stT, int[] enT, int reIn, int notficID)
+    public Appointment(string t, string d, int[] stT, int[] enT, int reIn, int notficId)
     {
         title = t;
         description = d;
         startTime = stT;
         endTime = enT;
         repeat = reIn;
-        notifcation_id = notficID;
+        notifcationId = notficId;
     }
-    public Appointment(string t, string d, int[] stT, int[] enT, int reIn, int notficID, int repTimes)
+
+    public Appointment(string t, string d, int[] stT, int[] enT, int reIn, int notficId, int repTimes)
     {
         title = t;
         description = d;
         startTime = stT;
         endTime = enT;
         repeat = reIn;
-        notifcation_id = notficID;
-        repeattimes = repTimes;
+        notifcationId = notficId;
+        repeatTimes = repTimes;
     }
 
     public string Title { get => title; set => title = value; }
@@ -41,22 +42,22 @@ public class Appointment
     public int[] StartTime { get => startTime; set => startTime = value; }
     public int[] EndTime { get => endTime; set => endTime = value; }
     public int Repeat { get => repeat; set => repeat = value; }
-    public int Repeattimes { get => repeattimes; set => repeattimes = value; }
-    public int Notifcation_id { get => notifcation_id; set => notifcation_id = value; }
+    public int RepeatTimes { get => repeatTimes; set => repeatTimes = value; }
+    public int NotificationId { get => notifcationId; set => notifcationId = value; }
 
     public DateTime StartTimeDT()
     {
-        return DataMaster.ConvertIntArrayToDatetime(startTime);
+        return DataMaster.ConvertIntArrayToDateTime(startTime);
     }
 
     public DateTime EndTimeDT()
     {
-        return DataMaster.ConvertIntArrayToDatetime(endTime);
+        return DataMaster.ConvertIntArrayToDateTime(endTime);
     }
 
     public bool AppointmentOnThisDay(DateTime selectDay)
     {
-        DateTime CurrentStart = new DateTime(startTime[4], startTime[3], startTime[2]);
+        DateTime CurrentStart = new(startTime[4], startTime[3], startTime[2]);
 
         if (selectDay == CurrentStart)
         {
@@ -70,7 +71,7 @@ public class Appointment
         else
         {
             int daydiff = (selectDay - CurrentStart).Days;
-            if (daydiff / repeat > repeattimes & repeattimes != 0)
+            if (daydiff / repeat > repeatTimes & repeatTimes != 0)
             {
                 return false;
             }
@@ -83,7 +84,7 @@ public class Appointment
         }
     }
 
-    public static DateTime ConvertIntArrayToDatetime(int[] toconvert)
+    public static DateTime ConvertIntArrayToDateTime(int[] toconvert)
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
@@ -98,7 +99,7 @@ public class Appointment
     {
         return appos.Title == title && appos.Description == description
             && appos.StartTime.Equals(startTime) && appos.EndTime.Equals(EndTime)
-            && appos.repeat == repeat & appos.repeattimes == repeattimes;
+            && appos.repeat == repeat & appos.repeatTimes == repeatTimes;
     }
 
     public override int GetHashCode()

@@ -50,8 +50,8 @@ public class AppointmentValueManager : MonoBehaviour
             return;
         }
 
-        int[] start = DataMaster.ConvertDatetimeToIntArray(startTime);
-        int[] end = DataMaster.ConvertDatetimeToIntArray(endTime); 
+        int[] start = DataMaster.ConvertDateTimeToIntArray(startTime);
+        int[] end = DataMaster.ConvertDateTimeToIntArray(endTime); 
 
         if (underlyingAppointment == null)
         {
@@ -71,7 +71,7 @@ public class AppointmentValueManager : MonoBehaviour
         Subject.TriggerOnDeleteAppointment(underlyingAppointment);
     }
 
-    public void StartEditMode()
+    private void StartEditMode()
     {
         title.text = underlyingAppointment.Title;
         description.text = underlyingAppointment.Description;

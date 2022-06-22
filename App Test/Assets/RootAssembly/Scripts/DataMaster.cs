@@ -9,13 +9,13 @@ using UnityEngine.SceneManagement;
 
 public class DataMaster : MonoBehaviour, IObserver
 {
-    IDataMasterNOSClient clientNotificationSystem;
-    [SerializeField] SaveObject dataSave = new SaveObject();
-    string directoryname = "/SavedData/";
-    string filename = "SavedList.txt";
+    private IDataMasterNOSClient clientNotificationSystem;
+    [SerializeField] private SaveObject dataSave = new();
+    private string directoryName = "/SavedData/";
+    private string fileName = "SavedList.txt";
 
-    public string Directoryname { get => directoryname; set => directoryname = value; }
-    public string Filename { get => filename; set => filename = value; }
+    public string DirectoryName { get => directoryName; set => directoryName = value; }
+    public string FileName { get => fileName; set => fileName = value; }
 
     private void Awake()
     {
@@ -53,21 +53,21 @@ public class DataMaster : MonoBehaviour, IObserver
                
                 if (clientNotificationSystem != null) 
                 {
-                    int id = clientNotificationSystem.SendNewDeadlineNotifications(t, ConvertIntArrayToDatetime(dt));
-                    Task new_task = new Task(t, d, dt, p, id, repeatindex);
+                    int id = clientNotificationSystem.SendNewDeadlineNotifications(t, ConvertIntArrayToDateTime(dt));
+                    Task new_task = new(t, d, dt, p, id, repeatindex);
                     dataSave.AddNewToList(new_task);
                 }
                 else
                 {
                     print("[Warning] The NotficationSystem is not plugged");
-                    Task new_task = new Task(t, d, dt, p);
+                    Task new_task = new(t, d, dt, p);
                     dataSave.AddNewToList(new_task);
                 }
                 SaveList();
                 return;
            }
         }      
-        Task new_t = new Task(t, d, dt, p);
+        Task new_t = new(t, d, dt, p);
         dataSave.AddNewToList(new_t);     
         SaveList();
     }
@@ -99,7 +99,7 @@ public class DataMaster : MonoBehaviour, IObserver
         {
             if (clientNotificationSystem != null) 
             {
-                int new_id = clientNotificationSystem.SendNewDeadlineNotifications(t, ConvertIntArrayToDatetime(dt));
+                int new_id = clientNotificationSystem.SendNewDeadlineNotifications(t, ConvertIntArrayToDateTime(dt));
                 dataSave.ChangeTask(oldtask, t, d, dt, p, new_id,rindex);
             }
             else
@@ -120,7 +120,7 @@ public class DataMaster : MonoBehaviour, IObserver
         return dataSave.GetList();
     }
 
-    public int GetTaskListLenght()
+    public int GetTaskListLength()
     {
         return GetTasks().Count;
     }
@@ -135,7 +135,7 @@ public class DataMaster : MonoBehaviour, IObserver
                 .ThenBy(t => t.Priority)
                 .ThenByDescending(t => {
                     if (t.DeadlineChannelId == 0) return 0;
-                    return new DateTimeOffset(ConvertIntArrayToDatetime(t.Deadline)).ToUnixTimeSeconds();
+                    return new DateTimeOffset(ConvertIntArrayToDateTime(t.Deadline)).ToUnixTimeSeconds();
                 })
                 .ToList();
         }
@@ -144,7 +144,7 @@ public class DataMaster : MonoBehaviour, IObserver
             return unsort.OrderBy(t => t.DeadlineChannelId)
                 .ThenByDescending(t => {
                     if (t.DeadlineChannelId == 0) return 0;
-                    return new DateTimeOffset(ConvertIntArrayToDatetime(t.Deadline)).ToUnixTimeSeconds();
+                    return new DateTimeOffset(ConvertIntArrayToDateTime(t.Deadline)).ToUnixTimeSeconds();
                 })
                 .ThenBy(t => t.Priority)
                 .ToList();
@@ -163,7 +163,7 @@ public class DataMaster : MonoBehaviour, IObserver
 
     private void SaveList()
     {
-        string dir = Application.persistentDataPath + directoryname;
+        string dir = Application.persistentDataPath + directoryName;
 
         if (!Directory.Exists(dir))
         {
@@ -172,12 +172,12 @@ public class DataMaster : MonoBehaviour, IObserver
 
         string saveJason = JsonUtility.ToJson(dataSave);
 
-        File.WriteAllText(dir + filename, saveJason);
+        File.WriteAllText(dir + fileName, saveJason);
     }
 
     private void LoadList()
     {
-        string loadpath = Application.persistentDataPath + directoryname + filename;
+        string loadpath = Application.persistentDataPath + directoryName + fileName;
         print(loadpath);
 
         if (File.Exists(loadpath))
@@ -199,12 +199,12 @@ public class DataMaster : MonoBehaviour, IObserver
         {
             if (t.Deadline != null && t.Deadline.Length != 0)
             {
-                if (DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
+                if (DateTime.Now >= ConvertIntArrayToDateTime(t.Deadline))
                 {
                     if (t.NextDeadlineIndex != 0)
                     {
                          int[] NextDeadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);
-                         int NextDeadlineNotifId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDatetime(NextDeadline)); // ex: Subject.Trigger_Request_NotiID
+                         int NextDeadlineNotifId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDateTime(NextDeadline)); // ex: Subject.Trigger_Request_NotiID
                          dataSave.ChangeTaskCauseRepeat(t, NextDeadline,NextDeadlineNotifId) ;
                          SaveList();
                     }
@@ -219,23 +219,23 @@ public class DataMaster : MonoBehaviour, IObserver
 
         foreach (Task t in (dataSave.GetWaitingList()).ToArray())
         {
-            if (DateTime.Now >= ConvertIntArrayToDatetime(t.Deadline))
+            if (DateTime.Now >= ConvertIntArrayToDateTime(t.Deadline))
             {
                 dataSave.RemoveFromWaitList(t); 
                 t.Deadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);               
-                t.DeadlineChannelId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDatetime(t.Deadline));
+                t.DeadlineChannelId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDateTime(t.Deadline));
                 dataSave.AddNewToList(t);
                 Subject.Trigger_ExpiredDeadline();
             }
         }
     }
 
-    public static DateTime ConvertIntArrayToDatetime(int[] toconvert)
+    public static DateTime ConvertIntArrayToDateTime(int[] toconvert)
     {
         return new DateTime(toconvert[4], toconvert[3], toconvert[2], toconvert[1], toconvert[0], 0);
     }
 
-    public static int[] ConvertDatetimeToIntArray(DateTime toconvert)
+    public static int[] ConvertDateTimeToIntArray(DateTime toconvert)
     {
         return new int[] { toconvert.Minute, toconvert.Hour, toconvert.Day, toconvert.Month, toconvert.Year };
     }
@@ -271,7 +271,7 @@ public class DataMaster : MonoBehaviour, IObserver
 
     public int[] CalculateNextDT(int nextDeadlineIndex, int[] currentDeadline) // nur public damit sie testbar ist
     {
-        DateTime dateTime = ConvertIntArrayToDatetime(currentDeadline);
+        DateTime dateTime = ConvertIntArrayToDateTime(currentDeadline);
         switch (nextDeadlineIndex)
         {
             case 1:
@@ -297,7 +297,7 @@ public class DataMaster : MonoBehaviour, IObserver
 
         if (clientNotificationSystem != null)
         {
-            notficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArrayToDatetime(startTime), ConvertIntArrayToDatetime(endTime), repeat, titel,repeatTimes,preW);
+            notficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArrayToDateTime(startTime), ConvertIntArrayToDateTime(endTime), repeat, titel,repeatTimes,preW);
         }
         else
         {
@@ -325,7 +325,7 @@ public class DataMaster : MonoBehaviour, IObserver
         {
             if (clientNotificationSystem != null)
             {
-                int newnotficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArrayToDatetime(startTime), ConvertIntArrayToDatetime(endTime), repeat, titel, repeatTimes, preW);
+                int newnotficID = clientNotificationSystem.SendAppointmentNotifcations(ConvertIntArrayToDateTime(startTime), ConvertIntArrayToDateTime(endTime), repeat, titel, repeatTimes, preW);
                 dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, newnotficID, repeatTimes);
             }
             else
@@ -337,7 +337,7 @@ public class DataMaster : MonoBehaviour, IObserver
         }
         else
         {
-            dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, oldAppointment.Notifcation_id, repeatTimes);
+            dataSave.ChangeAppointment(oldAppointment, titel, desp, startTime, endTime, repeat, oldAppointment.NotificationId, repeatTimes);
         }
         SaveList();
     }
@@ -368,7 +368,8 @@ public class DataMaster : MonoBehaviour, IObserver
 
     public List<Appointment> GiveAppointsOfThisDay(DateTime askedday)
     {
-        List<Appointment> DayList = new List<Appointment>();
+        List<Appointment> DayList = new();
+
         foreach (Appointment appo in dataSave.GetAppointmentList())
         {
             if (appo.AppointmentOnThisDay(askedday))

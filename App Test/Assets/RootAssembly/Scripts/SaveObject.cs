@@ -5,11 +5,11 @@ using UnityEngine;
 [Serializable]
 public class SaveObject
 {
-    [SerializeField] List<Task> tasklist = new List<Task>();
-    [SerializeField] List<Task> archivedTasks = new List<Task>();
-    [SerializeField] List<Task> repeatingTaskOnWait = new List<Task>(); 
+    [SerializeField] private List<Task> tasklist = new();
+    [SerializeField] private List<Task> archivedTasks = new();
+    [SerializeField] private List<Task> repeatingTaskOnWait = new(); 
 
-    [SerializeField] List<Appointment> appointmentlist = new List<Appointment>(); 
+    [SerializeField] private List<Appointment> appointmentlist = new(); 
 
     public void AddNewToList(Task addT)
     {

@@ -8,10 +8,10 @@ using System;
 public class PopUpMessage : MonoBehaviour,IObserver
 {
 
-    [SerializeField] Image MessageBox;
-    [SerializeField] Image HeaderBox;
-    [SerializeField] TextMeshProUGUI messagerText;
-    [SerializeField] TextMeshProUGUI headerText;
+    [SerializeField] private Image MessageBox;
+    [SerializeField] private Image HeaderBox;
+    [SerializeField] private TextMeshProUGUI messagerText;
+    [SerializeField] private TextMeshProUGUI headerText;
 
     void Start()
     {
@@ -47,7 +47,7 @@ public class PopUpMessage : MonoBehaviour,IObserver
         {
             if (doneTask.Deadline.Length != 0)
             {
-                DateTime deadline = DataMaster.ConvertIntArrayToDatetime(doneTask.Deadline);
+                DateTime deadline = DataMaster.ConvertIntArrayToDateTime(doneTask.Deadline);
                 DateTime currentDate = DateTime.Now;
                 
                 int remaining = (deadline - currentDate).Days;
@@ -111,7 +111,7 @@ public class PopUpMessage : MonoBehaviour,IObserver
         Subject.OnTaskChange += ShowBoxTaskChange;
         Subject.OnTaskSetDone += ShowBoxTaskDone;
         Subject.OnTaskReturning += ShowBoxTaskReturn;
-        Subject.OnExpiredDealine += ShowBoxTaskExpired;
+        Subject.OnExpiredDeadline += ShowBoxTaskExpired;
 
         Subject.OnDateInPast += ShowDateInPastMessage;
     }
@@ -122,7 +122,7 @@ public class PopUpMessage : MonoBehaviour,IObserver
         Subject.OnTaskChange -= ShowBoxTaskChange;
         Subject.OnTaskSetDone -= ShowBoxTaskDone;
         Subject.OnTaskReturning -= ShowBoxTaskReturn;
-        Subject.OnExpiredDealine -= ShowBoxTaskExpired;
+        Subject.OnExpiredDeadline -= ShowBoxTaskExpired;
 
         Subject.OnDateInPast -= ShowDateInPastMessage;
     }
