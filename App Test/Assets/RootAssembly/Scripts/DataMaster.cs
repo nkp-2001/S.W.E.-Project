@@ -36,6 +36,17 @@ public class DataMaster : MonoBehaviour, IObserver
     {
         CheckDeadlinesTask();
         SubscribeToEvents();
+        StartCoroutine(TimeUpdate());
+    }
+
+    IEnumerator TimeUpdate() 
+    {
+        while (true)
+        {
+            CheckDeadlinesTask();
+            yield return new WaitForSeconds(1);
+        }
+      
     }
 
     private void OnApplicationFocus(bool focus) 
@@ -199,7 +210,7 @@ public class DataMaster : MonoBehaviour, IObserver
         {
             if (t.Deadline != null && t.Deadline.Length != 0)
             {
-                if (DateTime.Now >= ConvertIntArrayToDateTime(t.Deadline))
+                if (DateTime.Now > ConvertIntArrayToDateTime(t.Deadline))
                 {
                     if (t.NextDeadlineIndex != 0)
                     {
