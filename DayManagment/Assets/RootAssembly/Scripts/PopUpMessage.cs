@@ -66,10 +66,18 @@ public class PopUpMessage : MonoBehaviour,IObserver
         StartCoroutine(ShowText("You have a new task to do"));
     }
 
-    public void ShowBoxTaskExpired()
+    public void ShowBoxTaskExpired(bool onWaitList)
     {
         StopAllCoroutines();  
-        StartCoroutine(ShowText("A task has expired"));
+        if (onWaitList)
+        {
+            StartCoroutine(ShowText("A repetaing Task is back"));
+        }
+        else
+        {
+            StartCoroutine(ShowText("A task has expired"));
+        }
+       
     }
 
     public void ShowDateInPastMessage()

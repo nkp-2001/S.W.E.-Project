@@ -8,8 +8,8 @@ public static class Subject
     public static event Action<int, bool> OnScrollPopUp;
     public static void Trigger_ScrollPopUp(int id, bool onoff) { OnScrollPopUp?.Invoke(id, onoff); }
 
-    public static event Action OnExpiredDeadline;
-    public static void Trigger_ExpiredDeadline() { OnExpiredDeadline?.Invoke(); }
+    public static event Action<bool> OnExpiredDeadline;
+    public static void Trigger_ExpiredDeadline(bool onWaitingList) { OnExpiredDeadline?.Invoke(onWaitingList); }
 
     public static event Action<Task> OnTaskSetDone;
     public static void Trigger_TaskSetDone(Task doneTask) { OnTaskSetDone?.Invoke(doneTask); }

@@ -111,6 +111,10 @@ public class ToDoPageController : MonoBehaviour,IObserver
             FetchTasks();
         }
     }
+    public void FetchTasks(bool w)
+    {
+        FetchTasks();
+    }
 
     public void SubscribeToEvents()
     {

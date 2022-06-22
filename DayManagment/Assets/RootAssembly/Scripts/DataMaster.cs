@@ -12,7 +12,7 @@ public class DataMaster : MonoBehaviour, IObserver
     private IDataMasterNOSClient clientNotificationSystem;
     [SerializeField] private SaveObject dataSave = new();
     private string directoryName = "/SavedData/";
-    private string fileName = "SavedList.txt";
+    private string fileName = "SavedList1.txt";
 
     public string DirectoryName { get => directoryName; set => directoryName = value; }
     public string FileName { get => fileName; set => fileName = value; }
@@ -225,7 +225,7 @@ public class DataMaster : MonoBehaviour, IObserver
                     {
                         RemoveTask(t);
                     }
-                    Subject.Trigger_ExpiredDeadline();
+                    Subject.Trigger_ExpiredDeadline(false);
                 }
             }
         }
@@ -238,7 +238,8 @@ public class DataMaster : MonoBehaviour, IObserver
                 t.Deadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);               
                 t.DeadlineChannelId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDateTime(t.Deadline));
                 dataSave.AddNewToList(t);
-                Subject.Trigger_ExpiredDeadline();
+                SaveList();
+                Subject.Trigger_ExpiredDeadline(true);
             }
         }
     }
