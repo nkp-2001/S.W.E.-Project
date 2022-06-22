@@ -235,8 +235,11 @@ public class DataMaster : MonoBehaviour, IObserver
             if (DateTime.Now >= ConvertIntArrayToDateTime(t.Deadline))
             {
                 dataSave.RemoveFromWaitList(t); 
-                t.Deadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);               
-                t.DeadlineChannelId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDateTime(t.Deadline));
+                t.Deadline = CalculateNextDT(t.NextDeadlineIndex, t.Deadline);
+                if (clientNotificationSystem != null)
+                {
+                    t.DeadlineChannelId = clientNotificationSystem.SendNewDeadlineNotifications(t.Title, ConvertIntArrayToDateTime(t.Deadline));
+                }
                 dataSave.AddNewToList(t);
                 SaveList();
                 Subject.Trigger_ExpiredDeadline(true);
