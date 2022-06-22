@@ -189,7 +189,7 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
 
     public void CancelDeadlineNotifications(Task oldtask, string t, string d, int[] dt, float p,int rindex) 
     {
-        
+        print(oldtask.Deadline);
         if (oldtask.Deadline != dt && oldtask.Deadline != null)
         {
             CancelNotificationsByID(oldtask.DeadlineChannelId);          
@@ -199,10 +199,12 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
     }
     public void CancelNotifications(Task task)
     {
+        
         int id = task.DeadlineChannelId;
+        print(task.DeadlineChannelId);
         if (id != 0)
         {
-            AndroidNotificationCenter.DeleteNotificationChannel("TaskDeadline" + id);
+            AndroidNotificationCenter.DeleteNotificationChannel("" + id);
         }
         if (taskmaster.GetTaskListLength() == 0) 
         {
@@ -211,7 +213,26 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
         }
     
     }
+    public void CancelNotifications(Appointment appo)
+    {
+        int id = appo.NotificationId;
+        print(id);
+        if (id != 0)
+        {
+            AndroidNotificationCenter.DeleteNotificationChannel("" + id);
+        }     
 
+    }
+
+    public void CancelNotifications(Appointment appo, string title, string description, int[] startTime, int[] endTime, int repeatindex, int repeatTimes, int[] preW)
+    {
+        int id = appo.NotificationId;
+        print(id);
+        if (id != 0)
+        {
+            AndroidNotificationCenter.DeleteNotificationChannel("" + id);
+        }
+    }
 
     public int SendAppointmentNotifcations(DateTime StartTime,DateTime EndTime,int repeat,string titel,int repeattimes, int[] preWarn)
     {
@@ -328,6 +349,8 @@ public class NotificationSystem : MonoBehaviour , IObserver,  IDataMasterNOSClie
     public void SubscribeToEvents()
     {
         Subject.OnTaskSetDone += CancelNotifications;
+        Subject.OnAppointmentChange += CancelNotifications;
+        Subject.OnDeleteAppointment += CancelNotifications;
         Subject.OnNewTask += NotficationStatusReaction;
         Subject.OnTaskReturning += NotficationStatusReaction;
         Subject.OnTaskChange += CancelDeadlineNotifications;     
